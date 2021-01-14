@@ -1,0 +1,13 @@
+server:
+  # Server bind address
+  address: "0.0.0.0"
+  # Server bind port
+  port: "${SERVER_PORT:19091}"
+
+mqtt:
+  host: "${MQTT_HOST:localhost}"
+  port: "${MQTT_PORT:1883}"
+  ssl:
+    enabled: "${MQTT_SSL_ENABLED:false}"
+    key_store: "${MQTT_SSL_KEY_STORE:mqttclient.jks}"
+    key_store_password: "${MQTT_SSL_KEY_STORE_PASSWORD:password}"
