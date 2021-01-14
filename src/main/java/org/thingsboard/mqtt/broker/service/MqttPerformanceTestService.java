@@ -56,10 +56,10 @@ public class MqttPerformanceTestService {
             int subscriberId = i;
             MqttClient subClient = new MqttClient("tcp://" + mqttHost + ":" + mqttPort, "test_sub_client_" + i, new MemoryPersistence());
             subClient.connect();
-            subscribers.add(new SubscriberInfo(subClient, subscriberId));
+            AtomicInteger receivedMsgs = new AtomicInteger(0);
+            subscribers.add(new SubscriberInfo(subClient, subscriberId, receivedMsgs));
             String topicFilter = subscriberId % 2 == 0 ? TOPIC_PREFIX + "+" : TOPIC_PREFIX + "#";
 
-            AtomicInteger receivedMsgs = new AtomicInteger(0);
             subClient.subscribe(topicFilter, (topic, mqttMessage) -> {
                 try {
                     Message message = mapper.readValue(mqttMessage.getPayload(), Message.class);
@@ -105,6 +105,11 @@ public class MqttPerformanceTestService {
         boolean successfullyProcessed = subscribersCDL.await(MSGS_TO_PUBLISH / MAX_MSGS_PER_SECOND + 5, TimeUnit.SECONDS);
         if (!successfullyProcessed) {
             log.error("Timeout waiting for subscribers to process messages.");
+            for (SubscriberInfo subscriberInfo : subscribers) {
+                if (subscriberInfo.receivedMsgs.get() != PUBLISHERS * MSGS_TO_PUBLISH) {
+                    log.error("[{}] Subscriber received only {} messages", subscriberInfo.id, subscriberInfo.receivedMsgs.get());
+                }
+            }
         }
         log.info("Disconnecting subscribers.");
         for (SubscriberInfo subscriberInfo : subscribers) {

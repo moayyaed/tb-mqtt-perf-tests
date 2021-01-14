@@ -1,8 +1,3 @@
-server:
-  # Server bind address
-  address: "0.0.0.0"
-  # Server bind port
-  port: "${SERVER_PORT:19091}"
 
 mqtt:
   host: "${MQTT_HOST:localhost}"
