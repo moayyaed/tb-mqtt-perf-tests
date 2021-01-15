@@ -22,7 +22,6 @@
         <lombok.version>1.18.16</lombok.version>
         <spring.version>5.2.6.RELEASE</spring.version>
         <netty.version>4.1.49.Final</netty.version>
-        <paho-client.version>1.2.5</paho-client.version>
         <jackson.version>2.11.3</jackson.version>
 
         <winsw.version>2.0.1</winsw.version>
@@ -98,12 +97,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.eclipse.paho</groupId>
-            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
-            <version>${paho-client.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
@@ -117,6 +110,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
             <version>${commons-math3.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.thingsboard</groupId>
+            <artifactId>netty-mqtt</artifactId>
+            <version>3.2.0</version>
         </dependency>
 
 
@@ -175,6 +174,12 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+        </repository>
+
+        <repository>
+            <id>thingsboard-public-repo</id>
+            <name>ThingsBoard Public Repo</name>
+            <url>https://repo.thingsboard.io/artifactory/libs-release-public</url>
         </repository>
     </repositories>
 
