@@ -7,6 +7,8 @@ import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.data.Message;
@@ -16,13 +18,16 @@ import org.thingsboard.mqtt.broker.data.PublisherInfo;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
 public class PublisherServiceImpl implements PublisherService {
     private final ObjectMapper mapper = new ObjectMapper();
@@ -34,6 +39,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public void connectPublishers(Collection<PublisherGroup> publisherGroups) {
+        validatePublisherGroups(publisherGroups);
         log.info("Start connecting publishers.");
         for (PublisherGroup publisherGroup : publisherGroups) {
             for (int i = 0; i < publisherGroup.getPublishers(); i++) {
@@ -83,6 +89,13 @@ public class PublisherServiceImpl implements PublisherService {
         }
     }
 
+    private void validatePublisherGroups(Collection<PublisherGroup> publisherGroups) {
+        Set<Integer> distinctIds = publisherGroups.stream().map(PublisherGroup::getId).collect(Collectors.toSet());
+        if (distinctIds.size() != publisherGroups.size()) {
+            log.error("Some publisher IDs are equal.");
+            throw new RuntimeException("Some publisher IDs are equal");
+        }
+    }
 
     private static final ByteBufAllocator ALLOCATOR = new UnpooledByteBufAllocator(false);
 

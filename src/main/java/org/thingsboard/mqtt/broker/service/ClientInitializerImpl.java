@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.MqttClient;
 import org.thingsboard.mqtt.MqttClientConfig;
 import org.thingsboard.mqtt.MqttConnectResult;
+import org.thingsboard.mqtt.MqttHandler;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -34,9 +35,20 @@ public class ClientInitializerImpl implements ClientInitializer {
 
     @Override
     public MqttClient initClient(String clientId) {
+        return initClient(clientId, true, null);
+    }
+
+    @Override
+    public MqttClient initClient(String clientId, boolean cleanSession) {
+        return initClient(clientId, cleanSession, null);
+    }
+
+    @Override
+    public MqttClient initClient(String clientId, boolean cleanSession, MqttHandler defaultHandler) {
         MqttClientConfig config = new MqttClientConfig();
         config.setClientId(clientId);
-        MqttClient client = MqttClient.create(config, null);
+        config.setCleanSession(cleanSession);
+        MqttClient client = MqttClient.create(config, defaultHandler);
         client.setEventLoop(EVENT_LOOP_GROUP);
         Future<MqttConnectResult> connectFuture = client.connect(mqttHost, mqttPort);
         MqttConnectResult result;

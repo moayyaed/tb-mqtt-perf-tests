@@ -2,7 +2,18 @@
 mqtt:
   host: "${MQTT_HOST:localhost}"
   port: "${MQTT_PORT:1883}"
+#  port: "${MQTT_PORT:1885}"
   ssl:
     enabled: "${MQTT_SSL_ENABLED:false}"
     key_store: "${MQTT_SSL_KEY_STORE:mqttclient.jks}"
     key_store_password: "${MQTT_SSL_KEY_STORE_PASSWORD:password}"
+
+broker:
+  type: "${BROKER_TYPE:THINGSBOARD}"
+#  type: "${BROKER_TYPE:OTHER}"
+
+tb-broker:
+  uri: "${TB_URI:http://localhost:8083}"
+  admin:
+    username: "${TB_ADMIN_USERNAME:sysadmin@thingsboard.org}"
+    password: "${TB_ADMIN_PASSWORD:sysadmin}"

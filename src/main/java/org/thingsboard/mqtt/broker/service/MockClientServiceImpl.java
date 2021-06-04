@@ -2,6 +2,8 @@ package org.thingsboard.mqtt.broker.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.MqttClient;
 
@@ -11,6 +13,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
 public class MockClientServiceImpl implements MockClientService {
     private final ClientInitializer clientInitializer;
