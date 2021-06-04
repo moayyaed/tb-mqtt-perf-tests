@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.thingsboard.mqtt.MqttClient;
 
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @AllArgsConstructor
@@ -12,4 +13,5 @@ public class SubscriberInfo {
     private final MqttClient subscriber;
     private final int id;
     private final AtomicInteger receivedMsgs;
+    private final Set<Integer> expectedPublisherGroups;
 }
