@@ -10,5 +10,4 @@ import lombok.Getter;
 public class SubscriberAnalysisResult {
     private final int lostMessages;
     private final int duplicatedMessages;
-    private final int expectedTotalReceivedMessages;
 }

@@ -20,10 +20,8 @@ import org.thingsboard.mqtt.broker.service.SubscriberService;
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -48,7 +46,7 @@ public class MqttPerformanceTest {
     private static final int SECONDS_TO_RUN = 30;
     private static final int ADDITIONAL_SECONDS_TO_WAIT = 15;
 
-    private static final int MOCK_CLIENTS = 5;
+    private static final int MOCK_CLIENTS = 0;
     private static final int MAX_MSGS_PER_PUBLISHER_PER_SECOND = 5;
 
     private static final int TOTAL_PUBLISHER_MESSAGES = SECONDS_TO_RUN * MAX_MSGS_PER_PUBLISHER_PER_SECOND;
@@ -60,6 +58,8 @@ public class MqttPerformanceTest {
 
     @PostConstruct
     public void init() throws Exception {
+        printTestRunConfiguration();
+
         DescriptiveStatistics generalLatencyStats = new DescriptiveStatistics();
 
         persistedMqttClientService.initApplicationClients(subscriberGroupsConfiguration);
@@ -99,7 +99,11 @@ public class MqttPerformanceTest {
                 analysisResult.getLostMessages(), analysisResult.getDuplicatedMessages(),
                 generalLatencyStats.getN());
 
+        // wait for all MQTT clients to close
+        Thread.sleep(1000);
+    }
 
+    private void printTestRunConfiguration() {
         int totalPublishers = publisherGroupsConfiguration.stream().mapToInt(PublisherGroup::getPublishers).sum();
         int nonPersistedSubscribers = subscriberGroupsConfiguration.stream()
                 .filter(subscriberGroup -> subscriberGroup.getPersistentSessionInfo() == null)
@@ -116,16 +120,13 @@ public class MqttPerformanceTest {
                 .mapToInt(SubscriberGroup::getSubscribers)
                 .sum();
         int totalPublishedMessages = totalPublishers * TOTAL_PUBLISHER_MESSAGES;
+        int totalExpectedReceivedMessages = subscriberService.calculateTotalExpectedReceivedMessages(subscriberGroupsConfiguration, publisherGroupsConfiguration, TOTAL_PUBLISHER_MESSAGES);
         log.info("Test run info: publishers - {}, non-persistent subscribers - {}, regular persistent subscribers - {}, " +
                         "'APPLICATION' persistent subscribers - {}, dummy client connections - {}, max messages per second - {}, " +
                         "run time - {}s, total published messages - {}, expected total received messages - {}",
                 totalPublishers, nonPersistedSubscribers, persistedDevicesSubscribers,
                 persistedApplicationsSubscribers, MOCK_CLIENTS, MAX_MSGS_PER_PUBLISHER_PER_SECOND,
-                SECONDS_TO_RUN, totalPublishedMessages, analysisResult.getExpectedTotalReceivedMessages());
-
-
-        // wait for all MQTT clients to close
-        Thread.sleep(1000);
+                SECONDS_TO_RUN, totalPublishedMessages, totalExpectedReceivedMessages);
     }
 
 

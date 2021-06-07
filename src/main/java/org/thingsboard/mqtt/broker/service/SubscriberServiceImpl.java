@@ -48,7 +48,7 @@ public class SubscriberServiceImpl implements SubscriberService {
                 boolean cleanSession = subscriberGroup.getPersistentSessionInfo() == null;
                 MqttClient subClient = clientInitializer.initClient(clientId, cleanSession);
                 AtomicInteger receivedMsgs = new AtomicInteger(0);
-                subscriberInfos.add(new SubscriberInfo(subClient, subscriberId, receivedMsgs, subscriberGroup.getExpectedPublisherGroups()));
+                subscriberInfos.add(new SubscriberInfo(subClient, subscriberId, receivedMsgs, subscriberGroup));
 
                 AtomicBoolean successfullySubscribed = new AtomicBoolean(false);
                 subClient.on(subscriberGroup.getTopicFilter(), (topic, mqttMessageByteBuf) -> {
@@ -95,10 +95,8 @@ public class SubscriberServiceImpl implements SubscriberService {
                 .collect(Collectors.toMap(PublisherGroup::getId, Function.identity()));
         int lostMessages = 0;
         int duplicatedMessages = 0;
-        int expectedTotalReceivedMessages = 0;
         for (SubscriberInfo subscriberInfo : subscriberInfos) {
-            int expectedReceivedMsgs = getSubscriberExpectedReceivedMsgs(totalProducerMessagesCount, publisherGroupsById, subscriberInfo);
-            expectedTotalReceivedMessages += expectedReceivedMsgs;
+            int expectedReceivedMsgs = getSubscriberExpectedReceivedMsgs(totalProducerMessagesCount, publisherGroupsById, subscriberInfo.getSubscriberGroup());
             int actualReceivedMsgs = subscriberInfo.getReceivedMsgs().get();
             if (actualReceivedMsgs != expectedReceivedMsgs) {
                 log.error("[{}] Expected messages count - {}, actual messages count - {}",
@@ -113,12 +111,20 @@ public class SubscriberServiceImpl implements SubscriberService {
         return SubscriberAnalysisResult.builder()
                 .lostMessages(lostMessages)
                 .duplicatedMessages(duplicatedMessages)
-                .expectedTotalReceivedMessages(expectedTotalReceivedMessages)
                 .build();
     }
 
-    private int getSubscriberExpectedReceivedMsgs(int totalProducerMessagesCount, Map<Integer, PublisherGroup> publisherGroupsById, SubscriberInfo subscriberInfo) {
-        return subscriberInfo.getExpectedPublisherGroups().stream()
+    @Override
+    public int calculateTotalExpectedReceivedMessages(Collection<SubscriberGroup> subscriberGroups, Collection<PublisherGroup> publisherGroups, int totalProducerMessagesCount) {
+        Map<Integer, PublisherGroup> publisherGroupsById = publisherGroups.stream()
+                .collect(Collectors.toMap(PublisherGroup::getId, Function.identity()));
+        return subscriberGroups.stream()
+                .mapToInt(subscriberGroup -> subscriberGroup.getSubscribers() * getSubscriberExpectedReceivedMsgs(totalProducerMessagesCount, publisherGroupsById, subscriberGroup))
+                .sum();
+    }
+
+    private int getSubscriberExpectedReceivedMsgs(int totalProducerMessagesCount, Map<Integer, PublisherGroup> publisherGroupsById, SubscriberGroup subscriberGroup) {
+        return subscriberGroup.getExpectedPublisherGroups().stream()
                 .map(publisherGroupsById::get)
                 .map(PublisherGroup::getPublishers)
                 .mapToInt(Integer::intValue)

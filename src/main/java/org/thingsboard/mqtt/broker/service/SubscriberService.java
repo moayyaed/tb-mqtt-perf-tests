@@ -12,4 +12,6 @@ public interface SubscriberService {
     void disconnectSubscribers();
 
     SubscriberAnalysisResult analyzeReceivedMessages(Collection<PublisherGroup> publisherGroups, int totalProducerMessagesCount);
+
+    int calculateTotalExpectedReceivedMessages(Collection<SubscriberGroup> subscriberGroups, Collection<PublisherGroup> publisherGroups, int totalProducerMessagesCount);
 }
