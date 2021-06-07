@@ -2,6 +2,7 @@ package org.thingsboard.mqtt.broker.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -47,7 +48,10 @@ public class MqttPerformanceTest {
     private static final int ADDITIONAL_SECONDS_TO_WAIT = 15;
 
     private static final int MOCK_CLIENTS = 0;
-    private static final int MAX_MSGS_PER_PUBLISHER_PER_SECOND = 5;
+    private static final int MAX_MSGS_PER_PUBLISHER_PER_SECOND = 1;
+
+    private static final MqttQoS PUBLISHER_QOS = MqttQoS.AT_LEAST_ONCE;
+    private static final MqttQoS SUBSCRIBER_QOS = MqttQoS.AT_LEAST_ONCE;
 
     private static final int TOTAL_PUBLISHER_MESSAGES = SECONDS_TO_RUN * MAX_MSGS_PER_PUBLISHER_PER_SECOND;
 
@@ -64,7 +68,7 @@ public class MqttPerformanceTest {
 
         persistedMqttClientService.initApplicationClients(subscriberGroupsConfiguration);
 
-        subscriberService.startSubscribers(subscriberGroupsConfiguration, msgByteBuf -> {
+        subscriberService.startSubscribers(subscriberGroupsConfiguration, SUBSCRIBER_QOS, msgByteBuf -> {
             long now = System.currentTimeMillis();
             byte[] mqttMessageBytes = toBytes(msgByteBuf);
             Message message = mapper.readValue(mqttMessageBytes, Message.class);
@@ -75,7 +79,7 @@ public class MqttPerformanceTest {
 
         mockClientService.connectMockClients(MOCK_CLIENTS);
 
-        publisherService.startPublishing(TOTAL_PUBLISHER_MESSAGES, MAX_MSGS_PER_PUBLISHER_PER_SECOND);
+        publisherService.startPublishing(TOTAL_PUBLISHER_MESSAGES, MAX_MSGS_PER_PUBLISHER_PER_SECOND, PUBLISHER_QOS);
 
 
         Thread.sleep(TimeUnit.SECONDS.toMillis(SECONDS_TO_RUN + ADDITIONAL_SECONDS_TO_WAIT));
@@ -122,10 +126,12 @@ public class MqttPerformanceTest {
         int totalPublishedMessages = totalPublishers * TOTAL_PUBLISHER_MESSAGES;
         int totalExpectedReceivedMessages = subscriberService.calculateTotalExpectedReceivedMessages(subscriberGroupsConfiguration, publisherGroupsConfiguration, TOTAL_PUBLISHER_MESSAGES);
         log.info("Test run info: publishers - {}, non-persistent subscribers - {}, regular persistent subscribers - {}, " +
-                        "'APPLICATION' persistent subscribers - {}, dummy client connections - {}, max messages per second - {}, " +
+                        "'APPLICATION' persistent subscribers - {}, dummy client connections - {}," +
+                        "publisher QoS - {}, subscriber QoS - {}, max messages per second - {}, " +
                         "run time - {}s, total published messages - {}, expected total received messages - {}",
                 totalPublishers, nonPersistedSubscribers, persistedDevicesSubscribers,
-                persistedApplicationsSubscribers, MOCK_CLIENTS, MAX_MSGS_PER_PUBLISHER_PER_SECOND,
+                persistedApplicationsSubscribers, MOCK_CLIENTS,
+                PUBLISHER_QOS, SUBSCRIBER_QOS, MAX_MSGS_PER_PUBLISHER_PER_SECOND,
                 SECONDS_TO_RUN, totalPublishedMessages, totalExpectedReceivedMessages);
     }
 

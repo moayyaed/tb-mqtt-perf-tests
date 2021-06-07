@@ -52,7 +52,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public void startPublishing(int totalProducerMessagesCount, int maxMessagesPerProducerPerSecond) {
+    public void startPublishing(int totalProducerMessagesCount, int maxMessagesPerProducerPerSecond, MqttQoS qos) {
         AtomicInteger publishedMessagesPerPublisher = new AtomicInteger();
         publishScheduler.scheduleAtFixedRate(() -> {
             if (publishedMessagesPerPublisher.getAndIncrement() >= totalProducerMessagesCount) {
@@ -62,7 +62,7 @@ public class PublisherServiceImpl implements PublisherService {
                 try {
                     Message message = new Message(System.currentTimeMillis());
                     byte[] messageBytes = mapper.writeValueAsBytes(message);
-                    publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes), MqttQoS.AT_MOST_ONCE)
+                    publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes), qos)
                             .addListener(future -> {
                                         if (!future.isSuccess()) {
                                             log.error("[{}] Error publishing msg", publisherInfo.getId());

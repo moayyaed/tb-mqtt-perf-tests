@@ -1,5 +1,6 @@
 package org.thingsboard.mqtt.broker.service;
 
+import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +36,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     private final List<SubscriberInfo> subscriberInfos = new ArrayList<>();
 
     @Override
-    public void startSubscribers(Collection<SubscriberGroup> subscriberGroups, MqttMsgProcessor msgProcessor) {
+    public void startSubscribers(Collection<SubscriberGroup> subscriberGroups, MqttQoS qos, MqttMsgProcessor msgProcessor) {
         validateSubscriberGroups(subscriberGroups);
         int totalSubscribers = subscriberGroups.stream().mapToInt(SubscriberGroup::getSubscribers).sum();
         CountDownLatch subscribeCDL = new CountDownLatch(totalSubscribers);
@@ -58,7 +60,7 @@ public class SubscriberServiceImpl implements SubscriberService {
                         log.error("[{}] Failed to process msg", subscriberId);
                     }
                     receivedMsgs.incrementAndGet();
-                }).addListener(future -> {
+                }, qos).addListener(future -> {
                     if (successfullySubscribed.getAndSet(true)) {
                         log.warn("[{}] Subscribed to topic more than one time!", subscriberId);
                     } else {
@@ -126,6 +128,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     private int getSubscriberExpectedReceivedMsgs(int totalProducerMessagesCount, Map<Integer, PublisherGroup> publisherGroupsById, SubscriberGroup subscriberGroup) {
         return subscriberGroup.getExpectedPublisherGroups().stream()
                 .map(publisherGroupsById::get)
+                .filter(Objects::nonNull)
                 .map(PublisherGroup::getPublishers)
                 .mapToInt(Integer::intValue)
                 .map(publishersInGroup -> publishersInGroup * totalProducerMessagesCount)
