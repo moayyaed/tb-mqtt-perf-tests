@@ -48,7 +48,13 @@ public class SubscriberServiceImpl implements SubscriberService {
                 int subscriberId = i;
                 String clientId = subscriberGroup.getClientId(subscriberId);
                 boolean cleanSession = subscriberGroup.getPersistentSessionInfo() == null;
-                MqttClient subClient = clientInitializer.initClient(clientId, cleanSession);
+                MqttClient subClient = clientInitializer.initClient(clientId, cleanSession, (s, mqttMessageByteBuf) -> {
+                    try {
+                        msgProcessor.process(mqttMessageByteBuf);
+                    } catch (Exception e) {
+                        log.error("[{}] Failed to process msg", subscriberId);
+                    }
+                });
                 AtomicInteger receivedMsgs = new AtomicInteger(0);
                 subscriberInfos.add(new SubscriberInfo(subClient, subscriberId, receivedMsgs, subscriberGroup));
 

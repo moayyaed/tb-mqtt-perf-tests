@@ -66,6 +66,7 @@ public class MqttPerformanceTest {
 
         DescriptiveStatistics generalLatencyStats = new DescriptiveStatistics();
 
+        persistedMqttClientService.clearPersistedSessions(subscriberGroupsConfiguration);
         persistedMqttClientService.initApplicationClients(subscriberGroupsConfiguration);
 
         subscriberService.startSubscribers(subscriberGroupsConfiguration, SUBSCRIBER_QOS, msgByteBuf -> {
