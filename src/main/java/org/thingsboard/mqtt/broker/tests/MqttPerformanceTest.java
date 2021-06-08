@@ -93,6 +93,7 @@ public class MqttPerformanceTest {
         Thread.sleep(1000);
 
         persistedMqttClientService.clearPersistedSessions(subscriberGroupsConfiguration);
+        Thread.sleep(1000);
         persistedMqttClientService.removeApplicationClients(subscriberGroupsConfiguration);
 
         SubscriberAnalysisResult analysisResult = subscriberService.analyzeReceivedMessages(publisherGroupsConfiguration, TOTAL_PUBLISHER_MESSAGES);
