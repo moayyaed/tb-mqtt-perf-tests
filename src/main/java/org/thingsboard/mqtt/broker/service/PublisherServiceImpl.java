@@ -43,7 +43,8 @@ public class PublisherServiceImpl implements PublisherService {
         log.info("Start connecting publishers.");
         for (PublisherGroup publisherGroup : publisherGroups) {
             for (int i = 0; i < publisherGroup.getPublishers(); i++) {
-                MqttClient pubClient = clientInitializer.initClient("test_pub_client_" + publisherGroup.getId() + "_" + i);
+                String clientId = publisherGroup.getClientId(i);
+                MqttClient pubClient = clientInitializer.initClient(clientId);
                 String topic = publisherGroup.getTopicPrefix() + i;
                 publisherInfos.add(new PublisherInfo(pubClient, i, topic));
             }

@@ -56,7 +56,7 @@ public class SubscriberServiceImpl implements SubscriberService {
                     }
                 });
                 AtomicInteger receivedMsgs = new AtomicInteger(0);
-                subscriberInfos.add(new SubscriberInfo(subClient, subscriberId, receivedMsgs, subscriberGroup));
+                subscriberInfos.add(new SubscriberInfo(subClient, subscriberId, clientId, receivedMsgs, subscriberGroup));
 
                 AtomicBoolean successfullySubscribed = new AtomicBoolean(false);
                 subClient.on(subscriberGroup.getTopicFilter(), (topic, mqttMessageByteBuf) -> {
@@ -92,7 +92,7 @@ public class SubscriberServiceImpl implements SubscriberService {
             try {
                 subscriberInfo.getSubscriber().disconnect();
             } catch (Exception e) {
-                log.error("[{}] Failed to disconnect subscriber", subscriberInfo.getId());
+                log.error("[{}] Failed to disconnect subscriber", subscriberInfo.getClientId());
             }
         }
     }
@@ -108,7 +108,7 @@ public class SubscriberServiceImpl implements SubscriberService {
             int actualReceivedMsgs = subscriberInfo.getReceivedMsgs().get();
             if (actualReceivedMsgs != expectedReceivedMsgs) {
                 log.error("[{}] Expected messages count - {}, actual messages count - {}",
-                        subscriberInfo.getId(), expectedReceivedMsgs, actualReceivedMsgs);
+                        subscriberInfo.getClientId(), expectedReceivedMsgs, actualReceivedMsgs);
                 if (expectedReceivedMsgs > actualReceivedMsgs) {
                     lostMessages += expectedReceivedMsgs - actualReceivedMsgs;
                 } else {

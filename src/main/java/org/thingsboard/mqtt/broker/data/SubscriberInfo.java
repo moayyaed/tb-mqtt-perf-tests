@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SubscriberInfo {
     private final MqttClient subscriber;
     private final int id;
+    private final String clientId;
     private final AtomicInteger receivedMsgs;
     private final SubscriberGroup subscriberGroup;
 }

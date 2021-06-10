@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -31,23 +32,30 @@ public class MqttPerformanceTest {
     private final ObjectMapper mapper = new ObjectMapper();
 
     private static final List<PublisherGroup> publisherGroupsConfiguration = Arrays.asList(
-            new PublisherGroup(1, 450, "europe/ua/kyiv/tb/"),
+            new PublisherGroup(1, 200, "europe/ua/kyiv/tb/"),
             new PublisherGroup(2, 100, "europe/ua/kyiv/"),
-            new PublisherGroup(3, 50, "asia/")
+            new PublisherGroup(3, 100, "asia/")
+//            new PublisherGroup(4, 1, "perf/test/topic/", "perf_test_publisher_")
     );
+
+    private static final Set<Integer> ALL_PUBLISHER_IDS = publisherGroupsConfiguration.stream().map(PublisherGroup::getId).collect(Collectors.toSet());
 
     private static final List<SubscriberGroup> subscriberGroupsConfiguration = Arrays.asList(
-            new SubscriberGroup(1, 100, "europe/ua/kyiv/tb/+", Set.of(1), null),
-            new SubscriberGroup(2, 50, "europe/ua/kyiv/#", Set.of(1, 2), null),
-            new SubscriberGroup(3, 10, "#", Set.of(1, 2, 3), new PersistentSessionInfo(PersistentClientType.APPLICATION))
+//            new SubscriberGroup(1, 50, "europe/ua/kyiv/tb/+", Set.of(1), null),
+//            new SubscriberGroup(2, 50, "europe/ua/kyiv/#", Set.of(1, 2), null),
+            new SubscriberGroup(3, 30, "#", ALL_PUBLISHER_IDS, new PersistentSessionInfo(PersistentClientType.APPLICATION))
 //            new SubscriberGroup(4, 20, "europe/ua/kyiv/tb/#", Set.of(1), new PersistentSessionInfo(PersistentClientType.DEVICE)),
-//            new SubscriberGroup(5, 20, "europe/ua/kyiv/#", Set.of(1, 2), new PersistentSessionInfo(PersistentClientType.DEVICE))
-    );
+//            new SubscriberGroup(5, 10, "europe/ua/kyiv/#", Set.of(1, 2), new PersistentSessionInfo(PersistentClientType.DEVICE))
+//            new SubscriberGroup(6, 1, "europe/ua/kyiv/#", Set.of(1, 2), new PersistentSessionInfo(PersistentClientType.APPLICATION))
+//            new SubscriberGroup(7, 1, "perf/test/topic/+", Set.of(4), null, "perf_test_basic_")
+//            new SubscriberGroup(8, 1, "perf/test/topic/+", Set.of(4), new PersistentSessionInfo(PersistentClientType.DEVICE), "perf_test_device_")
+//            new SubscriberGroup(9, 1, "perf/test/topic/+", Set.of(4), new PersistentSessionInfo(PersistentClientType.APPLICATION), "perf_test_application_")
+            );
 
     private static final int SECONDS_TO_RUN = 30;
-    private static final int ADDITIONAL_SECONDS_TO_WAIT = 15;
+    private static final int ADDITIONAL_SECONDS_TO_WAIT = 30;
 
-    private static final int MOCK_CLIENTS = 0;
+    private static final int MOCK_CLIENTS = 1000;
     private static final int MAX_MSGS_PER_PUBLISHER_PER_SECOND = 1;
 
     private static final MqttQoS PUBLISHER_QOS = MqttQoS.AT_LEAST_ONCE;
@@ -67,6 +75,7 @@ public class MqttPerformanceTest {
         DescriptiveStatistics generalLatencyStats = new DescriptiveStatistics();
 
         persistedMqttClientService.clearPersistedSessions(subscriberGroupsConfiguration);
+        persistedMqttClientService.removeApplicationClients(subscriberGroupsConfiguration);
         persistedMqttClientService.initApplicationClients(subscriberGroupsConfiguration);
 
         subscriberService.startSubscribers(subscriberGroupsConfiguration, SUBSCRIBER_QOS, msgByteBuf -> {
@@ -93,8 +102,6 @@ public class MqttPerformanceTest {
         Thread.sleep(1000);
 
         persistedMqttClientService.clearPersistedSessions(subscriberGroupsConfiguration);
-        Thread.sleep(1000);
-        persistedMqttClientService.removeApplicationClients(subscriberGroupsConfiguration);
 
         SubscriberAnalysisResult analysisResult = subscriberService.analyzeReceivedMessages(publisherGroupsConfiguration, TOTAL_PUBLISHER_MESSAGES);
 
