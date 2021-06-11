@@ -64,8 +64,12 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
         for (SubscriberGroup persistedSubscriberGroup : persistedSubscriberGroups) {
             for (int i = 0; i < persistedSubscriberGroup.getSubscribers(); i++) {
                 String clientId = persistedSubscriberGroup.getClientId(i);
-                MqttClient mqttClient = clientInitializer.initClient(clientId, true);
-                mqttClient.disconnect();
+                try {
+                    MqttClient mqttClient = clientInitializer.initClient(clientId, true);
+                    mqttClient.disconnect();
+                } catch (Exception e) {
+                    log.warn("[{}] Failed to clear persisted session", clientId);
+                }
             }
         }
     }
@@ -91,7 +95,7 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
                 try {
                     tbBrokerRestService.removeClient(clientId);
                 } catch (Exception e) {
-                    log.warn("Failed to remove {} {} client", clientId, PersistentClientType.APPLICATION);
+                    log.warn("[{}] Failed to remove {} client", clientId, PersistentClientType.APPLICATION);
                 }
             }
         }
