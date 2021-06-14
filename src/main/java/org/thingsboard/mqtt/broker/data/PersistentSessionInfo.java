@@ -1,10 +1,12 @@
 package org.thingsboard.mqtt.broker.data;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class PersistentSessionInfo {
-    private final PersistentClientType clientType;
+    private PersistentClientType clientType;
 }

@@ -5,12 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.MqttClient;
+import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.BrokerType;
 import org.thingsboard.mqtt.broker.data.dto.MqttClientDto;
 import org.thingsboard.mqtt.broker.data.PersistentClientType;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,16 +20,18 @@ import java.util.stream.Collectors;
 public class PersistedMqttClientServiceImpl implements PersistedMqttClientService {
     private final TbBrokerRestService tbBrokerRestService;
     private final ClientInitializer clientInitializer;
+    private final TestRunConfiguration testRunConfiguration;
 
     @Value("${broker.type:THINGSBOARD}")
     private BrokerType brokerType;
 
     @Override
-    public void initApplicationClients(Collection<SubscriberGroup> subscriberGroups) {
+    public void initApplicationClients() {
         if (brokerType != BrokerType.THINGSBOARD) {
             return;
         }
 
+        List<SubscriberGroup> subscriberGroups = testRunConfiguration.getSubscribersConfig();
         List<SubscriberGroup> applicationSubscriberGroups = subscriberGroups.stream()
                 .filter(subscriberGroup -> subscriberGroup.getPersistentSessionInfo() != null)
                 .filter(subscriberGroup -> subscriberGroup.getPersistentSessionInfo().getClientType() == PersistentClientType.APPLICATION)
@@ -54,8 +56,9 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
     }
 
     @Override
-    public void clearPersistedSessions(Collection<SubscriberGroup> subscriberGroupsConfiguration) {
-        List<SubscriberGroup> persistedSubscriberGroups = subscriberGroupsConfiguration.stream()
+    public void clearPersistedSessions() {
+        List<SubscriberGroup> subscriberGroups = testRunConfiguration.getSubscribersConfig();
+        List<SubscriberGroup> persistedSubscriberGroups = subscriberGroups.stream()
                 .filter(subscriberGroup -> subscriberGroup.getPersistentSessionInfo() != null)
                 .collect(Collectors.toList());
 
@@ -75,11 +78,12 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
     }
 
     @Override
-    public void removeApplicationClients(Collection<SubscriberGroup> subscriberGroups) {
+    public void removeApplicationClients() {
         if (brokerType != BrokerType.THINGSBOARD) {
             return;
         }
 
+        List<SubscriberGroup> subscriberGroups = testRunConfiguration.getSubscribersConfig();
         List<SubscriberGroup> applicationSubscriberGroups = subscriberGroups.stream()
                 .filter(subscriberGroup -> subscriberGroup.getPersistentSessionInfo() != null)
                 .filter(subscriberGroup -> subscriberGroup.getPersistentSessionInfo().getClientType() == PersistentClientType.APPLICATION)

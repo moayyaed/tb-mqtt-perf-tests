@@ -17,3 +17,6 @@ tb-broker:
   admin:
     username: "${TB_ADMIN_USERNAME:sysadmin@thingsboard.org}"
     password: "${TB_ADMIN_PASSWORD:sysadmin}"
+
+
+test-run-configuration-file: "${TEST_RUN_CONFIGURATION_FILE:}"

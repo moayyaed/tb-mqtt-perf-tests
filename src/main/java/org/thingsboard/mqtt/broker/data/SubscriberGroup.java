@@ -1,5 +1,7 @@
 package org.thingsboard.mqtt.broker.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import java.util.Set;
@@ -14,16 +16,20 @@ public class SubscriberGroup {
     private final String clientIdPrefix;
 
     public SubscriberGroup(int id, int subscribers, String topicFilter, Set<Integer> expectedPublisherGroups, PersistentSessionInfo persistentSessionInfo) {
-        this(id, subscribers, topicFilter, expectedPublisherGroups, persistentSessionInfo, "test_sub_client_" + id + "_");
+        this(id, subscribers, topicFilter, expectedPublisherGroups, persistentSessionInfo, null);
     }
 
-    public SubscriberGroup(int id, int subscribers, String topicFilter, Set<Integer> expectedPublisherGroups, PersistentSessionInfo persistentSessionInfo, String clientIdPrefix) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public SubscriberGroup(@JsonProperty("id") int id, @JsonProperty("subscribers") int subscribers, @JsonProperty("topicFilter") String topicFilter,
+                           @JsonProperty("expectedPublisherGroups") Set<Integer> expectedPublisherGroups,
+                           @JsonProperty("persistentSessionInfo") PersistentSessionInfo persistentSessionInfo,
+                           @JsonProperty("clientIdPrefix") String clientIdPrefix) {
         this.id = id;
         this.subscribers = subscribers;
         this.topicFilter = topicFilter;
         this.expectedPublisherGroups = expectedPublisherGroups;
         this.persistentSessionInfo = persistentSessionInfo;
-        this.clientIdPrefix = clientIdPrefix;
+        this.clientIdPrefix = clientIdPrefix != null ? clientIdPrefix : "test_sub_client_" + id + "_";
     }
 
     public String getClientId(int subscriberId) {

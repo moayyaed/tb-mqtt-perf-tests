@@ -1,6 +1,5 @@
 package org.thingsboard.mqtt.broker.service;
 
-import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
@@ -8,17 +7,16 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.MqttClient;
+import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberAnalysisResult;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberInfo;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,18 +30,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SubscriberServiceImpl implements SubscriberService {
     private final ClientInitializer clientInitializer;
+    private final TestRunConfiguration testRunConfiguration;
 
     private final List<SubscriberInfo> subscriberInfos = new ArrayList<>();
 
     @Override
-    public void startSubscribers(Collection<SubscriberGroup> subscriberGroups, MqttQoS qos, MqttMsgProcessor msgProcessor) {
-        validateSubscriberGroups(subscriberGroups);
-        int totalSubscribers = subscriberGroups.stream().mapToInt(SubscriberGroup::getSubscribers).sum();
+    public void startSubscribers(MqttMsgProcessor msgProcessor) {
+        int totalSubscribers = testRunConfiguration.getSubscribersConfig().stream().mapToInt(SubscriberGroup::getSubscribers).sum();
         CountDownLatch subscribeCDL = new CountDownLatch(totalSubscribers);
         log.info("Start connecting {} subscribers.", totalSubscribers);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        for (SubscriberGroup subscriberGroup : subscriberGroups) {
+        for (SubscriberGroup subscriberGroup : testRunConfiguration.getSubscribersConfig()) {
             for (int i = 0; i < subscriberGroup.getSubscribers(); i++) {
                 int subscriberId = i;
                 String clientId = subscriberGroup.getClientId(subscriberId);
@@ -66,7 +64,7 @@ public class SubscriberServiceImpl implements SubscriberService {
                         log.error("[{}] Failed to process msg", subscriberId);
                     }
                     receivedMsgs.incrementAndGet();
-                }, qos).addListener(future -> {
+                }, testRunConfiguration.getSubscriberQoS()).addListener(future -> {
                     if (successfullySubscribed.getAndSet(true)) {
                         log.warn("[{}] Subscribed to topic more than one time!", subscriberId);
                     } else {
@@ -98,13 +96,13 @@ public class SubscriberServiceImpl implements SubscriberService {
     }
 
     @Override
-    public SubscriberAnalysisResult analyzeReceivedMessages(Collection<PublisherGroup> publisherGroups, int totalProducerMessagesCount) {
-        Map<Integer, PublisherGroup> publisherGroupsById = publisherGroups.stream()
+    public SubscriberAnalysisResult analyzeReceivedMessages() {
+        Map<Integer, PublisherGroup> publisherGroupsById = testRunConfiguration.getPublishersConfig().stream()
                 .collect(Collectors.toMap(PublisherGroup::getId, Function.identity()));
         int lostMessages = 0;
         int duplicatedMessages = 0;
         for (SubscriberInfo subscriberInfo : subscriberInfos) {
-            int expectedReceivedMsgs = getSubscriberExpectedReceivedMsgs(totalProducerMessagesCount, publisherGroupsById, subscriberInfo.getSubscriberGroup());
+            int expectedReceivedMsgs = getSubscriberExpectedReceivedMsgs(testRunConfiguration.getTotalPublisherMessagesCount(), publisherGroupsById, subscriberInfo.getSubscriberGroup());
             int actualReceivedMsgs = subscriberInfo.getReceivedMsgs().get();
             if (actualReceivedMsgs != expectedReceivedMsgs) {
                 log.error("[{}] Expected messages count - {}, actual messages count - {}",
@@ -123,11 +121,11 @@ public class SubscriberServiceImpl implements SubscriberService {
     }
 
     @Override
-    public int calculateTotalExpectedReceivedMessages(Collection<SubscriberGroup> subscriberGroups, Collection<PublisherGroup> publisherGroups, int totalProducerMessagesCount) {
-        Map<Integer, PublisherGroup> publisherGroupsById = publisherGroups.stream()
+    public int calculateTotalExpectedReceivedMessages() {
+        Map<Integer, PublisherGroup> publisherGroupsById = testRunConfiguration.getPublishersConfig().stream()
                 .collect(Collectors.toMap(PublisherGroup::getId, Function.identity()));
-        return subscriberGroups.stream()
-                .mapToInt(subscriberGroup -> subscriberGroup.getSubscribers() * getSubscriberExpectedReceivedMsgs(totalProducerMessagesCount, publisherGroupsById, subscriberGroup))
+        return testRunConfiguration.getSubscribersConfig().stream()
+                .mapToInt(subscriberGroup -> subscriberGroup.getSubscribers() * getSubscriberExpectedReceivedMsgs(testRunConfiguration.getTotalPublisherMessagesCount(), publisherGroupsById, subscriberGroup))
                 .sum();
     }
 
@@ -139,13 +137,5 @@ public class SubscriberServiceImpl implements SubscriberService {
                 .mapToInt(Integer::intValue)
                 .map(publishersInGroup -> publishersInGroup * totalProducerMessagesCount)
                 .sum();
-    }
-
-    private void validateSubscriberGroups(Collection<SubscriberGroup> subscriberGroups) {
-        Set<Integer> distinctIds = subscriberGroups.stream().map(SubscriberGroup::getId).collect(Collectors.toSet());
-        if (distinctIds.size() != subscriberGroups.size()) {
-            log.error("Some subscriber IDs are equal.");
-            throw new RuntimeException("Some subscriber IDs are equal");
-        }
     }
 }

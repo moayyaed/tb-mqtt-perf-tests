@@ -1,5 +1,7 @@
 package org.thingsboard.mqtt.broker.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
@@ -10,14 +12,16 @@ public class PublisherGroup {
     private final String clientIdPrefix;
 
     public PublisherGroup(int id, int publishers, String topicPrefix) {
-        this(id, publishers, topicPrefix, "test_pub_client_" + id + "_");
+        this(id, publishers, topicPrefix, null);
     }
 
-    public PublisherGroup(int id, int publishers, String topicPrefix, String clientIdPrefix) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public PublisherGroup(@JsonProperty("id") int id, @JsonProperty("publishers") int publishers,
+                          @JsonProperty("topicPrefix") String topicPrefix, @JsonProperty("clientIdPrefix") String clientIdPrefix) {
         this.id = id;
         this.publishers = publishers;
         this.topicPrefix = topicPrefix;
-        this.clientIdPrefix = clientIdPrefix;
+        this.clientIdPrefix = clientIdPrefix != null ? clientIdPrefix : "test_pub_client_" + id + "_";
     }
 
     public String getClientId(int publisherId) {
