@@ -17,10 +17,3 @@ tb-broker:
   admin:
     username: "${TB_ADMIN_USERNAME:sysadmin@thingsboard.org}"
     password: "${TB_ADMIN_PASSWORD:sysadmin}"
-
-
-persistence-test:
-  enabled: "${PERSISTENCE_TEST_ENABLED:false}"
-
-performance-test:
-  enabled: "${PERFORMANCE_TEST_ENABLED:false}"
