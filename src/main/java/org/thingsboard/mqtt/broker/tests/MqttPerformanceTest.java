@@ -6,6 +6,7 @@ import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.thingsboard.mqtt.broker.data.Message;
 import org.thingsboard.mqtt.broker.data.PersistentClientType;
@@ -25,6 +26,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+@ConditionalOnProperty(prefix = "performance-test", value = "enabled", havingValue = "true")
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -70,6 +72,7 @@ public class MqttPerformanceTest {
 
     @PostConstruct
     public void init() throws Exception {
+        log.info("Start performance test.");
         printTestRunConfiguration();
 
         DescriptiveStatistics generalLatencyStats = new DescriptiveStatistics();

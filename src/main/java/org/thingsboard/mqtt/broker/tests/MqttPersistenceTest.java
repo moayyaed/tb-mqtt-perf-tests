@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 import org.thingsboard.mqtt.broker.data.PersistentClientType;
 import org.thingsboard.mqtt.broker.data.PersistentSessionInfo;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
@@ -19,7 +21,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-//@Component
+@ConditionalOnProperty(prefix = "persistence-test", value = "enabled", havingValue = "true")
+@Component
 @Slf4j
 @RequiredArgsConstructor
 public class MqttPersistenceTest {
@@ -50,6 +53,7 @@ public class MqttPersistenceTest {
 
     @PostConstruct
     public void init() throws Exception {
+        log.info("Start persistence test.");
         persistedMqttClientService.clearPersistedSessions(subscriberGroupsConfiguration);
         persistedMqttClientService.initApplicationClients(subscriberGroupsConfiguration);
 
