@@ -66,47 +66,6 @@ ospackage {
 
 }
 
-// Configure our RPM build task
-buildRpm {
-
-    arch = NOARCH
-
-    archiveVersion = projectVersion.replace('-', '')
-    archiveFileName = "${pkgName}.rpm"
-
-    requires("java-1.8.0")
-
-    from("${buildDir}/conf") {
-        include "${pkgName}.conf"
-        filter(ReplaceTokens, tokens: ['pkg.platform': 'rpm'])
-        fileType CONFIG | NOREPLACE
-        fileMode 0754
-        into "${pkgInstallFolder}/conf"
-    }
-
-    preInstall file("${buildDir}/control/rpm/preinst")
-    postInstall file("${buildDir}/control/rpm/postinst")
-    preUninstall file("${buildDir}/control/rpm/prerm")
-    postUninstall file("${buildDir}/control/rpm/postrm")
-
-    user pkgUser
-    permissionGroup pkgUser
-
-    // Copy the system unit files
-    from("${buildDir}/control/template.service") {
-        addParentDirs = false
-        fileMode 0644
-        into "/usr/lib/systemd/system"
-        rename { String filename ->
-            "${pkgName}.service"
-        }
-    }
-
-    link("${pkgInstallFolder}/bin/${pkgName}.yml", "${pkgInstallFolder}/conf/${pkgName}.yml")
-    link("/etc/${pkgName}/conf", "${pkgInstallFolder}/conf")
-}
-
-// Same as the buildRpm task
 buildDeb {
 
     arch = "all"
@@ -155,16 +114,6 @@ task renameDeb(type: Copy) {
         destinationDir file("${buildDir}/")
         rename { String filename ->
             "${pkgName}.deb"
-        }
-    }
-}
-
-task renameRpm(type: Copy) {
-    from("${buildDir}/") {
-        include '*.rpm'
-        destinationDir file("${buildDir}/")
-        rename { String filename ->
-            "${pkgName}.rpm"
         }
     }
 }
