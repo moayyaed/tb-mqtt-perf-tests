@@ -39,12 +39,10 @@
         <netty.version>4.1.49.Final</netty.version>
         <jackson.version>2.11.3</jackson.version>
 
-        <winsw.version>2.0.1</winsw.version>
         <pkg.name>tb-mqtt-broker-performance-tests</pkg.name>
         <pkg.user>thingsboard</pkg.user>
         <pkg.unixLogFolder>/var/log/${pkg.name}</pkg.unixLogFolder>
         <pkg.installFolder>/usr/share/${pkg.name}</pkg.installFolder>
-        <pkg.win.dist>${project.build.directory}/windows</pkg.win.dist>
         <docker.repo>thingsboard</docker.repo>
         <dockerfile.skip>true</dockerfile.skip>
         <docker.name>tb-mqtt-broker-performance-tests</docker.name>
@@ -132,35 +130,6 @@
                             </configuration>
                         </execution>
                         <execution>
-                            <id>copy-win-conf</id>
-                            <phase>process-resources</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>${pkg.win.dist}/conf</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>src/main/resources</directory>
-                                        <excludes>
-                                            <exclude>logback.xml</exclude>
-                                        </excludes>
-                                        <filtering>false</filtering>
-                                    </resource>
-                                    <resource>
-                                        <directory>src/main/conf</directory>
-                                        <excludes>
-                                            <exclude>${pkg.name}.conf</exclude>
-                                        </excludes>
-                                        <filtering>true</filtering>
-                                    </resource>
-                                </resources>
-                                <filters>
-                                    <filter>${basedir}/src/main/filters/windows.properties</filter>
-                                </filters>
-                            </configuration>
-                        </execution>
-                        <execution>
                             <id>copy-control</id>
                             <phase>process-resources</phase>
                             <goals>
@@ -199,47 +168,6 @@
                                 </resources>
                                 <filters>
                                     <filter>${basedir}/src/main/filters/unix.properties</filter>
-                                </filters>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>copy-windows-control</id>
-                            <phase>process-resources</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>${pkg.win.dist}</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${basedir}/src/main/scripts/windows</directory>
-                                        <filtering>true</filtering>
-                                    </resource>
-                                </resources>
-                                <filters>
-                                    <filter>${basedir}/src/main/filters/windows.properties</filter>
-                                </filters>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>copy-windows-install</id>
-                            <phase>process-resources</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>${pkg.win.dist}/install</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${basedir}/src/main/scripts/install</directory>
-                                        <includes>
-                                            <include>logback.xml</include>
-                                        </includes>
-                                        <filtering>true</filtering>
-                                    </resource>
-                                </resources>
-                                <filters>
-                                    <filter>${basedir}/src/main/filters/windows.properties</filter>
                                 </filters>
                             </configuration>
                         </execution>
@@ -287,46 +215,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>copy-winsw-service</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>copy</goal>
-                            </goals>
-                            <configuration>
-                                <artifactItems>
-                                    <artifactItem>
-                                        <groupId>com.sun.winsw</groupId>
-                                        <artifactId>winsw</artifactId>
-                                        <classifier>bin</classifier>
-                                        <type>exe</type>
-                                        <destFileName>service.exe</destFileName>
-                                    </artifactItem>
-                                </artifactItems>
-                                <outputDirectory>${pkg.win.dist}</outputDirectory>
-                            </configuration>
-                        </execution>
-                        <!--                                <execution>-->
-                        <!--                                    <id>copy-deb</id>-->
-                        <!--                                    <phase>package</phase>-->
-                        <!--                                    <goals>-->
-                        <!--                                        <goal>copy</goal>-->
-                        <!--                                    </goals>-->
-                        <!--                                    <configuration>-->
-                        <!--                                        <artifactItems>-->
-                        <!--                                            <artifactItem>-->
-                        <!--                                                <groupId>org.thingsboard</groupId>-->
-                        <!--                                                <artifactId>application</artifactId>-->
-                        <!--                                                <classifier>deb</classifier>-->
-                        <!--                                                <type>deb</type>-->
-                        <!--                                                <destFileName>${pkg.name}.deb</destFileName>-->
-                        <!--                                                <outputDirectory>${project.build.directory}</outputDirectory>-->
-                        <!--                                            </artifactItem>-->
-                        <!--                                        </artifactItems>-->
-                        <!--                                    </configuration>-->
-                        <!--                                </execution>-->
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -334,26 +222,6 @@
                     <version>2.2.1</version>
                 </plugin>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.0.0</version>
-                    <configuration>
-                        <finalName>${pkg.name}</finalName>
-                        <descriptors>
-                            <descriptor>${basedir}/src/main/assembly/windows.xml</descriptor>
-                        </descriptors>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>assembly</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>single</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -512,25 +380,17 @@
                             <exclude>**/README</exclude>
                             <exclude>**/LICENSE</exclude>
                             <exclude>**/banner.txt</exclude>
-                            <exclude>node_modules/**</exclude>
                             <exclude>**/*.properties</exclude>
                             <exclude>src/test/resources/**</exclude>
                             <exclude>src/vendor/**</exclude>
                             <exclude>src/font/**</exclude>
                             <exclude>src/sh/**</exclude>
                             <exclude>packaging/*/scripts/control/**</exclude>
-                            <exclude>packaging/*/scripts/windows/**</exclude>
                             <exclude>packaging/*/scripts/init/**</exclude>
                             <exclude>**/*.log</exclude>
                             <exclude>**/*.current</exclude>
                             <exclude>.instance_id</exclude>
                             <exclude>src/main/scripts/control/**</exclude>
-                            <exclude>src/main/scripts/windows/**</exclude>
-                            <exclude>src/main/resources/public/static/rulenode/**</exclude>
-                            <exclude>**/*.proto.js</exclude>
-                            <exclude>docker/haproxy/**</exclude>
-                            <exclude>docker/tb-node/**</exclude>
-                            <exclude>ui/**</exclude>
                             <exclude>src/browserslist</exclude>
                             <exclude>**/*.raw</exclude>
                         </excludes>
@@ -729,14 +589,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.winsw</groupId>
-            <artifactId>winsw</artifactId>
-            <version>${winsw.version}</version>
-            <classifier>bin</classifier>
-            <type>exe</type>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
