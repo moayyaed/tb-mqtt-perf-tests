@@ -36,7 +36,6 @@
         <commons-math3.version>3.6.1</commons-math3.version>
         <lombok.version>1.18.16</lombok.version>
         <spring.version>5.2.6.RELEASE</spring.version>
-        <netty.version>4.1.49.Final</netty.version>
         <jackson.version>2.11.3</jackson.version>
 
         <pkg.name>tb-mqtt-broker-performance-tests</pkg.name>

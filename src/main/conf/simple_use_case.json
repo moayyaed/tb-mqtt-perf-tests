@@ -1,0 +1,76 @@
+{
+  "publisherGroups": [
+    {
+      "id": 1,
+      "publishers": 20,
+      "topicPrefix": "europe/ua/kyiv/tb/",
+      "clientIdPrefix": null
+    },
+    {
+      "id": 2,
+      "publishers":5,
+      "topicPrefix": "europe/ua/kyiv/",
+      "clientIdPrefix": null
+    },
+    {
+      "id": 3,
+      "publishers": 15,
+      "topicPrefix": "asia/",
+      "clientIdPrefix": null
+    }
+  ],
+  "subscriberGroups": [
+    {
+      "id": 1,
+      "subscribers": 15,
+      "topicFilter": "europe/ua/kyiv/tb/+",
+      "expectedPublisherGroups": [1],
+      "persistentSessionInfo": null,
+      "clientIdPrefix": null
+    },
+    {
+      "id": 2,
+      "subscribers": 5,
+      "topicFilter": "europe/ua/kyiv/#",
+      "expectedPublisherGroups": [1, 2],
+      "persistentSessionInfo": null,
+      "clientIdPrefix": null
+    },
+    {
+      "id": 3,
+      "subscribers": 1,
+      "topicFilter": "#",
+      "expectedPublisherGroups": [1, 2, 3],
+      "persistentSessionInfo": {
+        "clientType": "APPLICATION"
+      },
+      "clientIdPrefix": null
+    },
+    {
+      "id": 4,
+      "subscribers": 2,
+      "topicFilter": "europe/ua/kyiv/tb/#",
+      "expectedPublisherGroups": [1],
+      "persistentSessionInfo": {
+        "clientType": "DEVICE"
+      },
+      "clientIdPrefix": null
+    },
+    {
+      "id": 5,
+      "subscribers": 1,
+      "topicFilter": "europe/ua/kyiv/#",
+      "expectedPublisherGroups": [1, 2],
+      "persistentSessionInfo": {
+        "clientType": "DEVICE"
+      },
+      "clientIdPrefix": null
+    }
+  ],
+  "dummyClients": 100,
+  "secondsToRun": 60,
+  "additionalSecondsToWait": 15,
+  "maxMsgsPerPublisherPerSecond": 1,
+  "publisherQosValue": 1,
+  "subscriberQosValue": 1
+}

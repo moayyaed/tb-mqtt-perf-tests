@@ -29,4 +29,4 @@ RUN chmod 555 ${pkg.installFolder}/bin/${pkg.name}.jar
 
 USER ${pkg.user}
 
-ENTRYPOINT ["start-tb-mqtt-broker-performance-tests.sh"]
+CMD ["start-tb-mqtt-broker-performance-tests.sh"]
