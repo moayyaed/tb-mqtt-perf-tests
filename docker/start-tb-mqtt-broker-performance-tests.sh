@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # Copyright © ${project.inceptionYear}-2018 The Thingsboard Authors
 #
@@ -15,7 +16,7 @@
 #
 
 CONF_FOLDER="/config"
-jarfile=/${pkg.name}.jar
+jarfile=${pkg.installFolder}/bin/${pkg.name}.jar
 configfile=${pkg.name}.conf
 
 source "${CONF_FOLDER}/${configfile}"

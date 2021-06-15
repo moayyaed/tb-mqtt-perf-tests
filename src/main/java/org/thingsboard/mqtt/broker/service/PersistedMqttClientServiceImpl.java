@@ -86,7 +86,7 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
                     MqttClient mqttClient = clientInitializer.initClient(clientId, true);
                     mqttClient.disconnect();
                 } catch (Exception e) {
-                    log.warn("[{}] Failed to clear persisted session", clientId);
+                    log.warn("[{}] Failed to clear persisted session", clientId, e);
                 }
             }
         }
