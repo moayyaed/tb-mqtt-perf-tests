@@ -52,6 +52,13 @@ spec:
       - name: postgres
         imagePullPolicy: Always
         image: postgres:12
+        resources:
+          limits:
+            cpu: 0.5
+            memory: 524Mi
+          requests:
+            cpu: 0.5
+            memory: 524Mi
         ports:
         - containerPort: 5432
           name: postgres

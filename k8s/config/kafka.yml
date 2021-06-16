@@ -32,6 +32,13 @@ spec:
         - name: server
           imagePullPolicy: Always
           image: wurstmeister/kafka:2.12-2.2.1
+          resources:
+            limits:
+              cpu: 1
+              memory: 1000Mi
+            requests:
+              cpu: 1
+              memory: 1000Mi
           ports:
             - containerPort: 9092
           readinessProbe:

@@ -32,6 +32,13 @@ spec:
         - name: server
           imagePullPolicy: Always
           image: zookeeper:3.5
+          resources:
+            limits:
+              cpu: 0.5
+              memory: 500Mi
+            requests:
+              cpu: 0.5
+              memory: 500Mi
           ports:
             - containerPort: 2181
           readinessProbe:
