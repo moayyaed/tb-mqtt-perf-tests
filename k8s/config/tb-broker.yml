@@ -47,9 +47,9 @@ spec:
             - containerPort: 8083
               name: http
             - containerPort: 1883
-              name: mqtt
+              name: mqtt-tcp
             - containerPort: 8883
-              name: mqtt
+              name: mqtt-ssl
           env:
             - name: TB_SERVICE_ID
               valueFrom:
@@ -79,7 +79,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: tb-broker
-  thingsboard-mqtt-broker
+  namespace: thingsboard-mqtt-broker
 spec:
   type: ClusterIP
   selector:
@@ -88,6 +88,6 @@ spec:
     - port: 8083
       name: http
     - port: 1883
-      name: mqtt
+      name: mqtt-tcp
     - port: 8883
-      name: mqtt
+      name: mqtt-ssl
