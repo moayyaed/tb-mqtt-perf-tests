@@ -17,8 +17,9 @@
 
 mqtt:
   host: "${MQTT_HOST:localhost}"
-  port: "${MQTT_PORT:1883}"
-#  port: "${MQTT_PORT:1885}"
+#  ports: "${MQTT_PORT:1883,1882}"
+  ports: "${MQTT_PORT:1883}"
+#  ports: "${MQTT_PORT:1885}"
   ssl:
     enabled: "${MQTT_SSL_ENABLED:false}"
     key_store: "${MQTT_SSL_KEY_STORE:mqttclient.jks}"
