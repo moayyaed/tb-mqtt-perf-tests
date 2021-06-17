@@ -23,6 +23,12 @@ kubectl apply -f config/tb-broker-namespace.yml
 kubectl config set-context $(kubectl config current-context) --namespace=thingsboard-mqtt-broker
 
 cp $TEST_RUN_CONFIG_FILE test-config/test_run_config.json
-kubectl create configmap test-run-config --from-file=test-config/test_run_config.json
+kubectl delete configmap test-run-config
+kubectl create configmap test-run-config --from-file=test-config/test_run_config.json --from-file=test-config/logback.xml --from-file=test-config/tb-mqtt-broker-performance-tests.conf
 rm test-config/test_run_config.json
-kubectl apply -f config/tests.yml
+
+kubectl apply -f config/tests.yml &&
+kubectl wait --for=condition=Ready pod/tests --timeout=120s &&
+kubectl exec tests -- sh -c 'start-tb-mqtt-broker-performance-tests.sh; touch /tmp/test-finished;'
+
+kubectl delete pod tests

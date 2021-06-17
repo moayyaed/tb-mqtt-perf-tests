@@ -14,50 +14,47 @@
 # limitations under the License.
 #
 
-apiVersion: apps/v1
+apiVersion: v1
 kind: Pod
 metadata:
   name: tests
   namespace: thingsboard-mqtt-broker
 spec:
-  selector:
-    matchLabels:
-      app: tests
-  template:
-    metadata:
-      labels:
-        app: tests
-    spec:
-      volumes:
-        - name: test-run-config
-          configMap:
-            name: test-run-config
-            items:
-              - key: test_run_config.json
-                path:  test_run_config.json
-      containers:
-        - name: server
-          imagePullPolicy: Always
-          image: vzikratyi/tb-mqtt-broker-performance-tests:latest
-          resources:
-            limits:
-              cpu: 0.5
-              memory: 1000Mi
-            requests:
-              cpu: 0.5
-              memory: 1000Mi
-          env:
-            - name: TEST_RUN_CONFIGURATION_FILE
-              value: "/config/test_run_config.json"
-            - name: BROKER_TYPE
-              value: "THINGSBOARD"
-            - name: MQTT_HOST
-              value: "tb-broker"
-            - name: MQTT_PORT
-              value: "1883"
-            - name: TB_URI
-              value: "http://tb-broker:8083"
-          volumeMounts:
-            - mountPath: /config
-              name: test-run-config
-      restartPolicy: Always
+  volumes:
+    - name: test-run-config
+      configMap:
+        name: test-run-config
+        items:
+          - key: test_run_config.json
+            path:  test_run_config.json
+          - key: logback.xml
+            path: logback.xml
+          - key: tb-mqtt-broker-performance-tests.conf
+            path: tb-mqtt-broker-performance-tests.conf
+  containers:
+    - name: server
+      imagePullPolicy: Always
+      image: vzikratyi/tb-mqtt-broker-performance-tests:latest
+      resources:
+        limits:
+          cpu: 0.5
+          memory: 1000Mi
+        requests:
+          cpu: 0.5
+          memory: 1000Mi
+      env:
+        - name: TEST_RUN_CONFIGURATION_FILE
+          value: "/config/test_run_config.json"
+        - name: BROKER_TYPE
+          value: "THINGSBOARD"
+        - name: MQTT_HOST
+          value: "tb-broker"
+        - name: MQTT_PORT
+          value: "1883"
+        - name: TB_URI
+          value: "http://tb-broker:8083"
+      volumeMounts:
+        - mountPath: /config
+          name: test-run-config
+      command: [ 'sh', '-c', 'while [ ! -f /tmp/test-finished ]; do sleep 2; done;' ]
+  restartPolicy: Never
