@@ -38,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 public class ClientInitializerImpl implements ClientInitializer {
 
     private final HostPortService hostPortService;
+    private final SslConfig sslConfig;
 
 
     @Value("${mqtt.client.connect-timeout-seconds:5}")
@@ -62,7 +63,7 @@ public class ClientInitializerImpl implements ClientInitializer {
 
     @Override
     public MqttClient initClient(String clientId, boolean cleanSession, MqttHandler defaultHandler) {
-        MqttClientConfig config = new MqttClientConfig();
+        MqttClientConfig config = new MqttClientConfig(sslConfig.getSslContext());
         config.setClientId(clientId);
         config.setCleanSession(cleanSession);
         MqttClient client = MqttClient.create(config, defaultHandler);
@@ -75,6 +76,7 @@ public class ClientInitializerImpl implements ClientInitializer {
         } catch (Exception ex) {
             connectFuture.cancel(true);
             client.disconnect();
+            log.error("[{}] Failed to connect to MQTT Broker", clientId, ex);
             throw new RuntimeException(String.format("Failed to connect to MQTT broker at %s:%d with client %s.",
                     hostPort.getHost(), hostPort.getPort(), clientId));
         }
