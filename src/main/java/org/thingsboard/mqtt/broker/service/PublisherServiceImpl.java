@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -73,7 +74,7 @@ public class PublisherServiceImpl implements PublisherService {
             }
             for (PublisherInfo publisherInfo : publisherInfos) {
                 try {
-                    Message message = new Message(System.currentTimeMillis());
+                    Message message = new Message(System.currentTimeMillis(), generatePayload(testRunConfiguration.getPayloadSize()));
                     byte[] messageBytes = mapper.writeValueAsBytes(message);
                     publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes), testRunConfiguration.getPublisherQoS())
                             .addListener(future -> {
@@ -102,6 +103,12 @@ public class PublisherServiceImpl implements PublisherService {
         }
     }
 
+
+    private static byte[] generatePayload(int size) {
+        byte[] payload = new byte[size];
+        ThreadLocalRandom.current().nextBytes(payload);
+        return payload;
+    }
 
     private static final ByteBufAllocator ALLOCATOR = new UnpooledByteBufAllocator(false);
 

@@ -41,4 +41,6 @@ public interface TestRunConfiguration {
     MqttQoS getPublisherQoS();
 
     MqttQoS getSubscriberQoS();
+
+    int getPayloadSize();
 }

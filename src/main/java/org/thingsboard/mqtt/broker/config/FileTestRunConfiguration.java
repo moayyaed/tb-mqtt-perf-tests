@@ -95,4 +95,9 @@ public class FileTestRunConfiguration implements TestRunConfiguration {
     public MqttQoS getSubscriberQoS() {
         return MqttQoS.valueOf(testRunConfigurationInfo.getSubscriberQosValue());
     }
+
+    @Override
+    public int getPayloadSize() {
+        return testRunConfigurationInfo.getPayloadSize();
+    }
 }

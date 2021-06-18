@@ -72,5 +72,6 @@
   "additionalSecondsToWait": 30,
   "maxMsgsPerPublisherPerSecond": 1,
   "publisherQosValue": 1,
-  "subscriberQosValue": 1
+  "subscriberQosValue": 1,
+  "payloadSize": 1024
 }

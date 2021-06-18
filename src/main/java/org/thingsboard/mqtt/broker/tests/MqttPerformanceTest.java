@@ -122,15 +122,15 @@ public class MqttPerformanceTest {
         int totalPublishedMessages = totalPublishers * testRunConfiguration.getTotalPublisherMessagesCount();
         int totalExpectedReceivedMessages = subscriberService.calculateTotalExpectedReceivedMessages();
         log.info("Test run info: publishers - {}, non-persistent subscribers - {}, regular persistent subscribers - {}, " +
-                        "'APPLICATION' persistent subscribers - {}, dummy client connections - {}," +
+                        "'APPLICATION' persistent subscribers - {}, dummy client connections - {}, " +
                         "publisher QoS - {}, subscriber QoS - {}, max messages per second - {}, " +
-                        "run time - {}s, total published messages - {}, expected total received messages - {}," +
-                        "configuration name - {}",
+                        "run time - {}s, total published messages - {}, expected total received messages - {}, " +
+                        "payload size - {}, configuration name - {}",
                 totalPublishers, nonPersistedSubscribers, persistedDevicesSubscribers,
                 persistedApplicationsSubscribers, testRunConfiguration.getNumberOfDummyClients(),
                 testRunConfiguration.getPublisherQoS(), testRunConfiguration.getSubscriberQoS(), testRunConfiguration.getMaxMessagesPerPublisherPerSecond(),
                 testRunConfiguration.getSecondsToRun(), totalPublishedMessages, totalExpectedReceivedMessages,
-                testRunConfiguration.getConfigurationName());
+                testRunConfiguration.getPayloadSize(), testRunConfiguration.getConfigurationName());
     }
 
 

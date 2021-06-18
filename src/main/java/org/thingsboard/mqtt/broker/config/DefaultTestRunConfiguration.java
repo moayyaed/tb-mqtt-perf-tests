@@ -65,6 +65,8 @@ public class DefaultTestRunConfiguration implements TestRunConfiguration {
     private static final MqttQoS PUBLISHER_QOS = MqttQoS.AT_LEAST_ONCE;
     private static final MqttQoS SUBSCRIBER_QOS = MqttQoS.AT_LEAST_ONCE;
 
+    private static final int PAYLOAD_SIZE = 1024;
+
     private static final int TOTAL_PUBLISHER_MESSAGES = SECONDS_TO_RUN * MAX_MSGS_PER_PUBLISHER_PER_SECOND;
 
     @Override
@@ -115,5 +117,10 @@ public class DefaultTestRunConfiguration implements TestRunConfiguration {
     @Override
     public MqttQoS getSubscriberQoS() {
         return SUBSCRIBER_QOS;
+    }
+
+    @Override
+    public int getPayloadSize() {
+        return PAYLOAD_SIZE;
     }
 }

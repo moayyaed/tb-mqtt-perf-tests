@@ -1,0 +1,43 @@
+{
+  "publisherGroups": [
+    {
+      "id": 1,
+      "publishers": 2000,
+      "topicPrefix": "europe/ua/kyiv/tb/",
+      "clientIdPrefix": null
+    },
+    {
+      "id": 2,
+      "publishers": 1,
+      "topicPrefix": "updates/",
+      "clientIdPrefix": null
+    }
+  ],
+  "subscriberGroups": [
+    {
+      "id": 1,
+      "subscribers": 100,
+      "topicFilter": "updates/+",
+      "expectedPublisherGroups": [2],
+      "persistentSessionInfo": null,
+      "clientIdPrefix": null
+    },
+    {
+      "id": 3,
+      "subscribers": 15,
+      "topicFilter": "europe/ua/kyiv/#",
+      "expectedPublisherGroups": [1],
+      "persistentSessionInfo": {
+        "clientType": "APPLICATION"
+      },
+      "clientIdPrefix": null
+    }
+  ],
+  "dummyClients": 10000,
+  "secondsToRun": 60,
+  "additionalSecondsToWait": 30,
+  "maxMsgsPerPublisherPerSecond": 1,
+  "publisherQosValue": 1,
+  "subscriberQosValue": 1,
+  "payloadSize": 1024
+}
