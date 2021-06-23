@@ -18,6 +18,7 @@ package org.thingsboard.mqtt.broker.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -26,11 +27,11 @@ import org.thingsboard.mqtt.broker.data.dto.LoginResponseDto;
 import org.thingsboard.mqtt.broker.data.dto.MqttClientDto;
 
 import javax.annotation.PostConstruct;
-import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@ConditionalOnExpression("'${broker.type:}'=='THINGSBOARD'")
 public class TbBrokerRestServiceImpl implements TbBrokerRestService {
 
     private final RestTemplateBuilder restTemplateBuilder;

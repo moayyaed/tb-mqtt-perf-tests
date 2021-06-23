@@ -17,11 +17,10 @@ package org.thingsboard.mqtt.broker.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
-import org.thingsboard.mqtt.broker.data.BrokerType;
 import org.thingsboard.mqtt.broker.data.dto.MqttClientDto;
 import org.thingsboard.mqtt.broker.data.PersistentClientType;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
@@ -33,16 +32,15 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PersistedMqttClientServiceImpl implements PersistedMqttClientService {
-    private final TbBrokerRestService tbBrokerRestService;
+    @Autowired(required = false)
+    private TbBrokerRestService tbBrokerRestService;
+
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
 
-    @Value("${broker.type:THINGSBOARD}")
-    private BrokerType brokerType;
-
     @Override
     public void initApplicationClients() {
-        if (brokerType != BrokerType.THINGSBOARD) {
+        if (tbBrokerRestService == null) {
             return;
         }
 
@@ -55,7 +53,7 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
             return;
         }
 
-        log.info("Initializing {} {} subscriber groups.", applicationSubscriberGroups.size(), PersistentClientType.APPLICATION);
+        log.info("Initializing {} {} subscribers.", applicationSubscriberGroups.stream().mapToInt(SubscriberGroup::getSubscribers).sum(), PersistentClientType.APPLICATION);
         for (SubscriberGroup subscriberGroup : applicationSubscriberGroups) {
             for (int i = 0; i < subscriberGroup.getSubscribers(); i++) {
                 String clientId = subscriberGroup.getClientId(i);
@@ -94,7 +92,7 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
 
     @Override
     public void removeApplicationClients() {
-        if (brokerType != BrokerType.THINGSBOARD) {
+        if (tbBrokerRestService == null) {
             return;
         }
 
@@ -107,7 +105,7 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
             return;
         }
 
-        log.info("Removing {} {} subscriber groups.", applicationSubscriberGroups.size(), PersistentClientType.APPLICATION);
+        log.info("Removing {} {} subscribers.", applicationSubscriberGroups.stream().mapToInt(SubscriberGroup::getSubscribers).sum(), PersistentClientType.APPLICATION);
         for (SubscriberGroup subscriberGroup : applicationSubscriberGroups) {
             for (int i = 0; i < subscriberGroup.getSubscribers(); i++) {
                 String clientId = subscriberGroup.getClientId(i);

@@ -61,6 +61,7 @@ public class MqttPerformanceTest {
 
         persistedMqttClientService.clearPersistedSessions();
         persistedMqttClientService.removeApplicationClients();
+        Thread.sleep(2000);
         persistedMqttClientService.initApplicationClients();
 
         subscriberService.startSubscribers(msgByteBuf -> {
