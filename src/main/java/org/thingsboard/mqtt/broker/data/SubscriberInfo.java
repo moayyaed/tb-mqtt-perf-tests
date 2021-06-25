@@ -17,7 +17,7 @@ package org.thingsboard.mqtt.broker.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.thingsboard.mqtt.MqttClient;
+import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

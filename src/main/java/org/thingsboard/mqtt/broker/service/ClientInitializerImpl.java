@@ -22,10 +22,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.thingsboard.mqtt.MqttClient;
-import org.thingsboard.mqtt.MqttClientConfig;
-import org.thingsboard.mqtt.MqttConnectResult;
-import org.thingsboard.mqtt.MqttHandler;
+import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
+import org.thingsboard.mqtt.broker.client.mqtt.MqttClientConfig;
+import org.thingsboard.mqtt.broker.client.mqtt.MqttConnectResult;
+import org.thingsboard.mqtt.broker.client.mqtt.MqttHandler;
 import org.thingsboard.mqtt.broker.data.dto.HostPortDto;
 
 import javax.annotation.PostConstruct;

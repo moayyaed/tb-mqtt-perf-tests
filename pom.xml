@@ -38,6 +38,8 @@
         <lombok.version>1.18.16</lombok.version>
         <spring.version>5.2.6.RELEASE</spring.version>
         <jackson.version>2.11.3</jackson.version>
+        <netty.version>4.1.60.Final</netty.version>
+        <guava.version>28.2-jre</guava.version>
 
         <pkg.name>tb-mqtt-broker-performance-tests</pkg.name>
         <pkg.user>thingsboard</pkg.user>
@@ -604,11 +606,6 @@
             <version>${commons-math3.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard</groupId>
-            <artifactId>netty-mqtt</artifactId>
-            <version>3.3.0-NETTY-CLIENT</version>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
@@ -618,6 +615,28 @@
             <groupId>org.eclipse.paho</groupId>
             <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
             <version>1.2.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-mqtt</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.1</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
     </dependencies>
 

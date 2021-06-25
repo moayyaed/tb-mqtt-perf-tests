@@ -15,8 +15,8 @@
  */
 package org.thingsboard.mqtt.broker.service;
 
-import org.thingsboard.mqtt.MqttClient;
-import org.thingsboard.mqtt.MqttHandler;
+import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
+import org.thingsboard.mqtt.broker.client.mqtt.MqttHandler;
 
 public interface ClientInitializer {
     MqttClient initClient(String clientId);
