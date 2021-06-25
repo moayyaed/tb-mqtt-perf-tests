@@ -136,7 +136,7 @@ public interface MqttClient {
      * @param payload The payload to send
      * @return A future which will be completed when the message is sent out of the MqttClient
      */
-    Future<Void> publish(String topic, ByteBuf payload);
+    PublishFutures publish(String topic, ByteBuf payload);
 
     /**
      * Publish a message to the given payload, using the given qos
@@ -145,7 +145,7 @@ public interface MqttClient {
      * @param qos The qos to use while publishing
      * @return A future which will be completed when the message is delivered to the server
      */
-    Future<Void> publish(String topic, ByteBuf payload, MqttQoS qos);
+    PublishFutures publish(String topic, ByteBuf payload, MqttQoS qos);
 
     /**
      * Publish a message to the given payload, using optional retain
@@ -154,7 +154,7 @@ public interface MqttClient {
      * @param retain true if you want to retain the message on the server, false otherwise
      * @return A future which will be completed when the message is sent out of the MqttClient
      */
-    Future<Void> publish(String topic, ByteBuf payload, boolean retain);
+    PublishFutures publish(String topic, ByteBuf payload, boolean retain);
 
     /**
      * Publish a message to the given payload, using the given qos and optional retain
@@ -164,7 +164,7 @@ public interface MqttClient {
      * @param retain true if you want to retain the message on the server, false otherwise
      * @return A future which will be completed when the message is delivered to the server
      */
-    Future<Void> publish(String topic, ByteBuf payload, MqttQoS qos, boolean retain);
+    PublishFutures publish(String topic, ByteBuf payload, MqttQoS qos, boolean retain);
 
     /**
      * Retrieve the MqttClient configuration

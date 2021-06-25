@@ -26,6 +26,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
+import org.thingsboard.mqtt.broker.client.mqtt.PublishFutures;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.Message;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
@@ -68,8 +69,9 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public DescriptiveStatistics startPublishing() {
-        DescriptiveStatistics publisherLatencyStats = new DescriptiveStatistics();
+    public PublishStats startPublishing() {
+        DescriptiveStatistics publishSentLatencyStats = new DescriptiveStatistics();
+        DescriptiveStatistics publishAcknowledgedStats = new DescriptiveStatistics();
         AtomicInteger publishedMessagesPerPublisher = new AtomicInteger();
         int publishPeriodMs = 1000 / testRunConfiguration.getMaxMessagesPerPublisherPerSecond();
         AtomicLong lastPublishTickTime = new AtomicLong(System.currentTimeMillis());
@@ -86,12 +88,22 @@ public class PublisherServiceImpl implements PublisherService {
                 try {
                     Message message = new Message(System.currentTimeMillis(), generatePayload(testRunConfiguration.getPayloadSize()));
                     byte[] messageBytes = mapper.writeValueAsBytes(message);
-                    publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes), testRunConfiguration.getPublisherQoS())
+                    PublishFutures publishFutures = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes), testRunConfiguration.getPublisherQoS());
+                    publishFutures.getPublishSentFuture()
                             .addListener(future -> {
                                         if (!future.isSuccess()) {
-                                            log.error("[{}] Error publishing msg", publisherInfo.getId());
+                                            log.error("[{}] Error sending msg", publisherInfo.getId());
                                         } else {
-                                            publisherLatencyStats.addValue(System.currentTimeMillis() - message.getCreateTime());
+                                            publishSentLatencyStats.addValue(System.currentTimeMillis() - message.getCreateTime());
+                                        }
+                                    }
+                            );
+                    publishFutures.getPublishFinishedFuture()
+                            .addListener(future -> {
+                                        if (!future.isSuccess()) {
+                                            log.error("[{}] Error acknowledging msg", publisherInfo.getId());
+                                        } else {
+                                            publishAcknowledgedStats.addValue(System.currentTimeMillis() - message.getCreateTime());
                                         }
                                     }
                             );
@@ -100,7 +112,7 @@ public class PublisherServiceImpl implements PublisherService {
                 }
             }
         }, 0, publishPeriodMs, TimeUnit.MILLISECONDS);
-        return publisherLatencyStats;
+        return new PublishStats(publishSentLatencyStats, publishAcknowledgedStats);
     }
 
     @Override

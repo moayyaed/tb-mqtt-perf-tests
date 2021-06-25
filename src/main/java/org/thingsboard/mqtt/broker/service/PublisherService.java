@@ -20,7 +20,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 public interface PublisherService {
     void connectPublishers();
 
-    DescriptiveStatistics startPublishing();
+    PublishStats startPublishing();
 
     void disconnectPublishers();
 }

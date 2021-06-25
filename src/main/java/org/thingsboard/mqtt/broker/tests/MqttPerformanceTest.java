@@ -28,6 +28,7 @@ import org.thingsboard.mqtt.broker.data.SubscriberAnalysisResult;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 import org.thingsboard.mqtt.broker.service.DummyClientService;
 import org.thingsboard.mqtt.broker.service.PersistedMqttClientService;
+import org.thingsboard.mqtt.broker.service.PublishStats;
 import org.thingsboard.mqtt.broker.service.PublisherService;
 import org.thingsboard.mqtt.broker.service.SubscriberService;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
@@ -75,7 +76,7 @@ public class MqttPerformanceTest {
 
         dummyClientService.connectDummyClients();
 
-        DescriptiveStatistics publishLatencyStats = publisherService.startPublishing();
+        PublishStats publishStats = publisherService.startPublishing();
 
 
         Thread.sleep(TimeUnit.SECONDS.toMillis(testRunConfiguration.getSecondsToRun() + testRunConfiguration.getAdditionalSecondsToWait()));
@@ -90,15 +91,20 @@ public class MqttPerformanceTest {
         persistedMqttClientService.clearPersistedSessions();
 
         SubscriberAnalysisResult analysisResult = subscriberService.analyzeReceivedMessages();
+        DescriptiveStatistics acknowledgedStats = publishStats.getPublishAcknowledgedStats();
+        DescriptiveStatistics sentStats = publishStats.getPublishSentLatencyStats();
 
         log.info("Latency stats: avg - {}, median - {}, max - {}, min - {}, 95th - {}, lost messages - {}, duplicated messages - {}, total received messages - {}, " +
-                        "published messages - {}, publish latency median - {}, publish latency max - {}.",
+                        "publish sent messages - {}, publish sent latency median - {}, publish sent latency max - {}, " +
+                        "publish acknowledged messages - {}, publish acknowledged latency median - {}, publish acknowledged latency max - {}.",
                 generalLatencyStats.getSum() / generalLatencyStats.getN(),
                 generalLatencyStats.getMean(), generalLatencyStats.getMax(),
                 generalLatencyStats.getMin(), generalLatencyStats.getPercentile(95),
                 analysisResult.getLostMessages(), analysisResult.getDuplicatedMessages(),
-                generalLatencyStats.getN(), publishLatencyStats.getN(),
-                publishLatencyStats.getMean(), publishLatencyStats.getMax());
+                generalLatencyStats.getN(),
+                sentStats.getN(), sentStats.getMean(), sentStats.getMax(),
+                acknowledgedStats.getN(), acknowledgedStats.getMean(), acknowledgedStats.getMax()
+                );
 
         // wait for all MQTT clients to close
         Thread.sleep(1000);

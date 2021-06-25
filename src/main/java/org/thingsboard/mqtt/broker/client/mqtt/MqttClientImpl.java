@@ -328,7 +328,7 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the message is sent out of the MqttClient
      */
     @Override
-    public Future<Void> publish(String topic, ByteBuf payload) {
+    public PublishFutures publish(String topic, ByteBuf payload) {
         return publish(topic, payload, MqttQoS.AT_MOST_ONCE, false);
     }
 
@@ -341,7 +341,7 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the message is delivered to the server
      */
     @Override
-    public Future<Void> publish(String topic, ByteBuf payload, MqttQoS qos) {
+    public PublishFutures publish(String topic, ByteBuf payload, MqttQoS qos) {
         return publish(topic, payload, qos, false);
     }
 
@@ -354,7 +354,7 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the message is sent out of the MqttClient
      */
     @Override
-    public Future<Void> publish(String topic, ByteBuf payload, boolean retain) {
+    public PublishFutures publish(String topic, ByteBuf payload, boolean retain) {
         return publish(topic, payload, MqttQoS.AT_MOST_ONCE, retain);
     }
 
@@ -368,7 +368,7 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the message is delivered to the server
      */
     @Override
-    public Future<Void> publish(String topic, ByteBuf payload, MqttQoS qos, boolean retain) {
+    public PublishFutures publish(String topic, ByteBuf payload, MqttQoS qos, boolean retain) {
         Promise<Void> future = new DefaultPromise<>(this.eventLoop.next());
         MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH, false, qos, retain, 0);
         MqttPublishVariableHeader variableHeader = new MqttPublishVariableHeader(topic, getNewMessageId().messageId());
@@ -381,7 +381,7 @@ final class MqttClientImpl implements MqttClient {
             pendingPublish.setSent(true);
             if (channelFuture.cause() != null) {
                 future.setFailure(channelFuture.cause());
-                return future;
+                return new PublishFutures(channelFuture, future);
             }
         }
         if (pendingPublish.isSent() && pendingPublish.getQos() == MqttQoS.AT_MOST_ONCE) {
@@ -392,7 +392,7 @@ final class MqttClientImpl implements MqttClient {
         } else {
             this.pendingPublishes.remove(pendingPublish.getMessageId());
         }
-        return future;
+        return new PublishFutures(channelFuture, future);
     }
 
     /**
