@@ -75,7 +75,7 @@ public class MqttPerformanceTest {
 
         dummyClientService.connectDummyClients();
 
-        publisherService.startPublishing();
+        DescriptiveStatistics publishLatencyStats = publisherService.startPublishing();
 
 
         Thread.sleep(TimeUnit.SECONDS.toMillis(testRunConfiguration.getSecondsToRun() + testRunConfiguration.getAdditionalSecondsToWait()));
@@ -91,12 +91,14 @@ public class MqttPerformanceTest {
 
         SubscriberAnalysisResult analysisResult = subscriberService.analyzeReceivedMessages();
 
-        log.info("Latency stats: avg - {}, median - {}, max - {}, min - {}, 95th - {}, lost messages - {}, duplicated messages - {}, total received messages - {}.",
+        log.info("Latency stats: avg - {}, median - {}, max - {}, min - {}, 95th - {}, lost messages - {}, duplicated messages - {}, total received messages - {}, " +
+                        "published messages - {}, publish latency median - {}, publish latency max - {}.",
                 generalLatencyStats.getSum() / generalLatencyStats.getN(),
                 generalLatencyStats.getMean(), generalLatencyStats.getMax(),
                 generalLatencyStats.getMin(), generalLatencyStats.getPercentile(95),
                 analysisResult.getLostMessages(), analysisResult.getDuplicatedMessages(),
-                generalLatencyStats.getN());
+                generalLatencyStats.getN(), publishLatencyStats.getN(),
+                publishLatencyStats.getMean(), publishLatencyStats.getMax());
 
         // wait for all MQTT clients to close
         Thread.sleep(1000);

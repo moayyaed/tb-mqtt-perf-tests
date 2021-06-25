@@ -21,6 +21,7 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 @Service
@@ -66,11 +68,19 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public void startPublishing() {
+    public DescriptiveStatistics startPublishing() {
+        DescriptiveStatistics publisherLatencyStats = new DescriptiveStatistics();
         AtomicInteger publishedMessagesPerPublisher = new AtomicInteger();
+        int publishPeriodMs = 1000 / testRunConfiguration.getMaxMessagesPerPublisherPerSecond();
+        AtomicLong lastPublishTickTime = new AtomicLong(System.currentTimeMillis());
         publishScheduler.scheduleAtFixedRate(() -> {
             if (publishedMessagesPerPublisher.getAndIncrement() >= testRunConfiguration.getTotalPublisherMessagesCount()) {
                 return;
+            }
+            long now = System.currentTimeMillis();
+            long actualPublishTickPause = now - lastPublishTickTime.getAndSet(now);
+            if (actualPublishTickPause > publishPeriodMs * 1.5) {
+                log.debug("Pause between ticks is bigger than expected, expected pause - {} ms, actual pause - {} ms", publishPeriodMs, actualPublishTickPause);
             }
             for (PublisherInfo publisherInfo : publisherInfos) {
                 try {
@@ -80,6 +90,8 @@ public class PublisherServiceImpl implements PublisherService {
                             .addListener(future -> {
                                         if (!future.isSuccess()) {
                                             log.error("[{}] Error publishing msg", publisherInfo.getId());
+                                        } else {
+                                            publisherLatencyStats.addValue(System.currentTimeMillis() - message.getCreateTime());
                                         }
                                     }
                             );
@@ -87,7 +99,8 @@ public class PublisherServiceImpl implements PublisherService {
                     log.error("[{}] Failed to publish", publisherInfo.getId(), e);
                 }
             }
-        }, 0, 1000 / testRunConfiguration.getMaxMessagesPerPublisherPerSecond(), TimeUnit.MILLISECONDS);
+        }, 0, publishPeriodMs, TimeUnit.MILLISECONDS);
+        return publisherLatencyStats;
     }
 
     @Override

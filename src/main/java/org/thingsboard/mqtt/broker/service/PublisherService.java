@@ -15,10 +15,12 @@
  */
 package org.thingsboard.mqtt.broker.service;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 public interface PublisherService {
     void connectPublishers();
 
-    void startPublishing();
+    DescriptiveStatistics startPublishing();
 
     void disconnectPublishers();
 }
