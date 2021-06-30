@@ -17,6 +17,7 @@ package org.thingsboard.mqtt.broker.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
@@ -26,6 +27,8 @@ import org.thingsboard.mqtt.broker.data.PersistentClientType;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -69,25 +72,34 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
     }
 
     @Override
-    public void clearPersistedSessions() {
+    public void clearPersistedSessions() throws InterruptedException {
         List<SubscriberGroup> subscriberGroups = testRunConfiguration.getSubscribersConfig();
         List<SubscriberGroup> persistedSubscriberGroups = subscriberGroups.stream()
                 .filter(subscriberGroup -> subscriberGroup.getPersistentSessionInfo() != null)
                 .collect(Collectors.toList());
 
-        log.info("Clearing persisted session for {} subscriber groups", persistedSubscriberGroups.size());
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
 
+        int persistentSubscribers = persistedSubscriberGroups.stream().mapToInt(SubscriberGroup::getSubscribers).sum();
+        CountDownLatch countDownLatch = new CountDownLatch(persistentSubscribers);
         for (SubscriberGroup persistedSubscriberGroup : persistedSubscriberGroups) {
             for (int i = 0; i < persistedSubscriberGroup.getSubscribers(); i++) {
                 String clientId = persistedSubscriberGroup.getClientId(i);
-                try {
-                    MqttClient mqttClient = clientInitializer.initClient(clientId, true);
+                MqttClient mqttClient = clientInitializer.createClient(clientId, true);
+                clientInitializer.connectClient(mqttClient).addListener(future -> {
+                    if (!future.isSuccess()) {
+                        log.warn("[{}] Failed to clear persisted session", clientId);
+                    }
                     mqttClient.disconnect();
-                } catch (Exception e) {
-                    log.warn("[{}] Failed to clear persisted session", clientId, e);
-                }
+                    countDownLatch.countDown();
+                });
             }
         }
+
+        countDownLatch.await(30, TimeUnit.SECONDS);
+        stopWatch.stop();
+        log.info("Clearing {} persisted sessions took {} ms", persistentSubscribers, stopWatch.getTime());
     }
 
     @Override

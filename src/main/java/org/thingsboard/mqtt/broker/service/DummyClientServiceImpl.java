@@ -15,17 +15,23 @@
  */
 package org.thingsboard.mqtt.broker.service;
 
+import io.netty.util.concurrent.Future;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
+import org.thingsboard.mqtt.broker.client.mqtt.MqttConnectResult;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 
 import javax.annotation.PreDestroy;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -35,24 +41,47 @@ public class DummyClientServiceImpl implements DummyClientService {
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
 
-    private List<MqttClient> dummyClients;
+    private Map<String, MqttClient> dummyClients;
 
     @Override
-    public void connectDummyClients() {
-        log.info("Start connecting dummy clients.");
-        this.dummyClients = new ArrayList<>(testRunConfiguration.getNumberOfDummyClients());
+    public void connectDummyClients() throws InterruptedException {
+        this.dummyClients = new ConcurrentHashMap<>();
+        DescriptiveStatistics connectionStats = new DescriptiveStatistics();
+        CountDownLatch countDownLatch = new CountDownLatch(testRunConfiguration.getNumberOfDummyClients());
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        long connectionStart = System.currentTimeMillis();
         for (int i = 0; i < testRunConfiguration.getNumberOfDummyClients(); i++) {
-            MqttClient dummyClient = clientInitializer.initClient("test_dummy_client_" + i);
-            dummyClients.add(dummyClient);
+            String clientId = "test_dummy_client_" + i;
+            MqttClient dummyClient = clientInitializer.createClient(clientId);
+            Future<MqttConnectResult> connectResultFuture = clientInitializer.connectClient(dummyClient);
+            connectResultFuture.addListener(future -> {
+                if (!future.isSuccess()) {
+                    log.warn("Failed to connect dummy client {}", clientId);
+                    dummyClient.disconnect();
+                } else {
+                    dummyClients.put(clientId, dummyClient);
+                    connectionStats.addValue(System.currentTimeMillis() - connectionStart);
+                }
+                countDownLatch.countDown();
+            });
         }
-        log.info("Finished connecting dummy clients.");
+
+        countDownLatch.await(30, TimeUnit.SECONDS);
+        stopWatch.stop();
+
+        log.info("Connecting {} dummy clients took {} ms, median connection time - {}, max connection time - {}, 95 percentile connection time - {}.",
+                testRunConfiguration.getNumberOfDummyClients(), stopWatch.getTime(), connectionStats.getMean(),
+                connectionStats.getMax(), connectionStats.getPercentile(95.0));
     }
 
     @Override
     public void disconnectDummyClients() {
         log.info("Disconnecting dummy clients.");
         int clientIndex = 0;
-        for (MqttClient dummyClient : dummyClients) {
+        for (MqttClient dummyClient : dummyClients.values()) {
             try {
                 dummyClient.disconnect();
             } catch (Exception e) {

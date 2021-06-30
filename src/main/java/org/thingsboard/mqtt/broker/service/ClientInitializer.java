@@ -15,13 +15,20 @@
  */
 package org.thingsboard.mqtt.broker.service;
 
+import io.netty.util.concurrent.Future;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
+import org.thingsboard.mqtt.broker.client.mqtt.MqttConnectResult;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttHandler;
 
 public interface ClientInitializer {
-    MqttClient initClient(String clientId);
+    MqttClient createClient(String clientId);
 
-    MqttClient initClient(String clientId, boolean cleanSession);
+    MqttClient createClient(String clientId, boolean cleanSession);
 
-    MqttClient initClient(String clientId, boolean cleanSession, MqttHandler defaultHandler);
+    MqttClient createClient(String clientId, boolean cleanSession, MqttHandler defaultHandler);
+
+    Future<MqttConnectResult> connectClient(MqttClient client);
+
+    MqttClient createAndConnectClient(String clientId, boolean cleanSession, MqttHandler defaultHandler);
+
 }

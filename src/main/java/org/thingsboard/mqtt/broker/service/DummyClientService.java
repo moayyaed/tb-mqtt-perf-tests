@@ -16,7 +16,7 @@
 package org.thingsboard.mqtt.broker.service;
 
 public interface DummyClientService {
-    void connectDummyClients();
+    void connectDummyClients() throws InterruptedException;
 
     void disconnectDummyClients();
 }

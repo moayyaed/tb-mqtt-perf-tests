@@ -15,6 +15,7 @@
  */
 package org.thingsboard.mqtt.broker.service;
 
+import io.netty.util.concurrent.Future;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -47,61 +49,82 @@ public class SubscriberServiceImpl implements SubscriberService {
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
 
-    private final List<SubscriberInfo> subscriberInfos = new ArrayList<>();
+    private final Map<String, SubscriberInfo> subscriberInfos = new ConcurrentHashMap<>();
 
     @Override
-    public void startSubscribers(MqttMsgProcessor msgProcessor) {
+    public void connectSubscribers(MqttMsgProcessor defaultMsgProcessor) {
         int totalSubscribers = testRunConfiguration.getSubscribersConfig().stream().mapToInt(SubscriberGroup::getSubscribers).sum();
-        CountDownLatch subscribeCDL = new CountDownLatch(totalSubscribers);
-        log.info("Start connecting {} subscribers.", totalSubscribers);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
+
+        CountDownLatch connectCDL = new CountDownLatch(totalSubscribers);
         for (SubscriberGroup subscriberGroup : testRunConfiguration.getSubscribersConfig()) {
             for (int i = 0; i < subscriberGroup.getSubscribers(); i++) {
                 int subscriberId = i;
                 String clientId = subscriberGroup.getClientId(subscriberId);
                 boolean cleanSession = subscriberGroup.getPersistentSessionInfo() == null;
-                MqttClient subClient = clientInitializer.initClient(clientId, cleanSession, (s, mqttMessageByteBuf) -> {
+                MqttClient subClient = clientInitializer.createClient(clientId, cleanSession, (s, mqttMessageByteBuf) -> {
                     try {
-                        msgProcessor.process(mqttMessageByteBuf);
+                        defaultMsgProcessor.process(mqttMessageByteBuf);
                     } catch (Exception e) {
-                        log.error("[{}] Failed to process msg", subscriberId);
+                        log.error("[{}] Failed to process msg", clientId);
                     }
                 });
-                AtomicInteger receivedMsgs = new AtomicInteger(0);
-                subscriberInfos.add(new SubscriberInfo(subClient, subscriberId, clientId, receivedMsgs, subscriberGroup));
-
-                AtomicBoolean successfullySubscribed = new AtomicBoolean(false);
-                subClient.on(subscriberGroup.getTopicFilter(), (topic, mqttMessageByteBuf) -> {
-                    try {
-                        msgProcessor.process(mqttMessageByteBuf);
-                    } catch (Exception e) {
-                        log.error("[{}] Failed to process msg", subscriberId);
-                    }
-                    receivedMsgs.incrementAndGet();
-                }, testRunConfiguration.getSubscriberQoS()).addListener(future -> {
-                    if (successfullySubscribed.getAndSet(true)) {
-                        log.warn("[{}] Subscribed to topic more than one time!", subscriberId);
+                clientInitializer.connectClient(subClient).addListener(future -> {
+                    if (!future.isSuccess()) {
+                        log.warn("[{}] Failed to connect subscriber", clientId);
+                        subClient.disconnect();
                     } else {
-                        subscribeCDL.countDown();
+                        subscriberInfos.put(clientId, new SubscriberInfo(subClient, subscriberId, clientId, new AtomicInteger(0), subscriberGroup));
                     }
+                    connectCDL.countDown();
                 });
             }
         }
         try {
-            subscribeCDL.await(10, TimeUnit.SECONDS);
+            connectCDL.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            log.error("Failed to wait for the subscribers to initialize.");
-            throw new RuntimeException("Failed to wait for the subscribers to initialize");
+            log.error("Failed to wait for the subscribers to connect.");
+            throw new RuntimeException("Failed to wait for the subscribers to connect");
         }
         stopWatch.stop();
-        log.info("Connecting subscribers took {} ms.", stopWatch.getTime());
+        log.info("Connecting {} subscribers took {} ms.", totalSubscribers, stopWatch.getTime());
+    }
+
+    @Override
+    public void subscribe(MqttMsgProcessor msgProcessor) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        CountDownLatch subscribeCDL = new CountDownLatch(subscriberInfos.size());
+        for (SubscriberInfo subscriberInfo : subscriberInfos.values()) {
+            Future<Void> subscribeFuture = subscriberInfo.getSubscriber().on(subscriberInfo.getSubscriberGroup().getTopicFilter(), (topic, mqttMessageByteBuf) -> {
+                try {
+                    msgProcessor.process(mqttMessageByteBuf);
+                } catch (Exception e) {
+                    log.error("[{}] Failed to process msg", subscriberInfo.getId());
+                }
+                subscriberInfo.getReceivedMsgs().incrementAndGet();
+            }, testRunConfiguration.getSubscriberQoS());
+
+            subscribeFuture.addListener(future -> {
+                subscribeCDL.countDown();
+            });
+        }
+        try {
+            subscribeCDL.await(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            log.error("Failed to wait for the subscribers to subscribe.");
+            throw new RuntimeException("Failed to wait for the subscribers to subscribe");
+        }
+        stopWatch.stop();
+        log.info("Subscribing {} subscribers took {} ms.", subscriberInfos.size(), stopWatch.getTime());
     }
 
     @Override
     public void disconnectSubscribers() {
         log.info("Disconnecting subscribers.");
-        for (SubscriberInfo subscriberInfo : subscriberInfos) {
+        for (SubscriberInfo subscriberInfo : subscriberInfos.values()) {
             try {
                 subscriberInfo.getSubscriber().disconnect();
             } catch (Exception e) {
@@ -116,7 +139,7 @@ public class SubscriberServiceImpl implements SubscriberService {
                 .collect(Collectors.toMap(PublisherGroup::getId, Function.identity()));
         int lostMessages = 0;
         int duplicatedMessages = 0;
-        for (SubscriberInfo subscriberInfo : subscriberInfos) {
+        for (SubscriberInfo subscriberInfo : subscriberInfos.values()) {
             int expectedReceivedMsgs = getSubscriberExpectedReceivedMsgs(testRunConfiguration.getTotalPublisherMessagesCount(), publisherGroupsById, subscriberInfo.getSubscriberGroup());
             int actualReceivedMsgs = subscriberInfo.getReceivedMsgs().get();
             if (actualReceivedMsgs != expectedReceivedMsgs) {

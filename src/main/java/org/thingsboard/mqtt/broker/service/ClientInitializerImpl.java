@@ -52,43 +52,52 @@ public class ClientInitializerImpl implements ClientInitializer {
     }
 
     @Override
-    public MqttClient initClient(String clientId) {
-        return initClient(clientId, true, null);
+    public MqttClient createClient(String clientId) {
+        return createClient(clientId, true, null);
     }
 
     @Override
-    public MqttClient initClient(String clientId, boolean cleanSession) {
-        return initClient(clientId, cleanSession, null);
+    public MqttClient createClient(String clientId, boolean cleanSession) {
+        return createClient(clientId, cleanSession, null);
     }
 
     @Override
-    public MqttClient initClient(String clientId, boolean cleanSession, MqttHandler defaultHandler) {
+    public MqttClient createClient(String clientId, boolean cleanSession, MqttHandler defaultHandler) {
         MqttClientConfig config = new MqttClientConfig(sslConfig.getSslContext());
         config.setClientId(clientId);
         config.setCleanSession(cleanSession);
         MqttClient client = MqttClient.create(config, defaultHandler);
         client.setEventLoop(EVENT_LOOP_GROUP);
+        return client;
+    }
+
+    @Override
+    public Future<MqttConnectResult> connectClient(MqttClient client) {
         HostPortDto hostPort = hostPortService.getHostPort();
-        Future<MqttConnectResult> connectFuture = client.connect(hostPort.getHost(), hostPort.getPort());
+        return client.connect(hostPort.getHost(), hostPort.getPort());
+    }
+
+    @Override
+    public MqttClient createAndConnectClient(String clientId, boolean cleanSession, MqttHandler defaultHandler) {
+        MqttClient client = createClient(clientId, cleanSession, defaultHandler);
         MqttConnectResult result;
+        Future<MqttConnectResult> connectFuture = connectClient(client);
         try {
             result = connectFuture.get(connectTimeout, TimeUnit.SECONDS);
         } catch (Exception ex) {
             connectFuture.cancel(true);
             client.disconnect();
             log.error("[{}] Failed to connect to MQTT Broker", clientId, ex);
-            throw new RuntimeException(String.format("Failed to connect to MQTT broker at %s:%d with client %s.",
-                    hostPort.getHost(), hostPort.getPort(), clientId));
+            throw new RuntimeException("Failed to connect to MQTT broker with client " + clientId);
         }
         if (!result.isSuccess()) {
             connectFuture.cancel(true);
             client.disconnect();
-            throw new RuntimeException(String.format("Failed to connect to MQTT broker at %s:%d with client %s. Result code is: %s",
-                    hostPort.getHost(), hostPort.getPort(), clientId, result.getReturnCode()));
+            throw new RuntimeException(String.format("Failed to connect to MQTT broker with client %s. Result code is: %s",
+                    clientId, result.getReturnCode()));
         }
         return client;
     }
-
 
     @PreDestroy
     public void destroy() {

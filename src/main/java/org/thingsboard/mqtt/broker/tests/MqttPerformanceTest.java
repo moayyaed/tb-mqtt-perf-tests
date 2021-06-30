@@ -65,7 +65,13 @@ public class MqttPerformanceTest {
         Thread.sleep(2000);
         persistedMqttClientService.initApplicationClients();
 
-        subscriberService.startSubscribers(msgByteBuf -> {
+        subscriberService.connectSubscribers(msgByteBuf -> {
+            byte[] mqttMessageBytes = toBytes(msgByteBuf);
+            Message message = mapper.readValue(mqttMessageBytes, Message.class);
+            log.warn("Received persisted message for the time {}", message.getCreateTime());
+        });
+
+        subscriberService.subscribe(msgByteBuf -> {
             long now = System.currentTimeMillis();
             byte[] mqttMessageBytes = toBytes(msgByteBuf);
             Message message = mapper.readValue(mqttMessageBytes, Message.class);

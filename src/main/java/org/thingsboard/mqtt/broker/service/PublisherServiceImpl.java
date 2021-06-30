@@ -19,21 +19,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
+import io.netty.util.concurrent.Future;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
+import org.thingsboard.mqtt.broker.client.mqtt.MqttConnectResult;
 import org.thingsboard.mqtt.broker.client.mqtt.PublishFutures;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.Message;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.PublisherInfo;
+import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
@@ -51,21 +58,41 @@ public class PublisherServiceImpl implements PublisherService {
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
 
-    private final List<PublisherInfo> publisherInfos = new ArrayList<>();
+    private final Map<String, PublisherInfo> publisherInfos = new ConcurrentHashMap<>();
     private final ScheduledExecutorService publishScheduler = Executors.newSingleThreadScheduledExecutor();
 
     @Override
     public void connectPublishers() {
-        log.info("Start connecting publishers.");
+        int totalPublishers = testRunConfiguration.getPublishersConfig().stream().mapToInt(PublisherGroup::getPublishers).sum();
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        CountDownLatch connectCDL = new CountDownLatch(totalPublishers);
         for (PublisherGroup publisherGroup : testRunConfiguration.getPublishersConfig()) {
             for (int i = 0; i < publisherGroup.getPublishers(); i++) {
-                String clientId = publisherGroup.getClientId(i);
-                MqttClient pubClient = clientInitializer.initClient(clientId);
-                String topic = publisherGroup.getTopicPrefix() + i;
-                publisherInfos.add(new PublisherInfo(pubClient, i, topic));
+                int publisherId = i;
+                String clientId = publisherGroup.getClientId(publisherId);
+                String topic = publisherGroup.getTopicPrefix() + publisherId;
+                MqttClient pubClient = clientInitializer.createClient(clientId);
+                Future<MqttConnectResult> connectResultFuture = clientInitializer.connectClient(pubClient);
+                connectResultFuture.addListener(future -> {
+                    if (!future.isSuccess()) {
+                        log.warn("[{}] Failed to connect publisher", clientId);
+                        pubClient.disconnect();
+                    } else {
+                        publisherInfos.put(clientId, new PublisherInfo(pubClient, publisherId, topic));
+                    }
+                    connectCDL.countDown();
+                });
             }
         }
-        log.info("Finished connecting publishers.");
+        try {
+            connectCDL.await(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            log.error("Failed to wait for the publishers to connect.");
+            throw new RuntimeException("Failed to wait for the publishers to connect");
+        }
+        stopWatch.stop();
+        log.info("Connecting {} publishers took {} ms.", totalPublishers, stopWatch.getTime());
     }
 
     @Override
@@ -84,7 +111,7 @@ public class PublisherServiceImpl implements PublisherService {
             if (actualPublishTickPause > publishPeriodMs * 1.5) {
                 log.debug("Pause between ticks is bigger than expected, expected pause - {} ms, actual pause - {} ms", publishPeriodMs, actualPublishTickPause);
             }
-            for (PublisherInfo publisherInfo : publisherInfos) {
+            for (PublisherInfo publisherInfo : publisherInfos.values()) {
                 try {
                     Message message = new Message(System.currentTimeMillis(), generatePayload(testRunConfiguration.getPayloadSize()));
                     byte[] messageBytes = mapper.writeValueAsBytes(message);
@@ -119,7 +146,7 @@ public class PublisherServiceImpl implements PublisherService {
     public void disconnectPublishers() {
         log.info("Disconnecting publishers.");
         publishScheduler.shutdownNow();
-        for (PublisherInfo publisherInfo : publisherInfos) {
+        for (PublisherInfo publisherInfo : publisherInfos.values()) {
             try {
                 publisherInfo.getPublisher().disconnect();
             } catch (Exception e) {
