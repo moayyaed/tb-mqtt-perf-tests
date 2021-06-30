@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright © 2016-2018 The Thingsboard Authors
+# Copyright © 2016-2021 The Thingsboard Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ kubectl config set-context $(kubectl config current-context) --namespace=thingsb
 
 # deploy postgres
 kubectl apply -f config/postgres.yml
-kubectl apply -f config/tb-broker-postgres-configmap.yml
 kubectl rollout status deployment/postgres
 
 # install Kafka
@@ -31,6 +30,7 @@ kubectl apply -f config/zookeeper.yml
 kubectl apply -f config/kafka.yml
 
 # install ThingsBoard MQTT Broker
+kubectl apply -f config/tb-broker-postgres-configmap.yml
 kubectl apply -f config/tb-broker-configmap.yml
 kubectl apply -f config/database-setup.yml &&
 kubectl wait --for=condition=Ready pod/tb-db-setup --timeout=120s &&
