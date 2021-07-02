@@ -387,9 +387,7 @@ final class MqttClientImpl implements MqttClient {
         if (pendingPublish.isSent() && pendingPublish.getQos() == MqttQoS.AT_MOST_ONCE) {
             this.pendingPublishes.remove(pendingPublish.getMessageId());
             pendingPublish.getFuture().setSuccess(null); //We don't get an ACK for QOS 0
-        } else if (pendingPublish.isSent()) {
-            pendingPublish.startPublishRetransmissionTimer(this.eventLoop.next(), this::sendAndFlushPacket);
-        } else {
+        } else if (!pendingPublish.isSent()) {
             this.pendingPublishes.remove(pendingPublish.getMessageId());
         }
         return new PublishFutures(channelFuture, future);
