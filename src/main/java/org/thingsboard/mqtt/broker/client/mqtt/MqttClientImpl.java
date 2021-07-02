@@ -553,7 +553,7 @@ final class MqttClientImpl implements MqttClient {
                 ch.pipeline().addLast(sslContext.newHandler(ch.alloc(), host, port));
             }
 
-            ch.pipeline().addLast("mqttDecoder", new MqttDecoder(clientConfig.getMaxBytesInMessage()));
+            ch.pipeline().addLast("mqttDecoder", new MqttDecoder(clientConfig.getMaxBytesInMessage(), Integer.MAX_VALUE));
             ch.pipeline().addLast("mqttEncoder", MqttEncoder.INSTANCE);
             ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(MqttClientImpl.this.clientConfig.getTimeoutSeconds(), MqttClientImpl.this.clientConfig.getTimeoutSeconds(), 0));
             ch.pipeline().addLast("mqttPingHandler", new MqttPingHandler(MqttClientImpl.this.clientConfig.getTimeoutSeconds()));

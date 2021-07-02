@@ -66,6 +66,7 @@ public class ClientInitializerImpl implements ClientInitializer {
         MqttClientConfig config = new MqttClientConfig(sslConfig.getSslContext());
         config.setClientId(clientId);
         config.setCleanSession(cleanSession);
+        config.setProtocolVersion(MqttVersion.MQTT_3_1_1);
         MqttClient client = MqttClient.create(config, defaultHandler);
         client.setEventLoop(EVENT_LOOP_GROUP);
         return client;
@@ -78,6 +79,7 @@ public class ClientInitializerImpl implements ClientInitializer {
     }
 
     @Override
+    // TODO: remove this
     public MqttClient createAndConnectClient(String clientId, boolean cleanSession, MqttHandler defaultHandler) {
         MqttClient client = createClient(clientId, cleanSession, defaultHandler);
         MqttConnectResult result;
