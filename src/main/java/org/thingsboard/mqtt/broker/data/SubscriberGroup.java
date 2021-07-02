@@ -29,22 +29,25 @@ public class SubscriberGroup {
     private final Set<Integer> expectedPublisherGroups;
     private final PersistentSessionInfo persistentSessionInfo;
     private final String clientIdPrefix;
+    private final boolean debugEnabled;
 
     public SubscriberGroup(int id, int subscribers, String topicFilter, Set<Integer> expectedPublisherGroups, PersistentSessionInfo persistentSessionInfo) {
-        this(id, subscribers, topicFilter, expectedPublisherGroups, persistentSessionInfo, null);
+        this(id, subscribers, topicFilter, expectedPublisherGroups, persistentSessionInfo, null, false);
     }
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public SubscriberGroup(@JsonProperty("id") int id, @JsonProperty("subscribers") int subscribers, @JsonProperty("topicFilter") String topicFilter,
                            @JsonProperty("expectedPublisherGroups") Set<Integer> expectedPublisherGroups,
                            @JsonProperty("persistentSessionInfo") PersistentSessionInfo persistentSessionInfo,
-                           @JsonProperty("clientIdPrefix") String clientIdPrefix) {
+                           @JsonProperty("clientIdPrefix") String clientIdPrefix,
+                           @JsonProperty("isDebugEnabled") Boolean isDebugEnabled) {
         this.id = id;
         this.subscribers = subscribers;
         this.topicFilter = topicFilter;
         this.expectedPublisherGroups = expectedPublisherGroups;
         this.persistentSessionInfo = persistentSessionInfo;
         this.clientIdPrefix = clientIdPrefix != null ? clientIdPrefix : "test_sub_client_" + id + "_";
+        this.debugEnabled = isDebugEnabled != null ? isDebugEnabled : false;
     }
 
     public String getClientId(int subscriberId) {

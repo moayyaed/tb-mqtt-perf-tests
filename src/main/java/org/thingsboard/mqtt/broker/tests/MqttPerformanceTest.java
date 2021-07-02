@@ -15,13 +15,11 @@
  */
 package org.thingsboard.mqtt.broker.tests;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.netty.buffer.ByteBuf;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.springframework.stereotype.Component;
-import org.thingsboard.mqtt.broker.data.Message;
+import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.PersistentClientType;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberAnalysisResult;
@@ -31,7 +29,6 @@ import org.thingsboard.mqtt.broker.service.PersistedMqttClientService;
 import org.thingsboard.mqtt.broker.service.PublishStats;
 import org.thingsboard.mqtt.broker.service.PublisherService;
 import org.thingsboard.mqtt.broker.service.SubscriberService;
-import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.util.ValidationUtil;
 
 import javax.annotation.PostConstruct;
@@ -42,8 +39,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RequiredArgsConstructor
 public class MqttPerformanceTest {
-    private final ObjectMapper mapper = new ObjectMapper();
-
     private final DummyClientService dummyClientService;
     private final SubscriberService subscriberService;
     private final PublisherService publisherService;
@@ -58,25 +53,15 @@ public class MqttPerformanceTest {
 
         printTestRunConfiguration();
 
-        DescriptiveStatistics generalLatencyStats = new DescriptiveStatistics();
 
         persistedMqttClientService.clearPersistedSessions();
         persistedMqttClientService.removeApplicationClients();
         Thread.sleep(2000);
         persistedMqttClientService.initApplicationClients();
 
-        subscriberService.connectSubscribers(msgByteBuf -> {
-            byte[] mqttMessageBytes = toBytes(msgByteBuf);
-            Message message = mapper.readValue(mqttMessageBytes, Message.class);
-            log.warn("Received persisted message for the time {}", message.getCreateTime());
-        });
+        subscriberService.connectSubscribers();
 
-        subscriberService.subscribe(msgByteBuf -> {
-            long now = System.currentTimeMillis();
-            byte[] mqttMessageBytes = toBytes(msgByteBuf);
-            Message message = mapper.readValue(mqttMessageBytes, Message.class);
-            generalLatencyStats.addValue(now - message.getCreateTime());
-        });
+        DescriptiveStatistics generalLatencyStats = subscriberService.subscribe();
 
         publisherService.connectPublishers();
 
@@ -112,6 +97,9 @@ public class MqttPerformanceTest {
                 acknowledgedStats.getN(), acknowledgedStats.getMean(), acknowledgedStats.getMax()
                 );
 
+        publisherService.printDebugPublishersStats();
+        subscriberService.printDebugSubscribersStats();
+
         // wait for all MQTT clients to close
         Thread.sleep(1000);
     }
@@ -146,13 +134,5 @@ public class MqttPerformanceTest {
                 testRunConfiguration.getPublisherQoS(), testRunConfiguration.getSubscriberQoS(), testRunConfiguration.getMaxMessagesPerPublisherPerSecond(),
                 testRunConfiguration.getSecondsToRun(), totalPublishedMessages, totalExpectedReceivedMessages,
                 testRunConfiguration.getPayloadSize(), testRunConfiguration.getConfigurationName());
-    }
-
-
-    private static byte[] toBytes(ByteBuf inbound) {
-        byte[] bytes = new byte[inbound.readableBytes()];
-        int readerIndex = inbound.readerIndex();
-        inbound.getBytes(readerIndex, bytes);
-        return bytes;
     }
 }

@@ -15,13 +15,12 @@
  */
 package org.thingsboard.mqtt.broker.data;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-@AllArgsConstructor
 @Getter
 public class SubscriberInfo {
     private final MqttClient subscriber;
@@ -29,4 +28,18 @@ public class SubscriberInfo {
     private final String clientId;
     private final AtomicInteger receivedMsgs;
     private final SubscriberGroup subscriberGroup;
+    private final DescriptiveStatistics latencyStats;
+
+    public SubscriberInfo(MqttClient subscriber, int id, String clientId, AtomicInteger receivedMsgs, SubscriberGroup subscriberGroup) {
+        this(subscriber, id, clientId, receivedMsgs, subscriberGroup, null);
+    }
+
+    public SubscriberInfo(MqttClient subscriber, int id, String clientId, AtomicInteger receivedMsgs, SubscriberGroup subscriberGroup, DescriptiveStatistics latencyStats) {
+        this.subscriber = subscriber;
+        this.id = id;
+        this.clientId = clientId;
+        this.receivedMsgs = receivedMsgs;
+        this.subscriberGroup = subscriberGroup;
+        this.latencyStats = latencyStats;
+    }
 }

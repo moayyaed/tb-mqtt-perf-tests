@@ -15,14 +15,28 @@
  */
 package org.thingsboard.mqtt.broker.data;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 
-@AllArgsConstructor
 @Getter
 public class PublisherInfo {
     private final MqttClient publisher;
-    private final int id;
+    private final String clientId;
     private final String topic;
+    private final DescriptiveStatistics acknowledgeLatencyStats;
+
+    public PublisherInfo(MqttClient publisher, String clientId, String topic, DescriptiveStatistics acknowledgeLatencyStats) {
+        this.publisher = publisher;
+        this.clientId = clientId;
+        this.topic = topic;
+        this.acknowledgeLatencyStats = acknowledgeLatencyStats;
+    }
+
+    public PublisherInfo(MqttClient publisher, String clientId, String topic) {
+        this.publisher = publisher;
+        this.clientId = clientId;
+        this.topic = topic;
+        this.acknowledgeLatencyStats = null;
+    }
 }

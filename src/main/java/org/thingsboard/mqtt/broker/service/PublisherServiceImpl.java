@@ -34,10 +34,7 @@ import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.Message;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.PublisherInfo;
-import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -69,9 +66,8 @@ public class PublisherServiceImpl implements PublisherService {
         CountDownLatch connectCDL = new CountDownLatch(totalPublishers);
         for (PublisherGroup publisherGroup : testRunConfiguration.getPublishersConfig()) {
             for (int i = 0; i < publisherGroup.getPublishers(); i++) {
-                int publisherId = i;
-                String clientId = publisherGroup.getClientId(publisherId);
-                String topic = publisherGroup.getTopicPrefix() + publisherId;
+                String clientId = publisherGroup.getClientId(i);
+                String topic = publisherGroup.getTopicPrefix() + i;
                 MqttClient pubClient = clientInitializer.createClient(clientId);
                 Future<MqttConnectResult> connectResultFuture = clientInitializer.connectClient(pubClient);
                 connectResultFuture.addListener(future -> {
@@ -79,7 +75,8 @@ public class PublisherServiceImpl implements PublisherService {
                         log.warn("[{}] Failed to connect publisher", clientId);
                         pubClient.disconnect();
                     } else {
-                        publisherInfos.put(clientId, new PublisherInfo(pubClient, publisherId, topic));
+                        publisherInfos.put(clientId, new PublisherInfo(pubClient, clientId, topic,
+                                publisherGroup.isDebugEnabled() ? new DescriptiveStatistics() : null));
                     }
                     connectCDL.countDown();
                 });
@@ -119,7 +116,7 @@ public class PublisherServiceImpl implements PublisherService {
                     publishFutures.getPublishSentFuture()
                             .addListener(future -> {
                                         if (!future.isSuccess()) {
-                                            log.error("[{}] Error sending msg", publisherInfo.getId());
+                                            log.error("[{}] Error sending msg", publisherInfo.getClientId());
                                         } else {
                                             publishSentLatencyStats.addValue(System.currentTimeMillis() - message.getCreateTime());
                                         }
@@ -128,14 +125,18 @@ public class PublisherServiceImpl implements PublisherService {
                     publishFutures.getPublishFinishedFuture()
                             .addListener(future -> {
                                         if (!future.isSuccess()) {
-                                            log.error("[{}] Error acknowledging msg", publisherInfo.getId());
+                                            log.error("[{}] Error acknowledging msg", publisherInfo.getClientId());
                                         } else {
-                                            publishAcknowledgedStats.addValue(System.currentTimeMillis() - message.getCreateTime());
+                                            long ackLatency = System.currentTimeMillis() - message.getCreateTime();
+                                            publishAcknowledgedStats.addValue(ackLatency);
+                                            if (publisherInfo.getAcknowledgeLatencyStats() != null) {
+                                                publisherInfo.getAcknowledgeLatencyStats().addValue(ackLatency);
+                                            }
                                         }
                                     }
                             );
                 } catch (Exception e) {
-                    log.error("[{}] Failed to publish", publisherInfo.getId(), e);
+                    log.error("[{}] Failed to publish", publisherInfo.getClientId(), e);
                 }
             }
         }, 0, publishPeriodMs, TimeUnit.MILLISECONDS);
@@ -150,11 +151,21 @@ public class PublisherServiceImpl implements PublisherService {
             try {
                 publisherInfo.getPublisher().disconnect();
             } catch (Exception e) {
-                log.error("[{}] Failed to disconnect publisher", publisherInfo.getId());
+                log.error("[{}] Failed to disconnect publisher", publisherInfo.getClientId());
             }
         }
     }
 
+    @Override
+    public void printDebugPublishersStats() {
+        for (PublisherInfo publisherInfo : publisherInfos.values()) {
+            DescriptiveStatistics stats = publisherInfo.getAcknowledgeLatencyStats();
+            if (stats != null) {
+                log.info("[{}] Publish acknowledge latency: messages - {}, median - {}, 95 percentile - {}, max - {}.",
+                        publisherInfo.getClientId(), stats.getN(), stats.getMean(), stats.getPercentile(95), stats.getMax());
+            }
+        }
+    }
 
     private static byte[] generatePayload(int size) {
         byte[] payload = new byte[size];
