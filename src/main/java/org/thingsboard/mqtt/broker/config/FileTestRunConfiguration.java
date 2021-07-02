@@ -30,11 +30,11 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@ConditionalOnExpression("'${test-run-configuration-file:}'!=''")
+@ConditionalOnExpression("'${test-run.configuration-file:}'!=''")
 public class FileTestRunConfiguration implements TestRunConfiguration {
     private final ObjectMapper mapper = new ObjectMapper();
 
-    @Value("${test-run-configuration-file}")
+    @Value("${test-run.configuration-file}")
     private String configurationFilePath;
 
     private File configurationFile;

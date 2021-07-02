@@ -51,6 +51,7 @@ public class SubscriberServiceImpl implements SubscriberService {
 
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
+    private final ClientIdService clientIdService;
 
     private final Map<String, SubscriberInfo> subscriberInfos = new ConcurrentHashMap<>();
 
@@ -64,7 +65,7 @@ public class SubscriberServiceImpl implements SubscriberService {
         for (SubscriberGroup subscriberGroup : testRunConfiguration.getSubscribersConfig()) {
             for (int i = 0; i < subscriberGroup.getSubscribers(); i++) {
                 int subscriberId = i;
-                String clientId = subscriberGroup.getClientId(subscriberId);
+                String clientId = clientIdService.createSubscriberClientId(subscriberGroup, subscriberId);
                 boolean cleanSession = subscriberGroup.getPersistentSessionInfo() == null;
                 MqttClient subClient = clientInitializer.createClient(clientId, cleanSession, (s, mqttMessageByteBuf) -> {
                     try {

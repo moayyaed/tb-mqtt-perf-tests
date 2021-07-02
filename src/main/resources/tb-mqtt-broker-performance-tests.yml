@@ -47,4 +47,6 @@ tb-broker:
     password: "${TB_ADMIN_PASSWORD:sysadmin}"
 
 
-test-run-configuration-file: "${TEST_RUN_CONFIGURATION_FILE:}"
+test-run:
+  configuration-file: "${TEST_RUN_CONFIGURATION_FILE:}"
+  id: "${TEST_RUN_ID:}"

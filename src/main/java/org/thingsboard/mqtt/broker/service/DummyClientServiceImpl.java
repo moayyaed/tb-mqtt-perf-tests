@@ -40,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 public class DummyClientServiceImpl implements DummyClientService {
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
+    private final ClientIdService clientIdService;
 
     private Map<String, MqttClient> dummyClients;
 
@@ -54,7 +55,7 @@ public class DummyClientServiceImpl implements DummyClientService {
 
         long connectionStart = System.currentTimeMillis();
         for (int i = 0; i < testRunConfiguration.getNumberOfDummyClients(); i++) {
-            String clientId = "test_dummy_client_" + i;
+            String clientId = clientIdService.createDummyClientId(i);
             MqttClient dummyClient = clientInitializer.createClient(clientId);
             Future<MqttConnectResult> connectResultFuture = clientInitializer.connectClient(dummyClient);
             connectResultFuture.addListener(future -> {

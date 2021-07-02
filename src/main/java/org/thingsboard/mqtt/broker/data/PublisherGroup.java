@@ -41,9 +41,4 @@ public class PublisherGroup {
         this.clientIdPrefix = clientIdPrefix != null ? clientIdPrefix : "test_pub_client_" + id + "_";
         this.debugEnabled = isDebugEnabled != null ? isDebugEnabled : false;
     }
-
-    public String getClientId(int publisherId) {
-        return clientIdPrefix + publisherId;
-    }
-
 }

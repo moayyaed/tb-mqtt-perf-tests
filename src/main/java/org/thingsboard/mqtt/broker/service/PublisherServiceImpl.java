@@ -54,6 +54,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
+    private final ClientIdService clientIdService;
 
     private final Map<String, PublisherInfo> publisherInfos = new ConcurrentHashMap<>();
     private final ScheduledExecutorService publishScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -66,7 +67,7 @@ public class PublisherServiceImpl implements PublisherService {
         CountDownLatch connectCDL = new CountDownLatch(totalPublishers);
         for (PublisherGroup publisherGroup : testRunConfiguration.getPublishersConfig()) {
             for (int i = 0; i < publisherGroup.getPublishers(); i++) {
-                String clientId = publisherGroup.getClientId(i);
+                String clientId = clientIdService.createPublisherClientId(publisherGroup, i);
                 String topic = publisherGroup.getTopicPrefix() + i;
                 MqttClient pubClient = clientInitializer.createClient(clientId);
                 Future<MqttConnectResult> connectResultFuture = clientInitializer.connectClient(pubClient);

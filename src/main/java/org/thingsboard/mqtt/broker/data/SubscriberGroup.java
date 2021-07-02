@@ -49,8 +49,4 @@ public class SubscriberGroup {
         this.clientIdPrefix = clientIdPrefix != null ? clientIdPrefix : "test_sub_client_" + id + "_";
         this.debugEnabled = isDebugEnabled != null ? isDebugEnabled : false;
     }
-
-    public String getClientId(int subscriberId) {
-        return clientIdPrefix + subscriberId;
-    }
 }

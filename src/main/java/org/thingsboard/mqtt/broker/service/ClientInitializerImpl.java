@@ -17,6 +17,7 @@ package org.thingsboard.mqtt.broker.service;
 
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.handler.codec.mqtt.MqttVersion;
 import io.netty.util.concurrent.Future;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -40,6 +40,7 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
 
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
+    private final ClientIdService clientIdService;
 
     @Override
     public void initApplicationClients() {
@@ -59,7 +60,7 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
         log.info("Initializing {} {} subscribers.", applicationSubscriberGroups.stream().mapToInt(SubscriberGroup::getSubscribers).sum(), PersistentClientType.APPLICATION);
         for (SubscriberGroup subscriberGroup : applicationSubscriberGroups) {
             for (int i = 0; i < subscriberGroup.getSubscribers(); i++) {
-                String clientId = subscriberGroup.getClientId(i);
+                String clientId = clientIdService.createSubscriberClientId(subscriberGroup, i);
                 MqttClientDto client = tbBrokerRestService.getClient(clientId);
                 if (client == null) {
                     tbBrokerRestService.createClient(new MqttClientDto(clientId, clientId, PersistentClientType.APPLICATION));
@@ -85,7 +86,7 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
         CountDownLatch countDownLatch = new CountDownLatch(persistentSubscribers);
         for (SubscriberGroup persistedSubscriberGroup : persistedSubscriberGroups) {
             for (int i = 0; i < persistedSubscriberGroup.getSubscribers(); i++) {
-                String clientId = persistedSubscriberGroup.getClientId(i);
+                String clientId = clientIdService.createSubscriberClientId(persistedSubscriberGroup, i);
                 MqttClient mqttClient = clientInitializer.createClient(clientId, true);
                 clientInitializer.connectClient(mqttClient).addListener(future -> {
                     if (!future.isSuccess()) {
@@ -120,7 +121,7 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
         log.info("Removing {} {} subscribers.", applicationSubscriberGroups.stream().mapToInt(SubscriberGroup::getSubscribers).sum(), PersistentClientType.APPLICATION);
         for (SubscriberGroup subscriberGroup : applicationSubscriberGroups) {
             for (int i = 0; i < subscriberGroup.getSubscribers(); i++) {
-                String clientId = subscriberGroup.getClientId(i);
+                String clientId = clientIdService.createSubscriberClientId(subscriberGroup, i);
                 try {
                     tbBrokerRestService.removeClient(clientId);
                 } catch (Exception e) {

@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-@ConditionalOnExpression("'${test-run-configuration-file:}'==''")
+@ConditionalOnExpression("'${test-run.configuration-file:}'==''")
 public class DefaultTestRunConfiguration implements TestRunConfiguration {
     private static final String CONFIGURATION_NAME = "Default Configuration";
 
