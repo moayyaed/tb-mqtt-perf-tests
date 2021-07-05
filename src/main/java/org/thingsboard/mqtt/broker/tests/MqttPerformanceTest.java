@@ -91,16 +91,19 @@ public class MqttPerformanceTest {
         DescriptiveStatistics sentStats = publishStats.getPublishSentLatencyStats();
 
         log.info("Latency stats: avg - {}, median - {}, max - {}, min - {}, 95th - {}, lost messages - {}, duplicated messages - {}, total received messages - {}, " +
-                        "old received messages - {}, publish sent messages - {}, publish sent latency median - {}, publish sent latency max - {}, " +
+                        "publish sent messages - {}, publish sent latency median - {}, publish sent latency max - {}, " +
                         "publish acknowledged messages - {}, publish acknowledged latency median - {}, publish acknowledged latency max - {}.",
                 generalLatencyStats.getSum() / generalLatencyStats.getN(),
                 generalLatencyStats.getMean(), generalLatencyStats.getMax(),
                 generalLatencyStats.getMin(), generalLatencyStats.getPercentile(95),
                 analysisResult.getLostMessages(), analysisResult.getDuplicatedMessages(),
-                generalLatencyStats.getN(), subscribeStats.getOldMessagesCount().get(),
+                generalLatencyStats.getN(),
                 sentStats.getN(), sentStats.getMean(), sentStats.getMax(),
                 acknowledgedStats.getN(), acknowledgedStats.getMean(), acknowledgedStats.getMax()
                 );
+        subscribeStats.getOldMessagesByTestRunId().forEach((testRunId, oldMessagesCount) -> {
+            log.info("Received {} messages from test run ID {}.", oldMessagesCount.get(), testRunId);
+        });
 
         publisherService.printDebugPublishersStats();
         subscriberService.printDebugSubscribersStats();

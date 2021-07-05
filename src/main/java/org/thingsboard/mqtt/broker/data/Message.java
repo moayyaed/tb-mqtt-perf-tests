@@ -24,6 +24,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class Message {
     private long createTime;
-    private long testRunId;
+    private Long testRunId;
     private byte[] payload;
 }

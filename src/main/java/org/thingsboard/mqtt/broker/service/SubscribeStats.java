@@ -19,11 +19,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Getter
 @AllArgsConstructor
 public class SubscribeStats {
     private final DescriptiveStatistics latencyStats;
-    private final AtomicLong oldMessagesCount;
+    private final ConcurrentMap<Long, AtomicLong> oldMessagesByTestRunId;
 }

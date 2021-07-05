@@ -103,7 +103,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     @Override
     public SubscribeStats subscribe() {
         DescriptiveStatistics generalLatencyStats = new DescriptiveStatistics();
-        AtomicLong oldReceivedMessages = new AtomicLong(0);
+        ConcurrentHashMap<Long, AtomicLong> oldMessagesByTestRunId = new ConcurrentHashMap<>();
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
@@ -114,8 +114,9 @@ public class SubscriberServiceImpl implements SubscriberService {
                     long now = System.currentTimeMillis();
                     byte[] mqttMessageBytes = toBytes(mqttMessageByteBuf);
                     Message message = mapper.readValue(mqttMessageBytes, Message.class);
-                    if (MqttPerformanceTest.TEST_RUN_ID != message.getTestRunId()) {
-                        oldReceivedMessages.incrementAndGet();
+                    long msgTestRunId = message.getTestRunId() != null ? message.getTestRunId() : -1L;
+                    if (MqttPerformanceTest.TEST_RUN_ID != msgTestRunId) {
+                        oldMessagesByTestRunId.computeIfAbsent(msgTestRunId, id -> new AtomicLong(0)).incrementAndGet();
                         return;
                     }
                     long msgLatency = now - message.getCreateTime();
@@ -142,7 +143,7 @@ public class SubscriberServiceImpl implements SubscriberService {
         stopWatch.stop();
         log.info("Subscribing {} subscribers took {} ms.", subscriberInfos.size(), stopWatch.getTime());
 
-        return new SubscribeStats(generalLatencyStats, oldReceivedMessages);
+        return new SubscribeStats(generalLatencyStats, oldMessagesByTestRunId);
     }
 
     @Override
