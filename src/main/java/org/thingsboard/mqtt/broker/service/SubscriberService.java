@@ -15,13 +15,12 @@
  */
 package org.thingsboard.mqtt.broker.service;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.thingsboard.mqtt.broker.data.SubscriberAnalysisResult;
 
 public interface SubscriberService {
     void connectSubscribers();
 
-    DescriptiveStatistics subscribe();
+    SubscribeStats subscribe();
 
     void disconnectSubscribers();
 

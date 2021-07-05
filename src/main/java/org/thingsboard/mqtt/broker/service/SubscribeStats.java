@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingsboard.mqtt.broker.data;
+package org.thingsboard.mqtt.broker.service;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
+import java.util.concurrent.atomic.AtomicLong;
+
+@Getter
 @AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class Message {
-    private long createTime;
-    private long testRunId;
-    private byte[] payload;
+public class SubscribeStats {
+    private final DescriptiveStatistics latencyStats;
+    private final AtomicLong oldMessagesCount;
 }

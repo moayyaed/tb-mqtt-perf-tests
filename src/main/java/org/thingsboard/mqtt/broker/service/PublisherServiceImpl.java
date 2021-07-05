@@ -34,6 +34,7 @@ import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.Message;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.PublisherInfo;
+import org.thingsboard.mqtt.broker.tests.MqttPerformanceTest;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -111,7 +112,7 @@ public class PublisherServiceImpl implements PublisherService {
             }
             for (PublisherInfo publisherInfo : publisherInfos.values()) {
                 try {
-                    Message message = new Message(System.currentTimeMillis(), generatePayload(testRunConfiguration.getPayloadSize()));
+                    Message message = new Message(System.currentTimeMillis(), MqttPerformanceTest.TEST_RUN_ID, generatePayload(testRunConfiguration.getPayloadSize()));
                     byte[] messageBytes = mapper.writeValueAsBytes(message);
                     PublishFutures publishFutures = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes), testRunConfiguration.getPublisherQoS());
                     publishFutures.getPublishSentFuture()

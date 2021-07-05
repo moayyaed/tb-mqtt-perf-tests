@@ -32,6 +32,7 @@ import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberAnalysisResult;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberInfo;
+import org.thingsboard.mqtt.broker.tests.MqttPerformanceTest;
 
 import java.util.Map;
 import java.util.Objects;
@@ -39,6 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -99,8 +101,9 @@ public class SubscriberServiceImpl implements SubscriberService {
     }
 
     @Override
-    public DescriptiveStatistics subscribe() {
+    public SubscribeStats subscribe() {
         DescriptiveStatistics generalLatencyStats = new DescriptiveStatistics();
+        AtomicLong oldReceivedMessages = new AtomicLong(0);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
@@ -111,15 +114,19 @@ public class SubscriberServiceImpl implements SubscriberService {
                     long now = System.currentTimeMillis();
                     byte[] mqttMessageBytes = toBytes(mqttMessageByteBuf);
                     Message message = mapper.readValue(mqttMessageBytes, Message.class);
+                    if (MqttPerformanceTest.TEST_RUN_ID != message.getTestRunId()) {
+                        oldReceivedMessages.incrementAndGet();
+                        return;
+                    }
                     long msgLatency = now - message.getCreateTime();
                     generalLatencyStats.addValue(msgLatency);
                     if (subscriberInfo.getLatencyStats() != null) {
                         subscriberInfo.getLatencyStats().addValue(msgLatency);
                     }
+                    subscriberInfo.getReceivedMsgs().incrementAndGet();
                 } catch (Exception e) {
                     log.error("[{}] Failed to process msg", subscriberInfo.getId());
                 }
-                subscriberInfo.getReceivedMsgs().incrementAndGet();
             }, testRunConfiguration.getSubscriberQoS());
 
             subscribeFuture.addListener(future -> {
@@ -135,7 +142,7 @@ public class SubscriberServiceImpl implements SubscriberService {
         stopWatch.stop();
         log.info("Subscribing {} subscribers took {} ms.", subscriberInfos.size(), stopWatch.getTime());
 
-        return generalLatencyStats;
+        return new SubscribeStats(generalLatencyStats, oldReceivedMessages);
     }
 
     @Override

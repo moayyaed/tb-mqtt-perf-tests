@@ -28,17 +28,21 @@ import org.thingsboard.mqtt.broker.service.DummyClientService;
 import org.thingsboard.mqtt.broker.service.PersistedMqttClientService;
 import org.thingsboard.mqtt.broker.service.PublishStats;
 import org.thingsboard.mqtt.broker.service.PublisherService;
+import org.thingsboard.mqtt.broker.service.SubscribeStats;
 import org.thingsboard.mqtt.broker.service.SubscriberService;
 import org.thingsboard.mqtt.broker.util.ValidationUtil;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class MqttPerformanceTest {
+    public static final long TEST_RUN_ID = new Random().nextLong();
+
     private final DummyClientService dummyClientService;
     private final SubscriberService subscriberService;
     private final PublisherService publisherService;
@@ -61,7 +65,8 @@ public class MqttPerformanceTest {
 
         subscriberService.connectSubscribers();
 
-        DescriptiveStatistics generalLatencyStats = subscriberService.subscribe();
+        SubscribeStats subscribeStats = subscriberService.subscribe();
+        DescriptiveStatistics generalLatencyStats = subscribeStats.getLatencyStats();
 
         publisherService.connectPublishers();
 
@@ -86,13 +91,13 @@ public class MqttPerformanceTest {
         DescriptiveStatistics sentStats = publishStats.getPublishSentLatencyStats();
 
         log.info("Latency stats: avg - {}, median - {}, max - {}, min - {}, 95th - {}, lost messages - {}, duplicated messages - {}, total received messages - {}, " +
-                        "publish sent messages - {}, publish sent latency median - {}, publish sent latency max - {}, " +
+                        "old received messages - {}, publish sent messages - {}, publish sent latency median - {}, publish sent latency max - {}, " +
                         "publish acknowledged messages - {}, publish acknowledged latency median - {}, publish acknowledged latency max - {}.",
                 generalLatencyStats.getSum() / generalLatencyStats.getN(),
                 generalLatencyStats.getMean(), generalLatencyStats.getMax(),
                 generalLatencyStats.getMin(), generalLatencyStats.getPercentile(95),
                 analysisResult.getLostMessages(), analysisResult.getDuplicatedMessages(),
-                generalLatencyStats.getN(),
+                generalLatencyStats.getN(), subscribeStats.getOldMessagesCount().get(),
                 sentStats.getN(), sentStats.getMean(), sentStats.getMax(),
                 acknowledgedStats.getN(), acknowledgedStats.getMean(), acknowledgedStats.getMax()
                 );
@@ -124,12 +129,12 @@ public class MqttPerformanceTest {
                 .sum();
         int totalPublishedMessages = totalPublishers * testRunConfiguration.getTotalPublisherMessagesCount();
         int totalExpectedReceivedMessages = subscriberService.calculateTotalExpectedReceivedMessages();
-        log.info("Test run info: publishers - {}, non-persistent subscribers - {}, regular persistent subscribers - {}, " +
+        log.info("Test run info: test run ID - {}, publishers - {}, non-persistent subscribers - {}, regular persistent subscribers - {}, " +
                         "'APPLICATION' persistent subscribers - {}, dummy client connections - {}, " +
                         "publisher QoS - {}, subscriber QoS - {}, max messages per second - {}, " +
                         "run time - {}s, total published messages - {}, expected total received messages - {}, " +
                         "payload size - {}, configuration name - {}",
-                totalPublishers, nonPersistedSubscribers, persistedDevicesSubscribers,
+                MqttPerformanceTest.TEST_RUN_ID, totalPublishers, nonPersistedSubscribers, persistedDevicesSubscribers,
                 persistedApplicationsSubscribers, testRunConfiguration.getNumberOfDummyClients(),
                 testRunConfiguration.getPublisherQoS(), testRunConfiguration.getSubscriberQoS(), testRunConfiguration.getMaxMessagesPerPublisherPerSecond(),
                 testRunConfiguration.getSecondsToRun(), totalPublishedMessages, totalExpectedReceivedMessages,
