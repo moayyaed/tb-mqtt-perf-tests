@@ -114,9 +114,6 @@ public class PublisherServiceImpl implements PublisherService {
                 try {
                     Message message = new Message(System.currentTimeMillis(), MqttPerformanceTest.TEST_RUN_ID, generatePayload(testRunConfiguration.getPayloadSize()));
                     byte[] messageBytes = mapper.writeValueAsBytes(message);
-                    if (publisherInfo.isDebug()) {
-                        log.debug("[{}] Sent msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
-                    }
                     PublishFutures publishFutures = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes), testRunConfiguration.getPublisherQoS());
                     publishFutures.getPublishSentFuture()
                             .addListener(future -> {
@@ -125,7 +122,7 @@ public class PublisherServiceImpl implements PublisherService {
                                         } else {
                                             publishSentLatencyStats.addValue(System.currentTimeMillis() - message.getCreateTime());
                                             if (publisherInfo.isDebug()) {
-                                                log.debug("[{}] Acknowledged msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
+                                                log.debug("[{}] Sent msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
                                             }
                                         }
                                     }
@@ -139,6 +136,7 @@ public class PublisherServiceImpl implements PublisherService {
                                             publishAcknowledgedStats.addValue(ackLatency);
                                             if (publisherInfo.getAcknowledgeLatencyStats() != null) {
                                                 publisherInfo.getAcknowledgeLatencyStats().addValue(ackLatency);
+                                                log.debug("[{}] Acknowledged msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
                                             }
                                         }
                                     }
