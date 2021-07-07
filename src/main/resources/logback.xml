@@ -26,6 +26,7 @@
 
     <logger name="org.thingsboard.mqtt.broker" level="INFO"/>
     <logger name="org.thingsboard.mqtt.broker.service.PublisherServiceImpl" level="DEBUG"/>
+    <logger name="org.thingsboard.mqtt.broker.service.SubscriberServiceImpl" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

@@ -25,12 +25,14 @@ public class PublisherInfo {
     private final String clientId;
     private final String topic;
     private final DescriptiveStatistics acknowledgeLatencyStats;
+    private final boolean debug;
 
     public PublisherInfo(MqttClient publisher, String clientId, String topic, DescriptiveStatistics acknowledgeLatencyStats) {
         this.publisher = publisher;
         this.clientId = clientId;
         this.topic = topic;
         this.acknowledgeLatencyStats = acknowledgeLatencyStats;
+        this.debug = acknowledgeLatencyStats != null;
     }
 
     public PublisherInfo(MqttClient publisher, String clientId, String topic) {
@@ -38,5 +40,6 @@ public class PublisherInfo {
         this.clientId = clientId;
         this.topic = topic;
         this.acknowledgeLatencyStats = null;
+        this.debug = false;
     }
 }
