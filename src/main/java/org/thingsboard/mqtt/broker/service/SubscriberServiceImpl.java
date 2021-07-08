@@ -117,7 +117,6 @@ public class SubscriberServiceImpl implements SubscriberService {
                     long msgTestRunId = message.getTestRunId() != null ? message.getTestRunId() : -1L;
                     if (MqttPerformanceTest.TEST_RUN_ID != msgTestRunId) {
                         oldMessagesByTestRunId.computeIfAbsent(msgTestRunId, id -> new AtomicLong(0)).incrementAndGet();
-                        return;
                     }
                     long msgLatency = now - message.getCreateTime();
                     generalLatencyStats.addValue(msgLatency);
