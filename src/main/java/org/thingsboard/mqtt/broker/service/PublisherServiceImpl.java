@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttConnectResult;
 import org.thingsboard.mqtt.broker.client.mqtt.PublishFutures;
+import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.Message;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
@@ -56,18 +57,25 @@ public class PublisherServiceImpl implements PublisherService {
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
     private final ClientIdService clientIdService;
+    private final TestRunClusterConfig testRunClusterConfig;
 
     private final Map<String, PublisherInfo> publisherInfos = new ConcurrentHashMap<>();
     private final ScheduledExecutorService publishScheduler = Executors.newSingleThreadScheduledExecutor();
 
     @Override
     public void connectPublishers() {
-        int totalPublishers = testRunConfiguration.getPublishersConfig().stream().mapToInt(PublisherGroup::getPublishers).sum();
+        int totalClusterPublishers = testRunConfiguration.getPublishersConfig().stream().mapToInt(PublisherGroup::getPublishers).sum();
+        int totalNodePublishers = totalClusterPublishers / testRunClusterConfig.getParallelTestsCount()
+                + (totalClusterPublishers % testRunClusterConfig.getParallelTestsCount() > testRunClusterConfig.getSequentialNumber() ? 1 : 0);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        CountDownLatch connectCDL = new CountDownLatch(totalPublishers);
+        int currentPublisherId = 0;
+        CountDownLatch connectCDL = new CountDownLatch(totalNodePublishers);
         for (PublisherGroup publisherGroup : testRunConfiguration.getPublishersConfig()) {
             for (int i = 0; i < publisherGroup.getPublishers(); i++) {
+                if (currentPublisherId++ % testRunClusterConfig.getParallelTestsCount() != testRunClusterConfig.getSequentialNumber()) {
+                    continue;
+                }
                 String clientId = clientIdService.createPublisherClientId(publisherGroup, i);
                 String topic = publisherGroup.getTopicPrefix() + i;
                 MqttClient pubClient = clientInitializer.createClient(clientId);
@@ -91,7 +99,7 @@ public class PublisherServiceImpl implements PublisherService {
             throw new RuntimeException("Failed to wait for the publishers to connect");
         }
         stopWatch.stop();
-        log.info("Connecting {} publishers took {} ms.", totalPublishers, stopWatch.getTime());
+        log.info("Connecting {} publishers took {} ms.", totalNodePublishers, stopWatch.getTime());
     }
 
     @Override

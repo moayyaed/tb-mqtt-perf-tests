@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttConnectResult;
+import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 
 import javax.annotation.PreDestroy;
@@ -41,6 +42,7 @@ public class DummyClientServiceImpl implements DummyClientService {
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
     private final ClientIdService clientIdService;
+    private final TestRunClusterConfig testRunClusterConfig;
 
     private Map<String, MqttClient> dummyClients;
 
@@ -48,13 +50,19 @@ public class DummyClientServiceImpl implements DummyClientService {
     public void connectDummyClients() throws InterruptedException {
         this.dummyClients = new ConcurrentHashMap<>();
         DescriptiveStatistics connectionStats = new DescriptiveStatistics();
-        CountDownLatch countDownLatch = new CountDownLatch(testRunConfiguration.getNumberOfDummyClients());
+        int totalNodeDummies = testRunConfiguration.getNumberOfDummyClients() / testRunClusterConfig.getParallelTestsCount()
+                + (testRunConfiguration.getNumberOfDummyClients() % testRunClusterConfig.getParallelTestsCount() > testRunClusterConfig.getSequentialNumber() ? 1 : 0);
+        CountDownLatch countDownLatch = new CountDownLatch(totalNodeDummies);
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
+        int currentDummyId = 0;
         long connectionStart = System.currentTimeMillis();
         for (int i = 0; i < testRunConfiguration.getNumberOfDummyClients(); i++) {
+            if (currentDummyId++ % testRunClusterConfig.getParallelTestsCount() != testRunClusterConfig.getSequentialNumber()) {
+                continue;
+            }
             String clientId = clientIdService.createDummyClientId(i);
             MqttClient dummyClient = clientInitializer.createClient(clientId);
             Future<MqttConnectResult> connectResultFuture = clientInitializer.connectClient(dummyClient);
@@ -74,7 +82,7 @@ public class DummyClientServiceImpl implements DummyClientService {
         stopWatch.stop();
 
         log.info("Connecting {} dummy clients took {} ms, median connection time - {}, max connection time - {}, 95 percentile connection time - {}.",
-                testRunConfiguration.getNumberOfDummyClients(), stopWatch.getTime(), connectionStats.getMean(),
+                totalNodeDummies, stopWatch.getTime(), connectionStats.getMean(),
                 connectionStats.getMax(), connectionStats.getPercentile(95.0));
     }
 

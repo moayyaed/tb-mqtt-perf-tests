@@ -49,4 +49,5 @@ tb-broker:
 
 test-run:
   configuration-file: "${TEST_RUN_CONFIGURATION_FILE:}"
-  id: "${TEST_RUN_ID:}"
+  sequential-number: "${TEST_RUN_SEQUENTIAL_NUMBER:0}"
+  parallel-tests-count: "${TEST_RUN_PARALLEL_TESTS_COUNT:1}"

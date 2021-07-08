@@ -26,6 +26,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
+import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.Message;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
@@ -54,18 +55,26 @@ public class SubscriberServiceImpl implements SubscriberService {
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
     private final ClientIdService clientIdService;
+    private final TestRunClusterConfig testRunClusterConfig;
 
     private final Map<String, SubscriberInfo> subscriberInfos = new ConcurrentHashMap<>();
 
     @Override
     public void connectSubscribers() {
-        int totalSubscribers = testRunConfiguration.getSubscribersConfig().stream().mapToInt(SubscriberGroup::getSubscribers).sum();
+        int totalClusterSubscribers = testRunConfiguration.getSubscribersConfig().stream().mapToInt(SubscriberGroup::getSubscribers).sum();
+        int totalNodeSubscribers = totalClusterSubscribers / testRunClusterConfig.getParallelTestsCount()
+                + (totalClusterSubscribers % testRunClusterConfig.getParallelTestsCount() > testRunClusterConfig.getSequentialNumber() ? 1 : 0);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        CountDownLatch connectCDL = new CountDownLatch(totalSubscribers);
+        CountDownLatch connectCDL = new CountDownLatch(totalNodeSubscribers);
+
+        int currentSubscriberId = 0;
         for (SubscriberGroup subscriberGroup : testRunConfiguration.getSubscribersConfig()) {
             for (int i = 0; i < subscriberGroup.getSubscribers(); i++) {
+                if (currentSubscriberId++ % testRunClusterConfig.getParallelTestsCount() != testRunClusterConfig.getSequentialNumber()) {
+                    continue;
+                }
                 int subscriberId = i;
                 String clientId = clientIdService.createSubscriberClientId(subscriberGroup, subscriberId);
                 boolean cleanSession = subscriberGroup.getPersistentSessionInfo() == null;
@@ -97,7 +106,7 @@ public class SubscriberServiceImpl implements SubscriberService {
             throw new RuntimeException("Failed to wait for the subscribers to connect");
         }
         stopWatch.stop();
-        log.info("Connecting {} subscribers took {} ms.", totalSubscribers, stopWatch.getTime());
+        log.info("Connecting {} subscribers took {} ms.", totalNodeSubscribers, stopWatch.getTime());
     }
 
     @Override
@@ -168,7 +177,7 @@ public class SubscriberServiceImpl implements SubscriberService {
             int expectedReceivedMsgs = getSubscriberExpectedReceivedMsgs(testRunConfiguration.getTotalPublisherMessagesCount(), publisherGroupsById, subscriberInfo.getSubscriberGroup());
             int actualReceivedMsgs = subscriberInfo.getReceivedMsgs().get();
             if (actualReceivedMsgs != expectedReceivedMsgs) {
-                log.error("[{}] Expected messages count - {}, actual messages count - {}",
+                log.trace("[{}] Expected messages count - {}, actual messages count - {}",
                         subscriberInfo.getClientId(), expectedReceivedMsgs, actualReceivedMsgs);
                 if (expectedReceivedMsgs > actualReceivedMsgs) {
                     lostMessages += expectedReceivedMsgs - actualReceivedMsgs;

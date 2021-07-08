@@ -16,33 +16,32 @@
 package org.thingsboard.mqtt.broker.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 
 @Service
 @RequiredArgsConstructor
 public class ClientIdServiceImpl implements ClientIdService {
-    @Value("${test-run.id:}")
-    private String testRunId;
+
+    private final TestRunClusterConfig testRunClusterConfig;
 
     @Override
     public String createSubscriberClientId(SubscriberGroup subscriberGroup, int subscriberId) {
         String subscriberClientId = subscriberGroup.getClientIdPrefix() + subscriberId;
-        return StringUtils.isEmpty(testRunId) ? subscriberClientId : testRunId + "_" + subscriberClientId;
+        return testRunClusterConfig.getSequentialNumber() + "_" + subscriberClientId;
     }
 
     @Override
     public String createPublisherClientId(PublisherGroup publisherGroup, int publisherId) {
         String publisherClientId = publisherGroup.getClientIdPrefix() + publisherId;
-        return StringUtils.isEmpty(testRunId) ? publisherClientId : testRunId + "_" + publisherClientId;
+        return testRunClusterConfig.getSequentialNumber() + "_" + publisherClientId;
     }
 
     @Override
     public String createDummyClientId(int dummyId) {
         String dummyClientId = "test_dummy_client_" + dummyId;
-        return StringUtils.isEmpty(testRunId) ? dummyClientId : testRunId + "_" + dummyClientId;
+        return testRunClusterConfig.getSequentialNumber() + "_" + dummyClientId;
     }
 }
