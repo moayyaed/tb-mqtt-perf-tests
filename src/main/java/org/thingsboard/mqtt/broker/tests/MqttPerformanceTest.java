@@ -69,6 +69,7 @@ public class MqttPerformanceTest {
         DescriptiveStatistics generalLatencyStats = subscribeStats.getLatencyStats();
 
         publisherService.connectPublishers();
+        publisherService.warmUpPublishers();
 
         dummyClientService.connectDummyClients();
 

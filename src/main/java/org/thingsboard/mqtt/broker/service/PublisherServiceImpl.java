@@ -44,6 +44,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -103,6 +104,35 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    public void warmUpPublishers() throws Exception {
+        CountDownLatch warmupCDL = new CountDownLatch(publisherInfos.size());
+        AtomicBoolean successfulWarmUp = new AtomicBoolean(true);
+        for (PublisherInfo publisherInfo : publisherInfos.values()) {
+            try {
+                Message message = new Message(System.currentTimeMillis(), MqttPerformanceTest.TEST_RUN_ID, true, generatePayload(testRunConfiguration.getPayloadSize()));
+                PublishFutures publishFutures = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(mapper.writeValueAsBytes(message)), testRunConfiguration.getPublisherQoS());
+                publishFutures.getPublishFinishedFuture()
+                        .addListener(future -> {
+                                    if (!future.isSuccess()) {
+                                        successfulWarmUp.getAndSet(false);
+                                        log.error("[{}] Error acknowledging warmup msg", publisherInfo.getClientId(), future.cause());
+                                    }
+                                    warmupCDL.countDown();
+                                }
+                        );
+            } catch (Exception e) {
+                log.error("[{}] Failed to publish", publisherInfo.getClientId(), e);
+                throw e;
+            }
+        }
+
+        boolean successfulWait = warmupCDL.await(10, TimeUnit.SECONDS);
+        if (!successfulWait || !successfulWarmUp.get()) {
+            throw new RuntimeException("Failed to warm up publishers");
+        }
+    }
+
+    @Override
     public PublishStats startPublishing() {
         DescriptiveStatistics publishSentLatencyStats = new DescriptiveStatistics();
         DescriptiveStatistics publishAcknowledgedStats = new DescriptiveStatistics();
@@ -120,13 +150,13 @@ public class PublisherServiceImpl implements PublisherService {
             }
             for (PublisherInfo publisherInfo : publisherInfos.values()) {
                 try {
-                    Message message = new Message(System.currentTimeMillis(), MqttPerformanceTest.TEST_RUN_ID, generatePayload(testRunConfiguration.getPayloadSize()));
+                    Message message = new Message(System.currentTimeMillis(), MqttPerformanceTest.TEST_RUN_ID, false, generatePayload(testRunConfiguration.getPayloadSize()));
                     byte[] messageBytes = mapper.writeValueAsBytes(message);
                     PublishFutures publishFutures = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes), testRunConfiguration.getPublisherQoS());
                     publishFutures.getPublishSentFuture()
                             .addListener(future -> {
                                         if (!future.isSuccess()) {
-                                            log.error("[{}] Error sending msg", publisherInfo.getClientId());
+                                            log.error("[{}] Error sending msg", publisherInfo.getClientId(), future.cause());
                                         } else {
                                             publishSentLatencyStats.addValue(System.currentTimeMillis() - message.getCreateTime());
                                             if (publisherInfo.isDebug()) {
@@ -138,7 +168,7 @@ public class PublisherServiceImpl implements PublisherService {
                     publishFutures.getPublishFinishedFuture()
                             .addListener(future -> {
                                         if (!future.isSuccess()) {
-                                            log.error("[{}] Error acknowledging msg", publisherInfo.getClientId());
+                                            log.error("[{}] Error acknowledging msg", publisherInfo.getClientId(), future.cause());
                                         } else {
                                             long ackLatency = System.currentTimeMillis() - message.getCreateTime();
                                             publishAcknowledgedStats.addValue(ackLatency);

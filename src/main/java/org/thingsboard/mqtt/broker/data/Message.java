@@ -25,5 +25,6 @@ import lombok.NoArgsConstructor;
 public class Message {
     private long createTime;
     private Long testRunId;
+    private boolean isWarmUpMsg;
     private byte[] payload;
 }

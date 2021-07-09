@@ -18,6 +18,8 @@ package org.thingsboard.mqtt.broker.service;
 public interface PublisherService {
     void connectPublishers();
 
+    void warmUpPublishers() throws Exception;
+
     PublishStats startPublishing();
 
     void disconnectPublishers();

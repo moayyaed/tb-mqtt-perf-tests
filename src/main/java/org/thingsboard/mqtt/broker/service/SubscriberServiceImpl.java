@@ -124,6 +124,9 @@ public class SubscriberServiceImpl implements SubscriberService {
                     byte[] mqttMessageBytes = toBytes(mqttMessageByteBuf);
                     Message message = mapper.readValue(mqttMessageBytes, Message.class);
                     long msgTestRunId = message.getTestRunId() != null ? message.getTestRunId() : -1L;
+                    if (message.isWarmUpMsg()) {
+                        return;
+                    }
                     if (MqttPerformanceTest.TEST_RUN_ID != msgTestRunId) {
                         oldMessagesByTestRunId.computeIfAbsent(msgTestRunId, id -> new AtomicLong(0)).incrementAndGet();
                     }
