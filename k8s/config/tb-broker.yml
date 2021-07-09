@@ -41,15 +41,15 @@ spec:
                 path:  logback.xml
       containers:
         - name: server
-          imagePullPolicy: Always
-          image: vzikratyi/tb-mqtt-broker:latest
+          imagePullPolicy: Never
+          image: vzikratyi/tb-mqtt-broker:1.1.12.BETA
           resources:
             limits:
-              cpu: 1
-              memory: 1500Mi
+              cpu: 3
+              memory: 6000Mi
             requests:
-              cpu: 1
-              memory: 1500Mi
+              cpu: 3
+              memory: 6000Mi
           ports:
             - containerPort: 8083
               name: http
@@ -64,9 +64,19 @@ spec:
                   fieldPath: metadata.name
             - name: TB_KAFKA_SERVERS
               value: "tb-kafka:9092"
-            - name: TRANSPORT_TYPE
-              value: "remote"
-            - name: HTTP_LOG_CONTROLLER_ERROR_STACK_TRACE
+            - name: HTTP_BIND_PORT
+              value: "8083"
+            - name: LISTENER_TCP_BIND_PORT
+              value: "1883"
+            - name: LISTENER_SSL_BIND_PORT
+              value: "8883"
+            - name: STATS_ENABLED
+              value: "true"
+            - name: STATS_PRINT_INTERVAL_MS
+              value: "60000"
+            - name: METRICS_ENDPOINTS_EXPOSE
+              value: "prometheus"
+            - name: TB_KAFKA_ENABLE_TOPIC_DELETION
               value: "false"
           envFrom:
             - configMapRef:
