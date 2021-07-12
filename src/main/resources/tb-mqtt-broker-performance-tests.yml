@@ -52,4 +52,4 @@ test-run:
   sequential-number: "${TEST_RUN_SEQUENTIAL_NUMBER:0}"
   parallel-tests-count: "${TEST_RUN_PARALLEL_TESTS_COUNT:1}"
   logs:
-    msg-processing-queue-period: "${TEST_RUN_LOGS_MSG_PROCESSING_QUEUE_PERIOD:10000}"
+    msg-processing-queue-period: "${TEST_RUN_LOGS_MSG_PROCESSING_QUEUE_PERIOD:15000}"

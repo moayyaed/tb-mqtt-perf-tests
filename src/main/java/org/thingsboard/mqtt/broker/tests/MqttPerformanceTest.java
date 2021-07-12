@@ -70,6 +70,7 @@ public class MqttPerformanceTest {
         DescriptiveStatistics msgProcessingLatencyStats = subscribeStats.getMsgProcessingLatencyStats();
 
         publisherService.connectPublishers();
+        Thread.sleep(2000);
         publisherService.warmUpPublishers();
 
         dummyClientService.connectDummyClients();
