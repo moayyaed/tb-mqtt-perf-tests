@@ -13,19 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingsboard.mqtt.broker.service;
+package org.thingsboard.mqtt.broker.client.mqtt;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import io.netty.handler.codec.mqtt.MqttPublishMessage;
 
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BiConsumer;
 
-@Getter
-@AllArgsConstructor
-public class SubscribeStats {
-    private final DescriptiveStatistics latencyStats;
-    private final DescriptiveStatistics msgProcessingLatencyStats;
-    private final ConcurrentMap<Long, AtomicLong> oldMessagesByTestRunId;
+public interface ReceivedMsgProcessor {
+    void processIncomingMessage(MqttPublishMessage message, BiConsumer<MqttPublishMessage, Long> msgProcessor);
 }

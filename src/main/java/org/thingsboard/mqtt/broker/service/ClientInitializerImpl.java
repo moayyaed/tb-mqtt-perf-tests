@@ -27,6 +27,7 @@ import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClientConfig;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttConnectResult;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttHandler;
+import org.thingsboard.mqtt.broker.client.mqtt.ReceivedMsgProcessor;
 import org.thingsboard.mqtt.broker.data.dto.HostPortDto;
 
 import javax.annotation.PostConstruct;
@@ -40,6 +41,7 @@ public class ClientInitializerImpl implements ClientInitializer {
 
     private final HostPortService hostPortService;
     private final SslConfig sslConfig;
+    private final ReceivedMsgProcessor receivedMsgProcessor;
 
 
     @Value("${mqtt.client.connect-timeout-seconds:5}")
@@ -68,7 +70,7 @@ public class ClientInitializerImpl implements ClientInitializer {
         config.setClientId(clientId);
         config.setCleanSession(cleanSession);
         config.setProtocolVersion(MqttVersion.MQTT_3_1_1);
-        MqttClient client = MqttClient.create(config, defaultHandler);
+        MqttClient client = MqttClient.create(config, defaultHandler, receivedMsgProcessor);
         client.setEventLoop(EVENT_LOOP_GROUP);
         return client;
     }

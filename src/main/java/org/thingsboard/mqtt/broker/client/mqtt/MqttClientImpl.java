@@ -73,6 +73,7 @@ final class MqttClientImpl implements MqttClient {
     private final AtomicInteger nextMessageId = new AtomicInteger(1);
 
     private final MqttClientConfig clientConfig;
+    private final ReceivedMsgProcessor receivedMsgProcessor;
 
     private final MqttHandler defaultHandler;
 
@@ -88,22 +89,15 @@ final class MqttClientImpl implements MqttClient {
 
 
     /**
-     * Construct the MqttClientImpl with default config
-     */
-    public MqttClientImpl(MqttHandler defaultHandler) {
-        this.clientConfig = new MqttClientConfig();
-        this.defaultHandler = defaultHandler;
-    }
-
-    /**
      * Construct the MqttClientImpl with additional config.
      * This config can also be changed using the {@link #getClientConfig()} function
      *
      * @param clientConfig The config object to use while looking for settings
      */
-    public MqttClientImpl(MqttClientConfig clientConfig, MqttHandler defaultHandler) {
+    public MqttClientImpl(MqttClientConfig clientConfig, MqttHandler defaultHandler, ReceivedMsgProcessor receivedMsgProcessor) {
         this.clientConfig = clientConfig;
         this.defaultHandler = defaultHandler;
+        this.receivedMsgProcessor = receivedMsgProcessor;
     }
 
     /**
@@ -141,7 +135,7 @@ final class MqttClientImpl implements MqttClient {
         bootstrap.group(this.eventLoop);
         bootstrap.channel(clientConfig.getChannelClass());
         bootstrap.remoteAddress(host, port);
-        bootstrap.handler(new MqttChannelInitializer(connectFuture, host, port, clientConfig.getSslContext()));
+        bootstrap.handler(new MqttChannelInitializer(connectFuture, host, port, clientConfig.getSslContext(), receivedMsgProcessor));
         ChannelFuture future = bootstrap.connect();
 
         future.addListener((ChannelFutureListener) f -> {
@@ -229,7 +223,7 @@ final class MqttClientImpl implements MqttClient {
     }
 
     /**
-     * Subscribe on the given topic. When a message is received, MqttClient will invoke the {@link MqttHandler#onMessage(String, ByteBuf)} function of the given handler
+     * Subscribe on the given topic. When a message is received, MqttClient will invoke the {@link MqttHandler#onMessage(String, ByteBuf, long)} function of the given handler
      *
      * @param topic   The topic filter to subscribe to
      * @param handler The handler to invoke when we receive a message
@@ -241,7 +235,7 @@ final class MqttClientImpl implements MqttClient {
     }
 
     /**
-     * Subscribe on the given topic, with the given qos. When a message is received, MqttClient will invoke the {@link MqttHandler#onMessage(String, ByteBuf)} function of the given handler
+     * Subscribe on the given topic, with the given qos. When a message is received, MqttClient will invoke the {@link MqttHandler#onMessage(String, ByteBuf, long)} function of the given handler
      *
      * @param topic   The topic filter to subscribe to
      * @param handler The handler to invoke when we receive a message
@@ -254,7 +248,7 @@ final class MqttClientImpl implements MqttClient {
     }
 
     /**
-     * Subscribe on the given topic. When a message is received, MqttClient will invoke the {@link MqttHandler#onMessage(String, ByteBuf)} function of the given handler
+     * Subscribe on the given topic. When a message is received, MqttClient will invoke the {@link MqttHandler#onMessage(String, ByteBuf, long)} function of the given handler
      * This subscription is only once. If the MqttClient has received 1 message, the subscription will be removed
      *
      * @param topic   The topic filter to subscribe to
@@ -267,7 +261,7 @@ final class MqttClientImpl implements MqttClient {
     }
 
     /**
-     * Subscribe on the given topic, with the given qos. When a message is received, MqttClient will invoke the {@link MqttHandler#onMessage(String, ByteBuf)} function of the given handler
+     * Subscribe on the given topic, with the given qos. When a message is received, MqttClient will invoke the {@link MqttHandler#onMessage(String, ByteBuf, long)} function of the given handler
      * This subscription is only once. If the MqttClient has received 1 message, the subscription will be removed
      *
      * @param topic   The topic filter to subscribe to
@@ -538,13 +532,15 @@ final class MqttClientImpl implements MqttClient {
         private final String host;
         private final int port;
         private final SslContext sslContext;
+        private final ReceivedMsgProcessor receivedMsgProcessor;
 
 
-        public MqttChannelInitializer(Promise<MqttConnectResult> connectFuture, String host, int port, SslContext sslContext) {
+        public MqttChannelInitializer(Promise<MqttConnectResult> connectFuture, String host, int port, SslContext sslContext, ReceivedMsgProcessor receivedMsgProcessor) {
             this.connectFuture = connectFuture;
             this.host = host;
             this.port = port;
             this.sslContext = sslContext;
+            this.receivedMsgProcessor = receivedMsgProcessor;
         }
 
         @Override
@@ -557,7 +553,7 @@ final class MqttClientImpl implements MqttClient {
             ch.pipeline().addLast("mqttEncoder", MqttEncoder.INSTANCE);
             ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(MqttClientImpl.this.clientConfig.getTimeoutSeconds(), MqttClientImpl.this.clientConfig.getTimeoutSeconds(), 0));
             ch.pipeline().addLast("mqttPingHandler", new MqttPingHandler(MqttClientImpl.this.clientConfig.getTimeoutSeconds()));
-            ch.pipeline().addLast("mqttHandler", new MqttChannelHandler(MqttClientImpl.this, connectFuture));
+            ch.pipeline().addLast("mqttHandler", new MqttChannelHandler(MqttClientImpl.this, connectFuture, receivedMsgProcessor));
         }
     }
 

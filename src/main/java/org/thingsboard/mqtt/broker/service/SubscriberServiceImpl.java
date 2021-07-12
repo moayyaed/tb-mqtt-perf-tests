@@ -78,7 +78,7 @@ public class SubscriberServiceImpl implements SubscriberService {
                 int subscriberId = i;
                 String clientId = clientIdService.createSubscriberClientId(subscriberGroup, subscriberId);
                 boolean cleanSession = subscriberGroup.getPersistentSessionInfo() == null;
-                MqttClient subClient = clientInitializer.createClient(clientId, cleanSession, (s, mqttMessageByteBuf) -> {
+                MqttClient subClient = clientInitializer.createClient(clientId, cleanSession, (s, mqttMessageByteBuf, receivedTime) -> {
                     try {
                         byte[] mqttMessageBytes = toBytes(mqttMessageByteBuf);
                         Message message = mapper.readValue(mqttMessageBytes, Message.class);
@@ -112,13 +112,14 @@ public class SubscriberServiceImpl implements SubscriberService {
     @Override
     public SubscribeStats subscribe() {
         DescriptiveStatistics generalLatencyStats = new DescriptiveStatistics();
+        DescriptiveStatistics msgProcessingLatencyStats = new DescriptiveStatistics();
         ConcurrentHashMap<Long, AtomicLong> oldMessagesByTestRunId = new ConcurrentHashMap<>();
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
         CountDownLatch subscribeCDL = new CountDownLatch(subscriberInfos.size());
         for (SubscriberInfo subscriberInfo : subscriberInfos.values()) {
-            Future<Void> subscribeFuture = subscriberInfo.getSubscriber().on(subscriberInfo.getSubscriberGroup().getTopicFilter(), (topic, mqttMessageByteBuf) -> {
+            Future<Void> subscribeFuture = subscriberInfo.getSubscriber().on(subscriberInfo.getSubscriberGroup().getTopicFilter(), (topic, mqttMessageByteBuf, receivedTime) -> {
                 try {
                     long now = System.currentTimeMillis();
                     byte[] mqttMessageBytes = toBytes(mqttMessageByteBuf);
@@ -130,8 +131,9 @@ public class SubscriberServiceImpl implements SubscriberService {
                     if (MqttPerformanceTest.TEST_RUN_ID != msgTestRunId) {
                         oldMessagesByTestRunId.computeIfAbsent(msgTestRunId, id -> new AtomicLong(0)).incrementAndGet();
                     }
-                    long msgLatency = now - message.getCreateTime();
+                    long msgLatency = receivedTime - message.getCreateTime();
                     generalLatencyStats.addValue(msgLatency);
+                    msgProcessingLatencyStats.addValue(now - receivedTime);
                     if (subscriberInfo.getLatencyStats() != null) {
                         subscriberInfo.getLatencyStats().addValue(msgLatency);
                         log.debug("[{}] Received msg with time {}", subscriberInfo.getClientId(), message.getCreateTime());
@@ -155,7 +157,7 @@ public class SubscriberServiceImpl implements SubscriberService {
         stopWatch.stop();
         log.info("Subscribing {} subscribers took {} ms.", subscriberInfos.size(), stopWatch.getTime());
 
-        return new SubscribeStats(generalLatencyStats, oldMessagesByTestRunId);
+        return new SubscribeStats(generalLatencyStats, msgProcessingLatencyStats, oldMessagesByTestRunId);
     }
 
     @Override

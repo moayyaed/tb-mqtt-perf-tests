@@ -105,6 +105,8 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public void warmUpPublishers() throws Exception {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         CountDownLatch warmupCDL = new CountDownLatch(publisherInfos.size());
         AtomicBoolean successfulWarmUp = new AtomicBoolean(true);
         for (PublisherInfo publisherInfo : publisherInfos.values()) {
@@ -130,6 +132,9 @@ public class PublisherServiceImpl implements PublisherService {
         if (!successfulWait || !successfulWarmUp.get()) {
             throw new RuntimeException("Failed to warm up publishers");
         }
+
+        stopWatch.stop();
+        log.info("Warming up {} publishers took {} ms.", publisherInfos.size(), stopWatch.getTime());
     }
 
     @Override
