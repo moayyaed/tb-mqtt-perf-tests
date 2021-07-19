@@ -97,7 +97,12 @@ public class FileTestRunConfiguration implements TestRunConfiguration {
     }
 
     @Override
-    public int getPayloadSize() {
-        return testRunConfigurationInfo.getPayloadSize();
+    public int getMinPayloadSize() {
+        return testRunConfigurationInfo.getMinPayloadSize();
+    }
+
+    @Override
+    public List<String> getTelemetryKeys() {
+        return testRunConfigurationInfo.getTelemetryKeys();
     }
 }

@@ -59,6 +59,7 @@ public class PublisherServiceImpl implements PublisherService {
     private final TestRunConfiguration testRunConfiguration;
     private final ClientIdService clientIdService;
     private final TestRunClusterConfig testRunClusterConfig;
+    private final PayloadGenerator payloadGenerator;
 
     private final Map<String, PublisherInfo> publisherInfos = new ConcurrentHashMap<>();
     private final ScheduledExecutorService publishScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -111,7 +112,7 @@ public class PublisherServiceImpl implements PublisherService {
         AtomicBoolean successfulWarmUp = new AtomicBoolean(true);
         for (PublisherInfo publisherInfo : publisherInfos.values()) {
             try {
-                Message message = new Message(System.currentTimeMillis(), MqttPerformanceTest.TEST_RUN_ID, true, generatePayload(testRunConfiguration.getPayloadSize()));
+                Message message = new Message(System.currentTimeMillis(), MqttPerformanceTest.TEST_RUN_ID, true, payloadGenerator.generatePayload());
                 PublishFutures publishFutures = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(mapper.writeValueAsBytes(message)), testRunConfiguration.getPublisherQoS());
                 publishFutures.getPublishFinishedFuture()
                         .addListener(future -> {
@@ -155,7 +156,7 @@ public class PublisherServiceImpl implements PublisherService {
             }
             for (PublisherInfo publisherInfo : publisherInfos.values()) {
                 try {
-                    Message message = new Message(System.currentTimeMillis(), MqttPerformanceTest.TEST_RUN_ID, false, generatePayload(testRunConfiguration.getPayloadSize()));
+                    Message message = new Message(System.currentTimeMillis(), MqttPerformanceTest.TEST_RUN_ID, false, payloadGenerator.generatePayload());
                     byte[] messageBytes = mapper.writeValueAsBytes(message);
                     PublishFutures publishFutures = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes), testRunConfiguration.getPublisherQoS());
                     publishFutures.getPublishSentFuture()
@@ -214,12 +215,6 @@ public class PublisherServiceImpl implements PublisherService {
                         publisherInfo.getClientId(), stats.getN(), stats.getMean(), stats.getPercentile(95), stats.getMax());
             }
         }
-    }
-
-    private static byte[] generatePayload(int size) {
-        byte[] payload = new byte[size];
-        ThreadLocalRandom.current().nextBytes(payload);
-        return payload;
     }
 
     private static final ByteBufAllocator ALLOCATOR = new UnpooledByteBufAllocator(false);

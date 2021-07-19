@@ -42,5 +42,7 @@ public interface TestRunConfiguration {
 
     MqttQoS getSubscriberQoS();
 
-    int getPayloadSize();
+    int getMinPayloadSize();
+
+    List<String> getTelemetryKeys();
 }

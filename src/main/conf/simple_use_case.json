@@ -73,6 +73,7 @@
   "maxMsgsPerPublisherPerSecond": 1,
   "publisherQosValue": 2,
   "subscriberQosValue": 2,
-  "payloadSize": 1024
-
+  "minPayloadSize": 1,
+  "telemetryKeys": ["temperature", "humidity", "location", "pressure", "longitude", "latitude", "id", "ts", "timestamp", "date",
+    "time", "speed", "acceleration", "radiation", "rate", "water_level", "precipitation", "quantity", "depth", "delta", "name", "store"]
 }

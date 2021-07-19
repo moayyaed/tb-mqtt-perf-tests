@@ -35,5 +35,6 @@ public class TestRunConfigurationInfo {
     private int maxMsgsPerPublisherPerSecond;
     private int publisherQosValue;
     private int subscriberQosValue;
-    private int payloadSize;
+    private int minPayloadSize;
+    private List<String> telemetryKeys;
 }

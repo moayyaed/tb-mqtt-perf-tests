@@ -25,6 +25,7 @@ import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -65,7 +66,7 @@ public class DefaultTestRunConfiguration implements TestRunConfiguration {
     private static final MqttQoS PUBLISHER_QOS = MqttQoS.AT_LEAST_ONCE;
     private static final MqttQoS SUBSCRIBER_QOS = MqttQoS.AT_LEAST_ONCE;
 
-    private static final int PAYLOAD_SIZE = 1024;
+    private static final int PAYLOAD_SIZE = 256;
 
     private static final int TOTAL_PUBLISHER_MESSAGES = SECONDS_TO_RUN * MAX_MSGS_PER_PUBLISHER_PER_SECOND;
 
@@ -120,7 +121,12 @@ public class DefaultTestRunConfiguration implements TestRunConfiguration {
     }
 
     @Override
-    public int getPayloadSize() {
+    public int getMinPayloadSize() {
         return PAYLOAD_SIZE;
+    }
+
+    @Override
+    public List<String> getTelemetryKeys() {
+        return Collections.emptyList();
     }
 }

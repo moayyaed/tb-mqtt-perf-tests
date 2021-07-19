@@ -15,16 +15,19 @@
  */
 package org.thingsboard.mqtt.broker.tests;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.springframework.stereotype.Component;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
+import org.thingsboard.mqtt.broker.data.Message;
 import org.thingsboard.mqtt.broker.data.PersistentClientType;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberAnalysisResult;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 import org.thingsboard.mqtt.broker.service.DummyClientService;
+import org.thingsboard.mqtt.broker.service.PayloadGenerator;
 import org.thingsboard.mqtt.broker.service.PersistedMqttClientService;
 import org.thingsboard.mqtt.broker.service.PublishStats;
 import org.thingsboard.mqtt.broker.service.PublisherService;
@@ -41,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RequiredArgsConstructor
 public class MqttPerformanceTest {
+    private static final ObjectMapper mapper = new ObjectMapper();
     public static final long TEST_RUN_ID = new Random().nextLong();
 
     private final DummyClientService dummyClientService;
@@ -48,6 +52,7 @@ public class MqttPerformanceTest {
     private final PublisherService publisherService;
     private final PersistedMqttClientService persistedMqttClientService;
     private final TestRunConfiguration testRunConfiguration;
+    private final PayloadGenerator payloadGenerator;
 
     @PostConstruct
     public void init() throws Exception {
@@ -117,7 +122,7 @@ public class MqttPerformanceTest {
         Thread.sleep(1000);
     }
 
-    private void printTestRunConfiguration() {
+    private void printTestRunConfiguration() throws Exception {
         List<PublisherGroup> publisherGroups = testRunConfiguration.getPublishersConfig();
         List<SubscriberGroup> subscriberGroups = testRunConfiguration.getSubscribersConfig();
         int totalPublishers = publisherGroups.stream().mapToInt(PublisherGroup::getPublishers).sum();
@@ -137,15 +142,16 @@ public class MqttPerformanceTest {
                 .sum();
         int totalPublishedMessages = totalPublishers * testRunConfiguration.getTotalPublisherMessagesCount();
         int totalExpectedReceivedMessages = subscriberService.calculateTotalExpectedReceivedMessages();
-        log.info("Test run info: test run ID - {}, publishers - {}, non-persistent subscribers - {}, regular persistent subscribers - {}, " +
+        Message randomMsg = new Message(System.currentTimeMillis(), MqttPerformanceTest.TEST_RUN_ID, true, payloadGenerator.generatePayload());
+        log.info("Test run info: publishers - {}, non-persistent subscribers - {}, regular persistent subscribers - {}, " +
                         "'APPLICATION' persistent subscribers - {}, dummy client connections - {}, " +
                         "publisher QoS - {}, subscriber QoS - {}, max messages per second - {}, " +
                         "run time - {}s, total published messages - {}, expected total received messages - {}, " +
-                        "payload size - {}, configuration name - {}",
-                MqttPerformanceTest.TEST_RUN_ID, totalPublishers, nonPersistedSubscribers, persistedDevicesSubscribers,
+                        "msg bytes size - {}, test run ID - {}",
+                totalPublishers, nonPersistedSubscribers, persistedDevicesSubscribers,
                 persistedApplicationsSubscribers, testRunConfiguration.getNumberOfDummyClients(),
                 testRunConfiguration.getPublisherQoS(), testRunConfiguration.getSubscriberQoS(), testRunConfiguration.getMaxMessagesPerPublisherPerSecond(),
                 testRunConfiguration.getSecondsToRun(), totalPublishedMessages, totalExpectedReceivedMessages,
-                testRunConfiguration.getPayloadSize(), testRunConfiguration.getConfigurationName());
+                mapper.writeValueAsBytes(randomMsg).length, MqttPerformanceTest.TEST_RUN_ID);
     }
 }
