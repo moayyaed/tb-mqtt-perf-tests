@@ -18,6 +18,7 @@ package org.thingsboard.mqtt.broker.client.mqtt;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -32,6 +33,7 @@ import java.util.function.BiConsumer;
 
 @Slf4j
 @Service
+@ConditionalOnExpression("'${test-run.test-app-type:}'=='RUNNER'")
 public class ReceivedMsgProcessorImpl implements ReceivedMsgProcessor {
     private static final long MAX_DELAY = 50L;
 

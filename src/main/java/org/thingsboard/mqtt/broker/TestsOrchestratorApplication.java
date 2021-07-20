@@ -26,14 +26,17 @@ import java.util.Arrays;
 
 @Slf4j
 @SpringBootApplication
-public class TestsApplication {
+public class TestsOrchestratorApplication {
     private static final String SPRING_CONFIG_NAME_KEY = "--spring.config.name";
     private static final String DEFAULT_SPRING_CONFIG_PARAM = SPRING_CONFIG_NAME_KEY + "=" + "tb-mqtt-broker-performance-tests";
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(TestsApplication.class, updateArguments(args));
-        int exitCode = SpringApplication.exit(ctx, () -> 0);
-        System.exit(exitCode);
+        try {
+            ConfigurableApplicationContext ctx = SpringApplication.run(TestsOrchestratorApplication.class, updateArguments(args));
+        } catch (Exception e) {
+            log.error("Failed to start application.", e);
+            System.exit(1);
+        }
     }
 
     private static String[] updateArguments(String[] args) {

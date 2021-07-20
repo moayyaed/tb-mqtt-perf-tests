@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.Message;
@@ -26,6 +27,7 @@ import org.thingsboard.mqtt.broker.data.PersistentClientType;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberAnalysisResult;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
+import org.thingsboard.mqtt.broker.service.orchestration.ClusterSynchronizer;
 import org.thingsboard.mqtt.broker.service.DummyClientService;
 import org.thingsboard.mqtt.broker.service.PayloadGenerator;
 import org.thingsboard.mqtt.broker.service.PersistedMqttClientService;
@@ -33,6 +35,7 @@ import org.thingsboard.mqtt.broker.service.PublishStats;
 import org.thingsboard.mqtt.broker.service.PublisherService;
 import org.thingsboard.mqtt.broker.service.SubscribeStats;
 import org.thingsboard.mqtt.broker.service.SubscriberService;
+import org.thingsboard.mqtt.broker.service.TestRestService;
 import org.thingsboard.mqtt.broker.util.ValidationUtil;
 
 import javax.annotation.PostConstruct;
@@ -43,6 +46,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 @RequiredArgsConstructor
+@ConditionalOnExpression("'${test-run.test-app-type:}'=='RUNNER'")
 public class MqttPerformanceTest {
     private static final ObjectMapper mapper = new ObjectMapper();
     public static final long TEST_RUN_ID = new Random().nextLong();
@@ -53,6 +57,8 @@ public class MqttPerformanceTest {
     private final PersistedMqttClientService persistedMqttClientService;
     private final TestRunConfiguration testRunConfiguration;
     private final PayloadGenerator payloadGenerator;
+    private final TestRestService testRestService;
+    private final ClusterSynchronizer clusterSynchronizer;
 
     @PostConstruct
     public void init() throws Exception {
@@ -75,6 +81,10 @@ public class MqttPerformanceTest {
         DescriptiveStatistics msgProcessingLatencyStats = subscribeStats.getMsgProcessingLatencyStats();
 
         publisherService.connectPublishers();
+        boolean orchestratorNotified = testRestService.notifyNodeIsReady();
+        if (orchestratorNotified) {
+            clusterSynchronizer.awaitClusterReady();
+        }
         Thread.sleep(2000);
         publisherService.warmUpPublishers();
 

@@ -22,6 +22,7 @@ import io.netty.util.concurrent.Future;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClientConfig;
@@ -37,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@ConditionalOnExpression("'${test-run.test-app-type:}'=='RUNNER'")
 public class ClientInitializerImpl implements ClientInitializer {
 
     private final HostPortService hostPortService;

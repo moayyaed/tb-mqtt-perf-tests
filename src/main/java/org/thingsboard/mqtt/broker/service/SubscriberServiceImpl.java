@@ -83,7 +83,9 @@ public class SubscriberServiceImpl implements SubscriberService {
                 try {
                     byte[] mqttMessageBytes = toBytes(mqttMessageByteBuf);
                     Message message = mapper.readValue(mqttMessageBytes, Message.class);
-                    log.warn("Received persisted message for the test run ID - {} and time {}", message.getTestRunId(), message.getCreateTime());
+                    if (!message.isWarmUpMsg()) {
+                        log.warn("Received persisted message for the test run ID - {} and time {}", message.getTestRunId(), message.getCreateTime());
+                    }
                 } catch (Exception e) {
                     log.error("[{}] Failed to process msg", clientId);
                 }

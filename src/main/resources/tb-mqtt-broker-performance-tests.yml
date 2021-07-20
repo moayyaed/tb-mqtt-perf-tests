@@ -48,8 +48,17 @@ tb-broker:
 
 
 test-run:
+  # Could be ORCHESTRATOR or RUNNER
+  test-app-type: "${TEST_RUN_TEST_APP_TYPE:RUNNER}"
+  orchestrator-url: "${TEST_RUN_TEST_ORCHESTRATOR_URL:}"
+  node-url: "${TEST_RUN_TEST_NODE_URL:}"
+  max-cluster-wait-time: "${TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS:60}"
   configuration-file: "${TEST_RUN_CONFIGURATION_FILE:}"
   sequential-number: "${TEST_RUN_SEQUENTIAL_NUMBER:0}"
   parallel-tests-count: "${TEST_RUN_PARALLEL_TESTS_COUNT:1}"
   logs:
     msg-processing-queue-period: "${TEST_RUN_LOGS_MSG_PROCESSING_QUEUE_PERIOD:15000}"
+
+
+server:
+  port: "${HTTP_BIND_PORT:8088}"
