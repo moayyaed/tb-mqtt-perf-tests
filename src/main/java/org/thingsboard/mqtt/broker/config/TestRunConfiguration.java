@@ -45,4 +45,6 @@ public interface TestRunConfiguration {
     int getMinPayloadSize();
 
     List<String> getTelemetryKeys();
+
+    int getMaxConcurrentOperations();
 }

@@ -18,9 +18,10 @@ package org.thingsboard.mqtt.broker.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.concurrent.Future;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -35,11 +36,11 @@ import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberInfo;
 import org.thingsboard.mqtt.broker.tests.MqttPerformanceTest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
@@ -56,57 +57,48 @@ public class SubscriberServiceImpl implements SubscriberService {
     private final TestRunConfiguration testRunConfiguration;
     private final ClientIdService clientIdService;
     private final TestRunClusterConfig testRunClusterConfig;
+    private final ClusterProcessService clusterProcessService;
 
     private final Map<String, SubscriberInfo> subscriberInfos = new ConcurrentHashMap<>();
 
     @Override
     public void connectSubscribers() {
-        int totalClusterSubscribers = testRunConfiguration.getSubscribersConfig().stream().mapToInt(SubscriberGroup::getSubscribers).sum();
-        int totalNodeSubscribers = totalClusterSubscribers / testRunClusterConfig.getParallelTestsCount()
-                + (totalClusterSubscribers % testRunClusterConfig.getParallelTestsCount() > testRunClusterConfig.getSequentialNumber() ? 1 : 0);
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-
-        CountDownLatch connectCDL = new CountDownLatch(totalNodeSubscribers);
-
+        List<PreConnectedSubscriberInfo> preConnectedSubscriberInfos = new ArrayList<>();
         int currentSubscriberId = 0;
         for (SubscriberGroup subscriberGroup : testRunConfiguration.getSubscribersConfig()) {
             for (int i = 0; i < subscriberGroup.getSubscribers(); i++) {
-                if (currentSubscriberId++ % testRunClusterConfig.getParallelTestsCount() != testRunClusterConfig.getSequentialNumber()) {
-                    continue;
+                if (currentSubscriberId++ % testRunClusterConfig.getParallelTestsCount() == testRunClusterConfig.getSequentialNumber()) {
+                    preConnectedSubscriberInfos.add(new PreConnectedSubscriberInfo(subscriberGroup, i));
                 }
-                int subscriberId = i;
-                String clientId = clientIdService.createSubscriberClientId(subscriberGroup, subscriberId);
-                boolean cleanSession = subscriberGroup.getPersistentSessionInfo() == null;
-                MqttClient subClient = clientInitializer.createClient(clientId, cleanSession, (s, mqttMessageByteBuf, receivedTime) -> {
-                    try {
-                        byte[] mqttMessageBytes = toBytes(mqttMessageByteBuf);
-                        Message message = mapper.readValue(mqttMessageBytes, Message.class);
-                        log.warn("Received persisted message for the time {}", message.getCreateTime());
-                    } catch (Exception e) {
-                        log.error("[{}] Failed to process msg", clientId);
-                    }
-                });
-                clientInitializer.connectClient(subClient).addListener(future -> {
-                    if (!future.isSuccess()) {
-                        log.warn("[{}] Failed to connect subscriber", clientId);
-                        subClient.disconnect();
-                    } else {
-                        subscriberInfos.put(clientId, new SubscriberInfo(subClient, subscriberId, clientId, new AtomicInteger(0), subscriberGroup,
-                                subscriberGroup.isDebugEnabled() ? new DescriptiveStatistics() : null));
-                    }
-                    connectCDL.countDown();
-                });
             }
         }
-        try {
-            connectCDL.await(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            log.error("Failed to wait for the subscribers to connect.");
-            throw new RuntimeException("Failed to wait for the subscribers to connect");
-        }
-        stopWatch.stop();
-        log.info("Connecting {} subscribers took {} ms.", totalNodeSubscribers, stopWatch.getTime());
+
+        clusterProcessService.process("SUBSCRIBERS_CONNECT", preConnectedSubscriberInfos, (latch, preConnectedSubscriberInfo) -> {
+            int subscriberIndex = preConnectedSubscriberInfo.getSubscriberIndex();
+            SubscriberGroup subscriberGroup = preConnectedSubscriberInfo.getSubscriberGroup();
+
+            String clientId = clientIdService.createSubscriberClientId(subscriberGroup, subscriberIndex);
+            boolean cleanSession = subscriberGroup.getPersistentSessionInfo() == null;
+            MqttClient subClient = clientInitializer.createClient(clientId, cleanSession, (s, mqttMessageByteBuf, receivedTime) -> {
+                try {
+                    byte[] mqttMessageBytes = toBytes(mqttMessageByteBuf);
+                    Message message = mapper.readValue(mqttMessageBytes, Message.class);
+                    log.warn("Received persisted message for the test run ID - {} and time {}", message.getTestRunId(), message.getCreateTime());
+                } catch (Exception e) {
+                    log.error("[{}] Failed to process msg", clientId);
+                }
+            });
+            clientInitializer.connectClient(subClient).addListener(future -> {
+                if (!future.isSuccess()) {
+                    log.warn("[{}] Failed to connect subscriber", clientId);
+                    subClient.disconnect();
+                } else {
+                    subscriberInfos.put(clientId, new SubscriberInfo(subClient, subscriberIndex, clientId, new AtomicInteger(0), subscriberGroup,
+                            subscriberGroup.isDebugEnabled() ? new DescriptiveStatistics() : null));
+                }
+                latch.countDown();
+            });
+        });
     }
 
     @Override
@@ -114,11 +106,8 @@ public class SubscriberServiceImpl implements SubscriberService {
         DescriptiveStatistics generalLatencyStats = new DescriptiveStatistics();
         DescriptiveStatistics msgProcessingLatencyStats = new DescriptiveStatistics();
         ConcurrentHashMap<Long, AtomicLong> oldMessagesByTestRunId = new ConcurrentHashMap<>();
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
 
-        CountDownLatch subscribeCDL = new CountDownLatch(subscriberInfos.size());
-        for (SubscriberInfo subscriberInfo : subscriberInfos.values()) {
+        clusterProcessService.process("SUBSCRIBERS_SUBSCRIBE", new ArrayList<>(subscriberInfos.values()), (latch, subscriberInfo) -> {
             Future<Void> subscribeFuture = subscriberInfo.getSubscriber().on(subscriberInfo.getSubscriberGroup().getTopicFilter(), (topic, mqttMessageByteBuf, receivedTime) -> {
                 try {
                     long now = System.currentTimeMillis();
@@ -145,17 +134,9 @@ public class SubscriberServiceImpl implements SubscriberService {
             }, testRunConfiguration.getSubscriberQoS());
 
             subscribeFuture.addListener(future -> {
-                subscribeCDL.countDown();
+                latch.countDown();
             });
-        }
-        try {
-            subscribeCDL.await(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            log.error("Failed to wait for the subscribers to subscribe.");
-            throw new RuntimeException("Failed to wait for the subscribers to subscribe");
-        }
-        stopWatch.stop();
-        log.info("Subscribing {} subscribers took {} ms.", subscriberInfos.size(), stopWatch.getTime());
+        });
 
         return new SubscribeStats(generalLatencyStats, msgProcessingLatencyStats, oldMessagesByTestRunId);
     }
@@ -233,5 +214,12 @@ public class SubscriberServiceImpl implements SubscriberService {
         int readerIndex = inbound.readerIndex();
         inbound.getBytes(readerIndex, bytes);
         return bytes;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    private static class PreConnectedSubscriberInfo {
+        private final SubscriberGroup subscriberGroup;
+        private final int subscriberIndex;
     }
 }

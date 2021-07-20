@@ -29,10 +29,10 @@ import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 
 import javax.annotation.PreDestroy;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -43,27 +43,29 @@ public class DummyClientServiceImpl implements DummyClientService {
     private final TestRunConfiguration testRunConfiguration;
     private final ClientIdService clientIdService;
     private final TestRunClusterConfig testRunClusterConfig;
+    private final ClusterProcessService clusterProcessService;
 
     private Map<String, MqttClient> dummyClients;
 
     @Override
-    public void connectDummyClients() throws InterruptedException {
+    public void connectDummyClients() {
         this.dummyClients = new ConcurrentHashMap<>();
         DescriptiveStatistics connectionStats = new DescriptiveStatistics();
-        int totalNodeDummies = testRunConfiguration.getNumberOfDummyClients() / testRunClusterConfig.getParallelTestsCount()
-                + (testRunConfiguration.getNumberOfDummyClients() % testRunClusterConfig.getParallelTestsCount() > testRunClusterConfig.getSequentialNumber() ? 1 : 0);
-        CountDownLatch countDownLatch = new CountDownLatch(totalNodeDummies);
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
+        List<Integer> preConnectedDummyIndexes = new ArrayList<>();
         int currentDummyId = 0;
-        long connectionStart = System.currentTimeMillis();
         for (int i = 0; i < testRunConfiguration.getNumberOfDummyClients(); i++) {
-            if (currentDummyId++ % testRunClusterConfig.getParallelTestsCount() != testRunClusterConfig.getSequentialNumber()) {
-                continue;
+            if (currentDummyId++ % testRunClusterConfig.getParallelTestsCount() == testRunClusterConfig.getSequentialNumber()) {
+                preConnectedDummyIndexes.add(i);
             }
-            String clientId = clientIdService.createDummyClientId(i);
+        }
+
+        long connectionStart = System.currentTimeMillis();
+        clusterProcessService.process("DUMMIES_CONNECT", preConnectedDummyIndexes, (latch, dummyId) -> {
+            String clientId = clientIdService.createDummyClientId(dummyId);
             MqttClient dummyClient = clientInitializer.createClient(clientId);
             Future<MqttConnectResult> connectResultFuture = clientInitializer.connectClient(dummyClient);
             connectResultFuture.addListener(future -> {
@@ -74,13 +76,13 @@ public class DummyClientServiceImpl implements DummyClientService {
                     dummyClients.put(clientId, dummyClient);
                     connectionStats.addValue(System.currentTimeMillis() - connectionStart);
                 }
-                countDownLatch.countDown();
+                latch.countDown();
             });
-        }
+        });
 
-        countDownLatch.await(30, TimeUnit.SECONDS);
         stopWatch.stop();
-
+        int totalNodeDummies = testRunConfiguration.getNumberOfDummyClients() / testRunClusterConfig.getParallelTestsCount()
+                + (testRunConfiguration.getNumberOfDummyClients() % testRunClusterConfig.getParallelTestsCount() > testRunClusterConfig.getSequentialNumber() ? 1 : 0);
         log.info("Connecting {} dummy clients took {} ms, median connection time - {}, max connection time - {}, 95 percentile connection time - {}.",
                 totalNodeDummies, stopWatch.getTime(), connectionStats.getMean(),
                 connectionStats.getMax(), connectionStats.getPercentile(95.0));

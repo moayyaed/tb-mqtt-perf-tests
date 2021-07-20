@@ -75,5 +75,6 @@
   "subscriberQosValue": 2,
   "minPayloadSize": 1,
   "telemetryKeys": ["temperature", "humidity", "location", "pressure", "longitude", "latitude", "id", "ts", "timestamp", "date",
-    "time", "speed", "acceleration", "radiation", "rate", "water_level", "precipitation", "quantity", "depth", "delta", "name", "store"]
+    "time", "speed", "acceleration", "radiation", "rate", "water_level", "precipitation", "quantity", "depth", "delta", "name", "store"],
+  "maxConcurrentOperations": 1000
 }

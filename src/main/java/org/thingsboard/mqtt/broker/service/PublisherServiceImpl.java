@@ -20,6 +20,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.util.concurrent.Future;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
@@ -37,12 +39,13 @@ import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.PublisherInfo;
 import org.thingsboard.mqtt.broker.tests.MqttPerformanceTest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -60,48 +63,40 @@ public class PublisherServiceImpl implements PublisherService {
     private final ClientIdService clientIdService;
     private final TestRunClusterConfig testRunClusterConfig;
     private final PayloadGenerator payloadGenerator;
+    private final ClusterProcessService clusterProcessService;
 
     private final Map<String, PublisherInfo> publisherInfos = new ConcurrentHashMap<>();
     private final ScheduledExecutorService publishScheduler = Executors.newSingleThreadScheduledExecutor();
 
     @Override
     public void connectPublishers() {
-        int totalClusterPublishers = testRunConfiguration.getPublishersConfig().stream().mapToInt(PublisherGroup::getPublishers).sum();
-        int totalNodePublishers = totalClusterPublishers / testRunClusterConfig.getParallelTestsCount()
-                + (totalClusterPublishers % testRunClusterConfig.getParallelTestsCount() > testRunClusterConfig.getSequentialNumber() ? 1 : 0);
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
+        List<PreConnectedPublisherInfo> preConnectedPublisherInfos = new ArrayList<>();
         int currentPublisherId = 0;
-        CountDownLatch connectCDL = new CountDownLatch(totalNodePublishers);
         for (PublisherGroup publisherGroup : testRunConfiguration.getPublishersConfig()) {
             for (int i = 0; i < publisherGroup.getPublishers(); i++) {
-                if (currentPublisherId++ % testRunClusterConfig.getParallelTestsCount() != testRunClusterConfig.getSequentialNumber()) {
-                    continue;
+                if (currentPublisherId++ % testRunClusterConfig.getParallelTestsCount() == testRunClusterConfig.getSequentialNumber()) {
+                    preConnectedPublisherInfos.add(new PreConnectedPublisherInfo(publisherGroup, i));
                 }
-                String clientId = clientIdService.createPublisherClientId(publisherGroup, i);
-                String topic = publisherGroup.getTopicPrefix() + i;
-                MqttClient pubClient = clientInitializer.createClient(clientId);
-                Future<MqttConnectResult> connectResultFuture = clientInitializer.connectClient(pubClient);
-                connectResultFuture.addListener(future -> {
-                    if (!future.isSuccess()) {
-                        log.warn("[{}] Failed to connect publisher", clientId);
-                        pubClient.disconnect();
-                    } else {
-                        publisherInfos.put(clientId, new PublisherInfo(pubClient, clientId, topic,
-                                publisherGroup.isDebugEnabled() ? new DescriptiveStatistics() : null));
-                    }
-                    connectCDL.countDown();
-                });
             }
         }
-        try {
-            connectCDL.await(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            log.error("Failed to wait for the publishers to connect.");
-            throw new RuntimeException("Failed to wait for the publishers to connect");
-        }
-        stopWatch.stop();
-        log.info("Connecting {} publishers took {} ms.", totalNodePublishers, stopWatch.getTime());
+        clusterProcessService.process("PUBLISHERS_CONNECT", preConnectedPublisherInfos, (latch, preConnectedPublisherInfo) -> {
+            PublisherGroup publisherGroup = preConnectedPublisherInfo.getPublisherGroup();
+            int publisherIndex = preConnectedPublisherInfo.getPublisherIndex();
+            String clientId = clientIdService.createPublisherClientId(publisherGroup, publisherIndex);
+            String topic = publisherGroup.getTopicPrefix() + publisherIndex;
+            MqttClient pubClient = clientInitializer.createClient(clientId);
+            Future<MqttConnectResult> connectResultFuture = clientInitializer.connectClient(pubClient);
+            connectResultFuture.addListener(future -> {
+                if (!future.isSuccess()) {
+                    log.warn("[{}] Failed to connect publisher", clientId);
+                    pubClient.disconnect();
+                } else {
+                    publisherInfos.put(clientId, new PublisherInfo(pubClient, clientId, topic,
+                            publisherGroup.isDebugEnabled() ? new DescriptiveStatistics() : null));
+                }
+                latch.countDown();
+            });
+        });
     }
 
     @Override
@@ -223,5 +218,12 @@ public class PublisherServiceImpl implements PublisherService {
         ByteBuf payload = ALLOCATOR.buffer();
         payload.writeBytes(bytes);
         return payload;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    private static class PreConnectedPublisherInfo {
+        private final PublisherGroup publisherGroup;
+        private final int publisherIndex;
     }
 }

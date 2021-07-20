@@ -129,4 +129,9 @@ public class DefaultTestRunConfiguration implements TestRunConfiguration {
     public List<String> getTelemetryKeys() {
         return Collections.emptyList();
     }
+
+    @Override
+    public int getMaxConcurrentOperations() {
+        return 10000;
+    }
 }

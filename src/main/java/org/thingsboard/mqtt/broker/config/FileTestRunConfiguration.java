@@ -105,4 +105,10 @@ public class FileTestRunConfiguration implements TestRunConfiguration {
     public List<String> getTelemetryKeys() {
         return testRunConfigurationInfo.getTelemetryKeys();
     }
+
+    @Override
+    public int getMaxConcurrentOperations() {
+        return testRunConfigurationInfo.getMaxConcurrentOperations();
+    }
+
 }

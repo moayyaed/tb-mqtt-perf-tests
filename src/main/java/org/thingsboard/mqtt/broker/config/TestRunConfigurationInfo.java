@@ -37,4 +37,5 @@ public class TestRunConfigurationInfo {
     private int subscriberQosValue;
     private int minPayloadSize;
     private List<String> telemetryKeys;
+    private int maxConcurrentOperations;
 }
