@@ -38,7 +38,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@ConditionalOnExpression("'${test-run.test-app-type:}'=='RUNNER'")
 public class ClientInitializerImpl implements ClientInitializer {
 
     private final HostPortService hostPortService;

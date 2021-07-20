@@ -16,7 +16,6 @@
 package org.thingsboard.mqtt.broker.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +24,6 @@ import org.thingsboard.mqtt.broker.service.orchestration.ClusterSynchronizer;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(ClusterConst.NODE_PATH)
-@ConditionalOnExpression("'${test-run.test-app-type:}'=='RUNNER'")
 public class NodeController {
 
     private final ClusterSynchronizer clusterSynchronizer;

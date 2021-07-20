@@ -18,14 +18,14 @@ package org.thingsboard.mqtt.broker.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.thingsboard.mqtt.broker.data.NodeInfo;
-import org.thingsboard.mqtt.broker.service.TestRestService;
+import org.thingsboard.mqtt.broker.service.orchestration.TestRestService;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -33,9 +33,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 @RestController
+@Profile("orchestrator")
 @RequiredArgsConstructor
 @RequestMapping(ClusterConst.ORCHESTRATOR_PATH)
-@ConditionalOnExpression("'${test-run.test-app-type:}'=='ORCHESTRATOR'")
 public class OrchestratorController {
 
     private final TestRestService testRestService;
@@ -58,7 +58,11 @@ public class OrchestratorController {
         if (nodeUrls.size() == nodeInfo.getNodesInCluster()) {
             for (String nodeUrl : nodeUrls) {
                 log.info("Notifying {} node.", nodeUrl);
-                testRestService.notifyClusterIsReady(nodeUrl);
+                try {
+                    testRestService.notifyClusterIsReady(nodeUrl);
+                } catch (Exception e) {
+                    log.warn("Failed to notify {} node", nodeUrl);
+                }
             }
             nodeUrls.clear();
         }

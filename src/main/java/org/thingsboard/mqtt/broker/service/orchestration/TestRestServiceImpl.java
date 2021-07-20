@@ -1,4 +1,4 @@
-package org.thingsboard.mqtt.broker.service;
+package org.thingsboard.mqtt.broker.service.orchestration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class TestRestServiceImpl implements TestRestService {
 
     @Override
     public void notifyClusterIsReady(String nodeUrl) {
-        restTemplate.postForLocation(nodeUrl, new Object());
+        restTemplate.postForLocation(nodeUrl, "OK");
     }
 
     @Override

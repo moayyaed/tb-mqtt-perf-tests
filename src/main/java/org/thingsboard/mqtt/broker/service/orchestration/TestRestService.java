@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingsboard.mqtt.broker.service;
+package org.thingsboard.mqtt.broker.service.orchestration;
 
 public interface TestRestService {
     void notifyClusterIsReady(String nodeUrl);

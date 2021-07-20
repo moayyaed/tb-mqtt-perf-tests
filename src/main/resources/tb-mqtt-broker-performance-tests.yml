@@ -49,7 +49,6 @@ tb-broker:
 
 test-run:
   # Could be ORCHESTRATOR or RUNNER
-  test-app-type: "${TEST_RUN_TEST_APP_TYPE:RUNNER}"
   orchestrator-url: "${TEST_RUN_TEST_ORCHESTRATOR_URL:}"
   node-url: "${TEST_RUN_TEST_NODE_URL:}"
   max-cluster-wait-time: "${TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS:60}"

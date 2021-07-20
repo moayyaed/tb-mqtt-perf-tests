@@ -35,7 +35,7 @@ import org.thingsboard.mqtt.broker.service.PublishStats;
 import org.thingsboard.mqtt.broker.service.PublisherService;
 import org.thingsboard.mqtt.broker.service.SubscribeStats;
 import org.thingsboard.mqtt.broker.service.SubscriberService;
-import org.thingsboard.mqtt.broker.service.TestRestService;
+import org.thingsboard.mqtt.broker.service.orchestration.TestRestService;
 import org.thingsboard.mqtt.broker.util.ValidationUtil;
 
 import javax.annotation.PostConstruct;
@@ -46,7 +46,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-@ConditionalOnExpression("'${test-run.test-app-type:}'=='RUNNER'")
 public class MqttPerformanceTest {
     private static final ObjectMapper mapper = new ObjectMapper();
     public static final long TEST_RUN_ID = new Random().nextLong();
@@ -64,6 +63,9 @@ public class MqttPerformanceTest {
     public void init() throws Exception {
         ValidationUtil.validateSubscriberGroups(testRunConfiguration.getSubscribersConfig());
         ValidationUtil.validatePublisherGroups(testRunConfiguration.getPublishersConfig());
+    }
+
+    public void runTest() throws Exception {
         log.info("Start performance test.");
 
         printTestRunConfiguration();
@@ -120,7 +122,7 @@ public class MqttPerformanceTest {
                 sentStats.getN(), sentStats.getMean(), sentStats.getMax(),
                 acknowledgedStats.getN(), acknowledgedStats.getMean(), acknowledgedStats.getMax(),
                 msgProcessingLatencyStats.getMean()
-                );
+        );
         subscribeStats.getOldMessagesByTestRunId().forEach((testRunId, oldMessagesCount) -> {
             log.info("Received {} messages from test run ID {}.", oldMessagesCount.get(), testRunId);
         });

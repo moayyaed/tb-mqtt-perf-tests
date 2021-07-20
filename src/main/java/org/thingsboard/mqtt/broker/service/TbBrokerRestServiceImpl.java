@@ -31,7 +31,7 @@ import javax.annotation.PostConstruct;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@ConditionalOnExpression("'${broker.type:}'=='THINGSBOARD' && '${test-run.test-app-type:}'=='RUNNER'")
+@ConditionalOnExpression("'${broker.type:}'=='THINGSBOARD'")
 public class TbBrokerRestServiceImpl implements TbBrokerRestService {
 
     private final RestTemplateBuilder restTemplateBuilder;

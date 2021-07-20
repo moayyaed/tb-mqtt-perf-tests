@@ -33,7 +33,6 @@ import java.util.function.BiConsumer;
 
 @Slf4j
 @Service
-@ConditionalOnExpression("'${test-run.test-app-type:}'=='RUNNER'")
 public class ReceivedMsgProcessorImpl implements ReceivedMsgProcessor {
     private static final long MAX_DELAY = 50L;
 
