@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -59,8 +60,9 @@ public class TestRestServiceImpl implements TestRestService {
             return false;
         }
         try {
-            return restTemplate.postForLocation(orchestratorUrl + ClusterConst.ORCHESTRATOR_PATH,
-                    new NodeInfo(nodeUrl + ClusterConst.NODE_PATH, testRunClusterConfig.getParallelTestsCount())) != null;
+            ResponseEntity<String> response = restTemplate.postForEntity(orchestratorUrl + ClusterConst.ORCHESTRATOR_PATH,
+                    new NodeInfo(nodeUrl + ClusterConst.NODE_PATH, testRunClusterConfig.getParallelTestsCount()), String.class);
+            return "OK".equals(response.getBody());
         } catch (Exception e) {
             log.error("Error notifying orchestrator", e);
             return false;
