@@ -63,10 +63,10 @@ public class DummyClientServiceImpl implements DummyClientService {
             }
         }
 
-        long connectionStart = System.currentTimeMillis();
         clusterProcessService.process("DUMMIES_CONNECT", preConnectedDummyIndexes, (latch, dummyId) -> {
             String clientId = clientIdService.createDummyClientId(dummyId);
             MqttClient dummyClient = clientInitializer.createClient(clientId);
+            long connectionStart = System.currentTimeMillis();
             Future<MqttConnectResult> connectResultFuture = clientInitializer.connectClient(dummyClient);
             connectResultFuture.addListener(future -> {
                 if (!future.isSuccess()) {

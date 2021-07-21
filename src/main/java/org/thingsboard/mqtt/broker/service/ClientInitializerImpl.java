@@ -47,6 +47,8 @@ public class ClientInitializerImpl implements ClientInitializer {
 
     @Value("${mqtt.client.connect-timeout-seconds:5}")
     private int connectTimeout;
+    @Value("${mqtt.client.keep-alive-seconds:600}")
+    private int keepAliveSeconds;
 
     private EventLoopGroup EVENT_LOOP_GROUP;
 
@@ -71,6 +73,7 @@ public class ClientInitializerImpl implements ClientInitializer {
         config.setClientId(clientId);
         config.setCleanSession(cleanSession);
         config.setProtocolVersion(MqttVersion.MQTT_3_1_1);
+        config.setTimeoutSeconds(keepAliveSeconds);
         MqttClient client = MqttClient.create(config, defaultHandler, receivedMsgProcessor);
         client.setEventLoop(EVENT_LOOP_GROUP);
         return client;
