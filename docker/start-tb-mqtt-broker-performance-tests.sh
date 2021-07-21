@@ -15,9 +15,17 @@
 # limitations under the License.
 #
 
-CONF_FOLDER="/config"
 jarfile=${pkg.installFolder}/bin/${pkg.name}.jar
-configfile=${pkg.name}.conf
+
+configfile="/config/${pkg.name}.conf"
+if [ ! -f ${configfile} ]; then
+  configfile=${pkg.installFolder}/conf/${pkg.name}.conf
+fi
+
+logbackfile="/config/logback.xml"
+if [ ! -f ${logbackfile} ]; then
+  logbackfile=${pkg.installFolder}/conf/logback.xml
+fi
 
 source "${CONF_FOLDER}/${configfile}"
 
@@ -25,6 +33,19 @@ echo "Starting ThingsBoard MQTT Broker Performance Tests..."
 
 cd ${pkg.installFolder}/bin
 
-java -cp ${jarfile} $JAVA_OPTS -Dloader.main=org.thingsboard.mqtt.broker.TestsApplication \
-                    -Dlogging.config=${CONF_FOLDER}/logback.xml \
+if [ "$ORCHESTRATION_NODE" == "true" ]; then
+
+  echo "Starting '${project.name}' in ORCHESTRATION mode..."
+
+  java -cp ${jarfile} $JAVA_OPTS -Dloader.main=org.thingsboard.mqtt.broker.TestsOrchestratorApplication \
+                    -Dlogging.config=${logbackfile} \
                     org.springframework.boot.loader.PropertiesLauncher
+
+else
+  echo "Starting '${project.name}' in WORKER mode..."
+
+  java -cp ${jarfile} $JAVA_OPTS -Dloader.main=org.thingsboard.mqtt.broker.TestsApplication \
+                    -Dlogging.config=${logbackfile} \
+                    org.springframework.boot.loader.PropertiesLauncher
+
+fi
