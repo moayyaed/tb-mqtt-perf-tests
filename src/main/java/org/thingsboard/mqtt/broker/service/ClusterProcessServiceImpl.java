@@ -63,7 +63,7 @@ public class ClusterProcessServiceImpl implements ClusterProcessService {
                 throw new RuntimeException("Failed to wait for the " + taskName + " to finish");
             }
             stopWatch.stop();
-            log.debug("Processing {} with {} took {} ms.", clientsToProcess, taskName, stopWatch.getTime());
+            log.debug("Processing {} {} took {} ms.", clientsToProcess, taskName, stopWatch.getTime());
         }
         log.info("Finished processing {} task.", taskName);
     }

@@ -82,6 +82,8 @@ public class MqttPerformanceTest {
         DescriptiveStatistics generalLatencyStats = subscribeStats.getLatencyStats();
         DescriptiveStatistics msgProcessingLatencyStats = subscribeStats.getMsgProcessingLatencyStats();
 
+        dummyClientService.connectDummyClients();
+
         publisherService.connectPublishers();
         boolean orchestratorNotified = testRestService.notifyNodeIsReady();
         if (orchestratorNotified) {
@@ -89,8 +91,7 @@ public class MqttPerformanceTest {
         }
         Thread.sleep(2000);
         publisherService.warmUpPublishers();
-
-        dummyClientService.connectDummyClients();
+        Thread.sleep(1000);
 
         PublishStats publishStats = publisherService.startPublishing();
 
