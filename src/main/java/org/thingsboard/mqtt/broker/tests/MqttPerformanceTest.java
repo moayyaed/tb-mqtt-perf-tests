@@ -76,9 +76,11 @@ public class MqttPerformanceTest {
         Thread.sleep(2000);
         persistedMqttClientService.initApplicationClients();
 
-        subscriberService.connectSubscribers();
+        SubscribeStats subscribeStats = new SubscribeStats(new DescriptiveStatistics(), new DescriptiveStatistics());
 
-        SubscribeStats subscribeStats = subscriberService.subscribe();
+        subscriberService.connectSubscribers(subscribeStats);
+
+        subscriberService.subscribe(subscribeStats);
         DescriptiveStatistics generalLatencyStats = subscribeStats.getLatencyStats();
         DescriptiveStatistics msgProcessingLatencyStats = subscribeStats.getMsgProcessingLatencyStats();
 
@@ -124,9 +126,6 @@ public class MqttPerformanceTest {
                 acknowledgedStats.getN(), acknowledgedStats.getMean(), acknowledgedStats.getMax(),
                 msgProcessingLatencyStats.getMean()
         );
-        subscribeStats.getOldMessagesByTestRunId().forEach((testRunId, oldMessagesCount) -> {
-            log.info("Received {} messages from test run ID {}.", oldMessagesCount.get(), testRunId);
-        });
 
         publisherService.printDebugPublishersStats();
         subscriberService.printDebugSubscribersStats();

@@ -16,6 +16,7 @@
 package org.thingsboard.mqtt.broker.data;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 
@@ -23,22 +24,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
 public class SubscriberInfo {
-    private final MqttClient subscriber;
+    @Setter
+    private MqttClient subscriber;
     private final int id;
     private final String clientId;
-    private final AtomicInteger receivedMsgs;
+    private final AtomicInteger totalReceivedMsgs;
     private final SubscriberGroup subscriberGroup;
     private final DescriptiveStatistics latencyStats;
 
-    public SubscriberInfo(MqttClient subscriber, int id, String clientId, AtomicInteger receivedMsgs, SubscriberGroup subscriberGroup) {
-        this(subscriber, id, clientId, receivedMsgs, subscriberGroup, null);
+    public SubscriberInfo(MqttClient subscriber, int id, String clientId, AtomicInteger totalReceivedMsgs, SubscriberGroup subscriberGroup) {
+        this(subscriber, id, clientId, totalReceivedMsgs, subscriberGroup, null);
     }
 
-    public SubscriberInfo(MqttClient subscriber, int id, String clientId, AtomicInteger receivedMsgs, SubscriberGroup subscriberGroup, DescriptiveStatistics latencyStats) {
+    public SubscriberInfo(MqttClient subscriber, int id, String clientId, AtomicInteger totalReceivedMsgs, SubscriberGroup subscriberGroup, DescriptiveStatistics latencyStats) {
         this.subscriber = subscriber;
         this.id = id;
         this.clientId = clientId;
-        this.receivedMsgs = receivedMsgs;
+        this.totalReceivedMsgs = totalReceivedMsgs;
         this.subscriberGroup = subscriberGroup;
         this.latencyStats = latencyStats;
     }

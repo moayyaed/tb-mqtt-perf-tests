@@ -157,7 +157,7 @@ public class PublisherServiceImpl implements PublisherService {
                     publishFutures.getPublishSentFuture()
                             .addListener(future -> {
                                         if (!future.isSuccess()) {
-                                            log.error("[{}] Error sending msg", publisherInfo.getClientId(), future.cause());
+                                            log.debug("[{}] Error sending msg, reason - {}", publisherInfo.getClientId(), future.cause().getMessage());
                                         } else {
                                             publishSentLatencyStats.addValue(System.currentTimeMillis() - message.getCreateTime());
                                             if (publisherInfo.isDebug()) {
@@ -168,9 +168,7 @@ public class PublisherServiceImpl implements PublisherService {
                             );
                     publishFutures.getPublishFinishedFuture()
                             .addListener(future -> {
-                                        if (!future.isSuccess()) {
-                                            log.error("[{}] Error acknowledging msg", publisherInfo.getClientId(), future.cause());
-                                        } else {
+                                        if (future.isSuccess()) {
                                             long ackLatency = System.currentTimeMillis() - message.getCreateTime();
                                             publishAcknowledgedStats.addValue(ackLatency);
                                             if (publisherInfo.getAcknowledgeLatencyStats() != null) {

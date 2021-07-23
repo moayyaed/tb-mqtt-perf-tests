@@ -34,7 +34,6 @@ import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberAnalysisResult;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberInfo;
-import org.thingsboard.mqtt.broker.tests.MqttPerformanceTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -62,7 +60,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     private final Map<String, SubscriberInfo> subscriberInfos = new ConcurrentHashMap<>();
 
     @Override
-    public void connectSubscribers() {
+    public void connectSubscribers(SubscribeStats subscribeStats) {
         List<PreConnectedSubscriberInfo> preConnectedSubscriberInfos = new ArrayList<>();
         int currentSubscriberId = 0;
         for (SubscriberGroup subscriberGroup : testRunConfiguration.getSubscribersConfig()) {
@@ -79,24 +77,18 @@ public class SubscriberServiceImpl implements SubscriberService {
 
             String clientId = clientIdService.createSubscriberClientId(subscriberGroup, subscriberIndex);
             boolean cleanSession = subscriberGroup.getPersistentSessionInfo() == null;
+            SubscriberInfo subscriberInfo = new SubscriberInfo(null, subscriberIndex, clientId, new AtomicInteger(0), subscriberGroup,
+                    subscriberGroup.isDebugEnabled() ? new DescriptiveStatistics() : null);
             MqttClient subClient = clientInitializer.createClient(clientId, cleanSession, (s, mqttMessageByteBuf, receivedTime) -> {
-                try {
-                    byte[] mqttMessageBytes = toBytes(mqttMessageByteBuf);
-                    Message message = mapper.readValue(mqttMessageBytes, Message.class);
-                    if (!message.isWarmUpMsg()) {
-                        log.warn("Received persisted message for the test run ID - {} and time {}", message.getTestRunId(), message.getCreateTime());
-                    }
-                } catch (Exception e) {
-                    log.error("[{}] Failed to process msg", clientId);
-                }
+                processReceivedMsg(subscribeStats, subscriberInfo, mqttMessageByteBuf, receivedTime);
             });
             clientInitializer.connectClient(subClient).addListener(future -> {
                 if (!future.isSuccess()) {
                     log.warn("[{}] Failed to connect subscriber", clientId);
                     subClient.disconnect();
                 } else {
-                    subscriberInfos.put(clientId, new SubscriberInfo(subClient, subscriberIndex, clientId, new AtomicInteger(0), subscriberGroup,
-                            subscriberGroup.isDebugEnabled() ? new DescriptiveStatistics() : null));
+                    subscriberInfo.setSubscriber(subClient);
+                    subscriberInfos.put(clientId, subscriberInfo);
                 }
                 latch.countDown();
             });
@@ -104,43 +96,36 @@ public class SubscriberServiceImpl implements SubscriberService {
     }
 
     @Override
-    public SubscribeStats subscribe() {
-        DescriptiveStatistics generalLatencyStats = new DescriptiveStatistics();
-        DescriptiveStatistics msgProcessingLatencyStats = new DescriptiveStatistics();
-        ConcurrentHashMap<Long, AtomicLong> oldMessagesByTestRunId = new ConcurrentHashMap<>();
-
+    public void subscribe(SubscribeStats subscribeStats) {
         clusterProcessService.process("SUBSCRIBERS_SUBSCRIBE", new ArrayList<>(subscriberInfos.values()), (latch, subscriberInfo) -> {
             Future<Void> subscribeFuture = subscriberInfo.getSubscriber().on(subscriberInfo.getSubscriberGroup().getTopicFilter(), (topic, mqttMessageByteBuf, receivedTime) -> {
-                try {
-                    long now = System.currentTimeMillis();
-                    byte[] mqttMessageBytes = toBytes(mqttMessageByteBuf);
-                    Message message = mapper.readValue(mqttMessageBytes, Message.class);
-                    long msgTestRunId = message.getTestRunId() != null ? message.getTestRunId() : -1L;
-                    if (message.isWarmUpMsg()) {
-                        return;
-                    }
-                    if (MqttPerformanceTest.TEST_RUN_ID != msgTestRunId) {
-                        oldMessagesByTestRunId.computeIfAbsent(msgTestRunId, id -> new AtomicLong(0)).incrementAndGet();
-                    }
-                    long msgLatency = receivedTime - message.getCreateTime();
-                    generalLatencyStats.addValue(msgLatency);
-                    msgProcessingLatencyStats.addValue(now - receivedTime);
-                    if (subscriberInfo.getLatencyStats() != null) {
-                        subscriberInfo.getLatencyStats().addValue(msgLatency);
-                        log.debug("[{}] Received msg with time {}", subscriberInfo.getClientId(), message.getCreateTime());
-                    }
-                    subscriberInfo.getReceivedMsgs().incrementAndGet();
-                } catch (Exception e) {
-                    log.error("[{}] Failed to process msg", subscriberInfo.getId());
-                }
+                processReceivedMsg(subscribeStats, subscriberInfo, mqttMessageByteBuf, receivedTime);
             }, testRunConfiguration.getSubscriberQoS());
 
             subscribeFuture.addListener(future -> {
                 latch.countDown();
             });
         });
+    }
 
-        return new SubscribeStats(generalLatencyStats, msgProcessingLatencyStats, oldMessagesByTestRunId);
+    private void processReceivedMsg(SubscribeStats subscribeStats, SubscriberInfo subscriberInfo, ByteBuf mqttMessageByteBuf, long receivedTime) {
+        try {
+            long now = System.currentTimeMillis();
+            byte[] mqttMessageBytes = toBytes(mqttMessageByteBuf);
+            Message message = mapper.readValue(mqttMessageBytes, Message.class);
+            if (message.isWarmUpMsg()) {
+                return;
+            }
+            long msgLatency = receivedTime - message.getCreateTime();
+            subscribeStats.getLatencyStats().addValue(msgLatency);
+            subscribeStats.getMsgProcessingLatencyStats().addValue(now - receivedTime);
+            if (subscriberInfo.getLatencyStats() != null) {
+                subscriberInfo.getLatencyStats().addValue(msgLatency);
+            }
+            subscriberInfo.getTotalReceivedMsgs().incrementAndGet();
+        } catch (Exception e) {
+            log.error("[{}] Failed to process msg", subscriberInfo.getId());
+        }
     }
 
     @Override
@@ -163,7 +148,7 @@ public class SubscriberServiceImpl implements SubscriberService {
         int duplicatedMessages = 0;
         for (SubscriberInfo subscriberInfo : subscriberInfos.values()) {
             int expectedReceivedMsgs = getSubscriberExpectedReceivedMsgs(testRunConfiguration.getTotalPublisherMessagesCount(), publisherGroupsById, subscriberInfo.getSubscriberGroup());
-            int actualReceivedMsgs = subscriberInfo.getReceivedMsgs().get();
+            int actualReceivedMsgs = subscriberInfo.getTotalReceivedMsgs().get();
             if (actualReceivedMsgs != expectedReceivedMsgs) {
                 log.trace("[{}] Expected messages count - {}, actual messages count - {}",
                         subscriberInfo.getClientId(), expectedReceivedMsgs, actualReceivedMsgs);

@@ -18,9 +18,9 @@ package org.thingsboard.mqtt.broker.service;
 import org.thingsboard.mqtt.broker.data.SubscriberAnalysisResult;
 
 public interface SubscriberService {
-    void connectSubscribers();
+    void connectSubscribers(SubscribeStats subscribeStats);
 
-    SubscribeStats subscribe();
+    void subscribe(SubscribeStats subscribeStats);
 
     void disconnectSubscribers();
 
