@@ -35,7 +35,8 @@ mqtt:
     trust_store_password: "${MQTT_SSL_TRUST_STORE_PASSWORD:truststore_password}"
     # Type of the trust store
     trust_store_type: "${SECURITY_MQTT_SSL_TRUST_STORE_TYPE:JKS}"
-
+  client:
+    keep-alive-seconds: "${CLIENT_KEEP_ALIVE_SECONDS:600}"
 broker:
   type: "${BROKER_TYPE:THINGSBOARD}"
 #  type: "${BROKER_TYPE:OTHER}"

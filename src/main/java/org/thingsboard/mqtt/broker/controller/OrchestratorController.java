@@ -30,6 +30,7 @@ import org.thingsboard.mqtt.broker.service.orchestration.TestRestService;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
 @RestController
@@ -45,27 +46,33 @@ public class OrchestratorController {
 
     private final Set<String> nodeUrls;
     private final AtomicLong lastNodeReady = new AtomicLong(0);
+    private final ReentrantLock lock = new ReentrantLock();
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public String nodeReady(@RequestBody NodeInfo nodeInfo) {
         log.info("Received node info - {}", nodeInfo);
         long now = System.currentTimeMillis();
-        if (lastNodeReady.getAndSet(now) < now - TimeUnit.SECONDS.toMillis(waitTime)) {
-            log.info("Clearing {} waiting nodes.", nodeUrls.size());
-            nodeUrls.clear();
-        }
-        nodeUrls.add(nodeInfo.getNodeUrl());
-        if (nodeUrls.size() == nodeInfo.getNodesInCluster()) {
-            for (String nodeUrl : nodeUrls) {
-                log.info("Notifying {} node.", nodeUrl);
-                try {
-                    testRestService.notifyClusterIsReady(nodeUrl);
-                } catch (Exception e) {
-                    log.warn("Failed to notify {} node", nodeUrl);
-                }
+        lock.lock();
+        try {
+            if (lastNodeReady.getAndSet(now) < now - TimeUnit.SECONDS.toMillis(waitTime)) {
+                log.info("Clearing {} waiting nodes.", nodeUrls.size());
+                nodeUrls.clear();
             }
-            nodeUrls.clear();
+            nodeUrls.add(nodeInfo.getNodeUrl());
+            if (nodeUrls.size() == nodeInfo.getNodesInCluster()) {
+                for (String nodeUrl : nodeUrls) {
+                    log.info("Notifying {} node.", nodeUrl);
+                    try {
+                        testRestService.notifyClusterIsReady(nodeUrl);
+                    } catch (Exception e) {
+                        log.warn("Failed to notify {} node", nodeUrl);
+                    }
+                }
+                nodeUrls.clear();
+            }
+        } finally {
+            lock.unlock();
         }
         return "OK";
     }
