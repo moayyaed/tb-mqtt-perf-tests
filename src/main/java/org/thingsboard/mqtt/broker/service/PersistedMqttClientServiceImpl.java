@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
@@ -35,6 +36,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PersistedMqttClientServiceImpl implements PersistedMqttClientService {
+
+    @Value("${test-run.clear-persisted-sessions-wait-time}")
+    private int waitTime;
+
     @Autowired(required = false)
     private TbBrokerRestService tbBrokerRestService;
 
@@ -98,7 +103,7 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
             }
         }
 
-        countDownLatch.await(30, TimeUnit.SECONDS);
+        countDownLatch.await(waitTime, TimeUnit.SECONDS);
         stopWatch.stop();
         log.info("Clearing {} persisted sessions took {} ms", persistentSubscribers, stopWatch.getTime());
     }

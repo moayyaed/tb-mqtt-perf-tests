@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,9 @@ import java.util.concurrent.atomic.AtomicLong;
 @RequiredArgsConstructor
 public class PublisherServiceImpl implements PublisherService {
     private final ObjectMapper mapper = new ObjectMapper();
+
+    @Value("${test-run.publisher-warmup-wait-time}")
+    private int warmupWaitTime;
 
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
@@ -107,7 +111,7 @@ public class PublisherServiceImpl implements PublisherService {
         AtomicBoolean successfulWarmUp = new AtomicBoolean(true);
         for (PublisherInfo publisherInfo : publisherInfos.values()) {
             try {
-                Message message = new Message(System.currentTimeMillis(), MqttPerformanceTest.TEST_RUN_ID, true, payloadGenerator.generatePayload());
+                Message message = new Message(System.currentTimeMillis(), true, payloadGenerator.generatePayload());
                 PublishFutures publishFutures = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(mapper.writeValueAsBytes(message)), testRunConfiguration.getPublisherQoS());
                 publishFutures.getPublishFinishedFuture()
                         .addListener(future -> {
@@ -124,7 +128,7 @@ public class PublisherServiceImpl implements PublisherService {
             }
         }
 
-        boolean successfulWait = warmupCDL.await(10, TimeUnit.SECONDS);
+        boolean successfulWait = warmupCDL.await(warmupWaitTime, TimeUnit.SECONDS);
         if (!successfulWait || !successfulWarmUp.get()) {
             throw new RuntimeException("Failed to warm up publishers");
         }
@@ -151,7 +155,7 @@ public class PublisherServiceImpl implements PublisherService {
             }
             for (PublisherInfo publisherInfo : publisherInfos.values()) {
                 try {
-                    Message message = new Message(System.currentTimeMillis(), MqttPerformanceTest.TEST_RUN_ID, false, payloadGenerator.generatePayload());
+                    Message message = new Message(System.currentTimeMillis(), false, payloadGenerator.generatePayload());
                     byte[] messageBytes = mapper.writeValueAsBytes(message);
                     PublishFutures publishFutures = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes), testRunConfiguration.getPublisherQoS());
                     publishFutures.getPublishSentFuture()

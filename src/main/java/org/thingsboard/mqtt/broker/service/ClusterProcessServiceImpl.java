@@ -18,6 +18,7 @@ package org.thingsboard.mqtt.broker.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
@@ -32,6 +33,9 @@ import java.util.concurrent.TimeUnit;
 public class ClusterProcessServiceImpl implements ClusterProcessService {
     private final TestRunConfiguration testRunConfiguration;
     private final TestRunClusterConfig testRunClusterConfig;
+
+    @Value("${test-run.cluster-process-wait-time}")
+    private int waitTime;
 
     @Override
     public <T> void process(String taskName, List<T> elements, ClusterTaskProcessor<T> processor) {
@@ -57,7 +61,7 @@ public class ClusterProcessServiceImpl implements ClusterProcessService {
             }
 
             try {
-                latch.await(30, TimeUnit.SECONDS);
+                latch.await(waitTime, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 log.error("Failed to wait for the {} to finish.", taskName);
                 throw new RuntimeException("Failed to wait for the " + taskName + " to finish");

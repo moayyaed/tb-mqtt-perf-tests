@@ -48,7 +48,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class MqttPerformanceTest {
     private static final ObjectMapper mapper = new ObjectMapper();
-    public static final long TEST_RUN_ID = new Random().nextLong();
 
     private final DummyClientService dummyClientService;
     private final SubscriberService subscriberService;
@@ -154,16 +153,16 @@ public class MqttPerformanceTest {
                 .sum();
         int totalPublishedMessages = totalPublishers * testRunConfiguration.getTotalPublisherMessagesCount();
         int totalExpectedReceivedMessages = subscriberService.calculateTotalExpectedReceivedMessages();
-        Message randomMsg = new Message(System.currentTimeMillis(), MqttPerformanceTest.TEST_RUN_ID, true, payloadGenerator.generatePayload());
+        Message randomMsg = new Message(System.currentTimeMillis(), true, payloadGenerator.generatePayload());
         log.info("Test run info: publishers - {}, non-persistent subscribers - {}, regular persistent subscribers - {}, " +
                         "'APPLICATION' persistent subscribers - {}, dummy client connections - {}, " +
                         "publisher QoS - {}, subscriber QoS - {}, max messages per second - {}, " +
                         "run time - {}s, total published messages - {}, expected total received messages - {}, " +
-                        "msg bytes size - {}, test run ID - {}",
+                        "msg bytes size - {}",
                 totalPublishers, nonPersistedSubscribers, persistedDevicesSubscribers,
                 persistedApplicationsSubscribers, testRunConfiguration.getNumberOfDummyClients(),
                 testRunConfiguration.getPublisherQoS(), testRunConfiguration.getSubscriberQoS(), testRunConfiguration.getMaxMessagesPerPublisherPerSecond(),
                 testRunConfiguration.getSecondsToRun(), totalPublishedMessages, totalExpectedReceivedMessages,
-                mapper.writeValueAsBytes(randomMsg).length, MqttPerformanceTest.TEST_RUN_ID);
+                mapper.writeValueAsBytes(randomMsg).length);
     }
 }

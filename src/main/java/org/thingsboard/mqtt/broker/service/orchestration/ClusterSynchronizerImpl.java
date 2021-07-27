@@ -39,7 +39,6 @@ public class ClusterSynchronizerImpl implements ClusterSynchronizer {
 
     @Override
     public void awaitClusterReady() {
-        log.info("Waiting for cluster to be ready");
         try {
             latch.await(waitTime, TimeUnit.SECONDS);
         } catch (InterruptedException e) {

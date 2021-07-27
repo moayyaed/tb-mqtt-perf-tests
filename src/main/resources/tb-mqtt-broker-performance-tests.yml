@@ -56,6 +56,9 @@ test-run:
   configuration-file: "${TEST_RUN_CONFIGURATION_FILE:}"
   sequential-number: "${TEST_RUN_SEQUENTIAL_NUMBER:0}"
   parallel-tests-count: "${TEST_RUN_PARALLEL_TESTS_COUNT:1}"
+  publisher-warmup-wait-time: "${TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS:30}"
+  cluster-process-wait-time: "${TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS:30}"
+  clear-persisted-sessions-wait-time: "${TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS:30}"
   logs:
     msg-processing-queue-period: "${TEST_RUN_LOGS_MSG_PROCESSING_QUEUE_PERIOD:15000}"
 

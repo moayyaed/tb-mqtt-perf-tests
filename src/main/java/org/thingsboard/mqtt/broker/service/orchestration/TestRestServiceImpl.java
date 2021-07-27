@@ -59,6 +59,7 @@ public class TestRestServiceImpl implements TestRestService {
         if (StringUtils.isEmpty(orchestratorUrl) || StringUtils.isEmpty(nodeUrl)) {
             return false;
         }
+        log.info("Notifying orchestrator about node readiness");
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(orchestratorUrl + ClusterConst.ORCHESTRATOR_PATH,
                     new NodeInfo(nodeUrl + ClusterConst.NODE_PATH, testRunClusterConfig.getParallelTestsCount()), String.class);
