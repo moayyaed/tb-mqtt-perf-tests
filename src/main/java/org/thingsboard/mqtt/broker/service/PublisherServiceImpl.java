@@ -130,7 +130,7 @@ public class PublisherServiceImpl implements PublisherService {
 
         boolean successfulWait = warmupCDL.await(warmupWaitTime, TimeUnit.SECONDS);
         if (!successfulWait || !successfulWarmUp.get()) {
-            throw new RuntimeException("Failed to warm up publishers");
+            throw new RuntimeException("Failed to warm up publishers. " + warmupCDL.getCount() + " publishers couldn't acknowledge a message");
         }
 
         stopWatch.stop();

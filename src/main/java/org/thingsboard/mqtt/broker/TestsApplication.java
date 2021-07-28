@@ -31,9 +31,14 @@ public class TestsApplication {
 
     public static void main(String[] args) throws Exception {
         ConfigurableApplicationContext ctx = SpringApplication.run(TestsApplication.class, updateArguments(args));
-        ctx.getBean(MqttPerformanceTest.class).runTest();
-        int exitCode = SpringApplication.exit(ctx, () -> 0);
-        System.exit(exitCode);
+        try {
+            ctx.getBean(MqttPerformanceTest.class).runTest();
+        } catch (Exception e) {
+            log.error("Failed to run test", e);
+        } finally {
+            int exitCode = SpringApplication.exit(ctx, () -> 0);
+            System.exit(exitCode);
+        }
     }
 
     private static String[] updateArguments(String[] args) {

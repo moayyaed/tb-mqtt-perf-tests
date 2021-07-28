@@ -30,10 +30,12 @@ import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.Message;
+import org.thingsboard.mqtt.broker.data.PreConnectedSubscriberInfo;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberAnalysisResult;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberInfo;
+import org.thingsboard.mqtt.broker.util.TestClusterUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,15 +63,7 @@ public class SubscriberServiceImpl implements SubscriberService {
 
     @Override
     public void connectSubscribers(SubscribeStats subscribeStats) {
-        List<PreConnectedSubscriberInfo> preConnectedSubscriberInfos = new ArrayList<>();
-        int currentSubscriberId = 0;
-        for (SubscriberGroup subscriberGroup : testRunConfiguration.getSubscribersConfig()) {
-            for (int i = 0; i < subscriberGroup.getSubscribers(); i++) {
-                if (currentSubscriberId++ % testRunClusterConfig.getParallelTestsCount() == testRunClusterConfig.getSequentialNumber()) {
-                    preConnectedSubscriberInfos.add(new PreConnectedSubscriberInfo(subscriberGroup, i));
-                }
-            }
-        }
+        List<PreConnectedSubscriberInfo> preConnectedSubscriberInfos = TestClusterUtil.getTestNodeSubscribers(testRunConfiguration, testRunClusterConfig);
 
         clusterProcessService.process("SUBSCRIBERS_CONNECT", preConnectedSubscriberInfos, (latch, preConnectedSubscriberInfo) -> {
             int subscriberIndex = preConnectedSubscriberInfo.getSubscriberIndex();
@@ -203,10 +197,4 @@ public class SubscriberServiceImpl implements SubscriberService {
         return bytes;
     }
 
-    @Getter
-    @AllArgsConstructor
-    private static class PreConnectedSubscriberInfo {
-        private final SubscriberGroup subscriberGroup;
-        private final int subscriberIndex;
-    }
 }

@@ -25,23 +25,18 @@ import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 @RequiredArgsConstructor
 public class ClientIdServiceImpl implements ClientIdService {
 
-    private final TestRunClusterConfig testRunClusterConfig;
-
     @Override
     public String createSubscriberClientId(SubscriberGroup subscriberGroup, int subscriberId) {
-        String subscriberClientId = subscriberGroup.getClientIdPrefix() + subscriberId;
-        return testRunClusterConfig.getSequentialNumber() + "_" + subscriberClientId;
+        return subscriberGroup.getClientIdPrefix() + subscriberId;
     }
 
     @Override
     public String createPublisherClientId(PublisherGroup publisherGroup, int publisherId) {
-        String publisherClientId = publisherGroup.getClientIdPrefix() + publisherId;
-        return testRunClusterConfig.getSequentialNumber() + "_" + publisherClientId;
+        return publisherGroup.getClientIdPrefix() + publisherId;
     }
 
     @Override
     public String createDummyClientId(int dummyId) {
-        String dummyClientId = "test_dummy_client_" + dummyId;
-        return testRunClusterConfig.getSequentialNumber() + "_" + dummyClientId;
+        return  "test_dummy_client_" + dummyId;
     }
 }

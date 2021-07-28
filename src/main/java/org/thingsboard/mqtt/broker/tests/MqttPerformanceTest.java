@@ -130,7 +130,8 @@ public class MqttPerformanceTest {
         subscriberService.printDebugSubscribersStats();
 
         // wait for all MQTT clients to close
-        Thread.sleep(1000);
+        Thread.sleep(2000);
+        persistedMqttClientService.removeApplicationClients();
     }
 
     private void printTestRunConfiguration() throws Exception {
