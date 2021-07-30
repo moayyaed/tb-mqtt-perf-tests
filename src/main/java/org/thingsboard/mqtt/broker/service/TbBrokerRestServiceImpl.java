@@ -20,13 +20,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.thingsboard.mqtt.broker.data.PageData;
 import org.thingsboard.mqtt.broker.data.dto.LoginDto;
 import org.thingsboard.mqtt.broker.data.dto.LoginResponseDto;
 import org.thingsboard.mqtt.broker.data.dto.MqttClientDto;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -62,7 +68,25 @@ public class TbBrokerRestServiceImpl implements TbBrokerRestService {
         return restTemplate.getForEntity(tbUri + "/api/mqtt/client/" + clientId, MqttClientDto.class).getBody();
     }
 
-
+    @Override
+    public List<MqttClientDto> getAllClients() {
+        List<MqttClientDto> clients = new ArrayList<>();
+        boolean hasNext;
+        int currentPage = 0;
+        int pageSize = 10;
+        do {
+            PageData<MqttClientDto> pageData = restTemplate.exchange(tbUri + "/api/mqtt/client?pageSize=" + pageSize + "&page=" + currentPage,
+                    HttpMethod.GET, null,
+                    new ParameterizedTypeReference<PageData<MqttClientDto>>() {
+                    },
+                    Map.of()
+            ).getBody();
+            hasNext = pageData.hasNext();
+            clients.addAll(pageData.getData());
+            currentPage++;
+        } while (hasNext);
+        return clients;
+    }
 
     @Override
     public void createClient(MqttClientDto clientDto) {

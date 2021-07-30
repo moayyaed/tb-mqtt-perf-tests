@@ -17,10 +17,12 @@ package org.thingsboard.mqtt.broker.service;
 
 import org.thingsboard.mqtt.broker.data.dto.MqttClientDto;
 
-import java.util.UUID;
+import java.util.List;
 
 public interface TbBrokerRestService {
     MqttClientDto getClient(String clientId);
+
+    List<MqttClientDto> getAllClients();
 
     void createClient(MqttClientDto clientDto);
 
