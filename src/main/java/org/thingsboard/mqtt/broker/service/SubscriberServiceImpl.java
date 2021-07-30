@@ -115,6 +115,7 @@ public class SubscriberServiceImpl implements SubscriberService {
             subscribeStats.getMsgProcessingLatencyStats().addValue(now - receivedTime);
             if (subscriberInfo.getLatencyStats() != null) {
                 subscriberInfo.getLatencyStats().addValue(msgLatency);
+                log.debug("[{}] Received msg with time {}", subscriberInfo.getClientId(), message.getCreateTime());
             }
             subscriberInfo.getTotalReceivedMsgs().incrementAndGet();
         } catch (Exception e) {
