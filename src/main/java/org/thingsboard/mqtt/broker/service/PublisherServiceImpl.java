@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
+import io.netty.channel.ChannelFuture;
 import io.netty.util.concurrent.Future;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,13 +33,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttConnectResult;
-import org.thingsboard.mqtt.broker.client.mqtt.PublishFutures;
 import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.Message;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.PublisherInfo;
 import org.thingsboard.mqtt.broker.tests.MqttPerformanceTest;
+import org.thingsboard.mqtt.broker.util.CallbackUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,16 +113,15 @@ public class PublisherServiceImpl implements PublisherService {
         for (PublisherInfo publisherInfo : publisherInfos.values()) {
             try {
                 Message message = new Message(System.currentTimeMillis(), true, payloadGenerator.generatePayload());
-                PublishFutures publishFutures = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(mapper.writeValueAsBytes(message)), testRunConfiguration.getPublisherQoS());
-                publishFutures.getPublishFinishedFuture()
-                        .addListener(future -> {
-                                    if (!future.isSuccess()) {
-                                        successfulWarmUp.getAndSet(false);
-                                        log.error("[{}] Error acknowledging warmup msg", publisherInfo.getClientId(), future.cause());
-                                    }
+                publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(mapper.writeValueAsBytes(message)),
+                        CallbackUtil.createCallback(
+                                warmupCDL::countDown,
+                                t -> {
+                                    successfulWarmUp.getAndSet(false);
+                                    log.error("[{}] Error acknowledging warmup msg", publisherInfo.getClientId(), t);
                                     warmupCDL.countDown();
-                                }
-                        );
+                                }),
+                        testRunConfiguration.getPublisherQoS());
             } catch (Exception e) {
                 log.error("[{}] Failed to publish", publisherInfo.getClientId(), e);
                 throw e;
@@ -157,8 +157,22 @@ public class PublisherServiceImpl implements PublisherService {
                 try {
                     Message message = new Message(System.currentTimeMillis(), false, payloadGenerator.generatePayload());
                     byte[] messageBytes = mapper.writeValueAsBytes(message);
-                    PublishFutures publishFutures = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes), testRunConfiguration.getPublisherQoS());
-                    publishFutures.getPublishSentFuture()
+                    ChannelFuture publishSentFuture = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes),
+                            CallbackUtil.createCallback(
+                                    () -> {
+                                        long ackLatency = System.currentTimeMillis() - message.getCreateTime();
+                                        publishAcknowledgedStats.addValue(ackLatency);
+                                        if (publisherInfo.isDebug()) {
+                                            publisherInfo.getAcknowledgeLatencyStats().addValue(ackLatency);
+                                            log.debug("[{}] Acknowledged msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
+                                        }
+                                    },
+                                    t -> {
+                                        log.debug("[{}] Failed to send msg. Exception - {}, message - {}", publisherInfo.getClientId(), t.getClass().getSimpleName(), t.getMessage());
+                                    }
+                            ),
+                            testRunConfiguration.getPublisherQoS());
+                    publishSentFuture
                             .addListener(future -> {
                                         if (!future.isSuccess()) {
                                             log.debug("[{}] Error sending msg, reason - {}", publisherInfo.getClientId(), future.cause().getMessage());
@@ -166,18 +180,6 @@ public class PublisherServiceImpl implements PublisherService {
                                             publishSentLatencyStats.addValue(System.currentTimeMillis() - message.getCreateTime());
                                             if (publisherInfo.isDebug()) {
                                                 log.debug("[{}] Sent msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
-                                            }
-                                        }
-                                    }
-                            );
-                    publishFutures.getPublishFinishedFuture()
-                            .addListener(future -> {
-                                        if (future.isSuccess()) {
-                                            long ackLatency = System.currentTimeMillis() - message.getCreateTime();
-                                            publishAcknowledgedStats.addValue(ackLatency);
-                                            if (publisherInfo.getAcknowledgeLatencyStats() != null) {
-                                                publisherInfo.getAcknowledgeLatencyStats().addValue(ackLatency);
-                                                log.debug("[{}] Acknowledged msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
                                             }
                                         }
                                     }

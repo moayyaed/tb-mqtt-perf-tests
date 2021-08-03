@@ -13,16 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingsboard.mqtt.broker.client.mqtt;
+package org.thingsboard.mqtt.broker.util;
 
-import io.netty.channel.ChannelFuture;
-import io.netty.util.concurrent.Future;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import java.util.function.Consumer;
 
-@Getter
-@AllArgsConstructor
-public class PublishFutures {
-    private final ChannelFuture publishSentFuture;
-    private final Future<Void> publishFinishedFuture;
+public class CallbackUtil {
+    public static BasicCallback createCallback(Runnable onSuccess, Consumer<Throwable> onFailure) {
+        return new BasicCallback() {
+            @Override
+            public void onSuccess() {
+                if (onSuccess != null) {
+                    onSuccess.run();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (onFailure != null) {
+                    onFailure.accept(t);
+                }
+            }
+        };
+    }
 }

@@ -17,10 +17,12 @@ package org.thingsboard.mqtt.broker.client.mqtt;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.util.concurrent.Future;
+import org.thingsboard.mqtt.broker.util.BasicCallback;
 
 public interface MqttClient {
 
@@ -78,7 +80,7 @@ public interface MqttClient {
      * @param handler The handler to invoke when we receive a message
      * @return A future which will be completed when the server acknowledges our subscribe request
      */
-    Future<Void> on(String topic, MqttHandler handler);
+    void on(String topic, MqttHandler handler, BasicCallback callback);
 
     /**
      * Subscribe on the given topic, with the given qos. When a message is received, MqttClient will invoke the {@link MqttHandler#onMessage(String, ByteBuf)} function of the given handler
@@ -88,7 +90,7 @@ public interface MqttClient {
      * @param qos The qos to request to the server
      * @return A future which will be completed when the server acknowledges our subscribe request
      */
-    Future<Void> on(String topic, MqttHandler handler, MqttQoS qos);
+    void on(String topic, MqttHandler handler, BasicCallback callback, MqttQoS qos);
 
     /**
      * Subscribe on the given topic. When a message is received, MqttClient will invoke the {@link MqttHandler#onMessage(String, ByteBuf)} function of the given handler
@@ -98,7 +100,7 @@ public interface MqttClient {
      * @param handler The handler to invoke when we receive a message
      * @return A future which will be completed when the server acknowledges our subscribe request
      */
-    Future<Void> once(String topic, MqttHandler handler);
+    void once(String topic, MqttHandler handler, BasicCallback callback);
 
     /**
      * Subscribe on the given topic, with the given qos. When a message is received, MqttClient will invoke the {@link MqttHandler#onMessage(String, ByteBuf)} function of the given handler
@@ -109,7 +111,7 @@ public interface MqttClient {
      * @param qos The qos to request to the server
      * @return A future which will be completed when the server acknowledges our subscribe request
      */
-    Future<Void> once(String topic, MqttHandler handler, MqttQoS qos);
+    void once(String topic, MqttHandler handler, BasicCallback callback, MqttQoS qos);
 
     /**
      * Remove the subscription for the given topic and handler
@@ -136,7 +138,7 @@ public interface MqttClient {
      * @param payload The payload to send
      * @return A future which will be completed when the message is sent out of the MqttClient
      */
-    PublishFutures publish(String topic, ByteBuf payload);
+    ChannelFuture publish(String topic, ByteBuf payload, BasicCallback callback);
 
     /**
      * Publish a message to the given payload, using the given qos
@@ -145,7 +147,7 @@ public interface MqttClient {
      * @param qos The qos to use while publishing
      * @return A future which will be completed when the message is delivered to the server
      */
-    PublishFutures publish(String topic, ByteBuf payload, MqttQoS qos);
+    ChannelFuture publish(String topic, ByteBuf payload, BasicCallback callback, MqttQoS qos);
 
     /**
      * Publish a message to the given payload, using optional retain
@@ -154,7 +156,7 @@ public interface MqttClient {
      * @param retain true if you want to retain the message on the server, false otherwise
      * @return A future which will be completed when the message is sent out of the MqttClient
      */
-    PublishFutures publish(String topic, ByteBuf payload, boolean retain);
+    ChannelFuture publish(String topic, ByteBuf payload, BasicCallback callback, boolean retain);
 
     /**
      * Publish a message to the given payload, using the given qos and optional retain
@@ -164,7 +166,7 @@ public interface MqttClient {
      * @param retain true if you want to retain the message on the server, false otherwise
      * @return A future which will be completed when the message is delivered to the server
      */
-    PublishFutures publish(String topic, ByteBuf payload, MqttQoS qos, boolean retain);
+    ChannelFuture publish(String topic, ByteBuf payload, BasicCallback callback, MqttQoS qos, boolean retain);
 
     /**
      * Retrieve the MqttClient configuration
@@ -192,8 +194,8 @@ public interface MqttClient {
 
     /**
      * Sets the {@see #MqttClientCallback} object for this MqttClient
-     * @param callback The callback to be set
+     * @param clientCallback The callback to be set
      */
-    void setCallback(MqttClientCallback callback);
+    void setClientCallback(MqttClientCallback clientCallback);
 
 }

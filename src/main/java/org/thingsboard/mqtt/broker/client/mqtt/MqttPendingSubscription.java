@@ -17,7 +17,7 @@ package org.thingsboard.mqtt.broker.client.mqtt;
 
 import io.netty.channel.EventLoop;
 import io.netty.handler.codec.mqtt.MqttSubscribeMessage;
-import io.netty.util.concurrent.Promise;
+import org.thingsboard.mqtt.broker.util.BasicCallback;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 
 final class MqttPendingSubscription {
 
-    private final Promise<Void> future;
+    private final BasicCallback callback;
     private final String topic;
     private final Set<MqttPendingHandler> handlers = new HashSet<>();
     private final MqttSubscribeMessage subscribeMessage;
@@ -34,16 +34,16 @@ final class MqttPendingSubscription {
 
     private boolean sent = false;
 
-    MqttPendingSubscription(Promise<Void> future, String topic, MqttSubscribeMessage message) {
-        this.future = future;
+    MqttPendingSubscription(BasicCallback callback, String topic, MqttSubscribeMessage message) {
+        this.callback = callback;
         this.topic = topic;
         this.subscribeMessage = message;
 
         this.retransmissionHandler.setOriginalMessage(message);
     }
 
-    Promise<Void> getFuture() {
-        return future;
+    BasicCallback getCallback() {
+        return callback;
     }
 
     String getTopic() {

@@ -155,7 +155,7 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
                     channel.write(publish.getMessage());
                     publish.setSent(true);
                     if (publish.getQos() == MqttQoS.AT_MOST_ONCE) {
-                        publish.getFuture().setSuccess(null); //We don't get an ACK for QOS 0
+                        publish.getCallback().onSuccess();//We don't get an ACK for QOS 0
                         this.client.getPendingPublishes().remove(publish.getMessageId());
                     }
                 });
@@ -192,9 +192,7 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
 
         this.client.getServerSubscriptions().add(pendingSubscription.getTopic());
 
-        if (!pendingSubscription.getFuture().isDone()) {
-            pendingSubscription.getFuture().setSuccess(null);
-        }
+        pendingSubscription.getCallback().onSuccess();
     }
 
     private void handlePublish(Channel channel, MqttPublishMessage message) {
@@ -243,7 +241,7 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
         if (pendingPublish == null) {
             return;
         }
-        pendingPublish.getFuture().setSuccess(null);
+        pendingPublish.getCallback().onSuccess();
         pendingPublish.onPubackReceived();
         this.client.getPendingPublishes().remove(message.variableHeader().messageId());
         pendingPublish.getPayload().release();
@@ -276,7 +274,7 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
     private void handlePubcomp(MqttMessage message) {
         MqttMessageIdVariableHeader variableHeader = (MqttMessageIdVariableHeader) message.variableHeader();
         MqttPendingPublish pendingPublish = this.client.getPendingPublishes().get(variableHeader.messageId());
-        pendingPublish.getFuture().setSuccess(null);
+        pendingPublish.getCallback().onSuccess();
         this.client.getPendingPublishes().remove(variableHeader.messageId());
         pendingPublish.getPayload().release();
         pendingPublish.onPubcompReceived();

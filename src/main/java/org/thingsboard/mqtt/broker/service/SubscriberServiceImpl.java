@@ -35,6 +35,7 @@ import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberAnalysisResult;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberInfo;
+import org.thingsboard.mqtt.broker.util.CallbackUtil;
 import org.thingsboard.mqtt.broker.util.TestClusterUtil;
 
 import java.util.ArrayList;
@@ -92,13 +93,11 @@ public class SubscriberServiceImpl implements SubscriberService {
     @Override
     public void subscribe(SubscribeStats subscribeStats) {
         clusterProcessService.process("SUBSCRIBERS_SUBSCRIBE", new ArrayList<>(subscriberInfos.values()), (latch, subscriberInfo) -> {
-            Future<Void> subscribeFuture = subscriberInfo.getSubscriber().on(subscriberInfo.getSubscriberGroup().getTopicFilter(), (topic, mqttMessageByteBuf, receivedTime) -> {
+            subscriberInfo.getSubscriber().on(subscriberInfo.getSubscriberGroup().getTopicFilter(), (topic, mqttMessageByteBuf, receivedTime) -> {
                 processReceivedMsg(subscribeStats, subscriberInfo, mqttMessageByteBuf, receivedTime);
-            }, testRunConfiguration.getSubscriberQoS());
-
-            subscribeFuture.addListener(future -> {
-                latch.countDown();
-            });
+            },
+                    CallbackUtil.createCallback(latch::countDown, t -> latch.countDown()),
+                    testRunConfiguration.getSubscriberQoS());
         });
     }
 

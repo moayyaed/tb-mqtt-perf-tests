@@ -45,6 +45,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultPromise;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.Promise;
+import org.thingsboard.mqtt.broker.util.BasicCallback;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -85,7 +86,7 @@ final class MqttClientImpl implements MqttClient {
     private volatile boolean reconnect = false;
     private String host;
     private int port;
-    private MqttClientCallback callback;
+    private MqttClientCallback clientCallback;
 
 
     /**
@@ -146,8 +147,8 @@ final class MqttClientImpl implements MqttClient {
                         return;
                     }
                     ChannelClosedException e = new ChannelClosedException("Channel is closed!");
-                    if (callback != null) {
-                        callback.connectionLost(e);
+                    if (clientCallback != null) {
+                        clientCallback.connectionLost(e);
                     }
                     pendingSubscriptions.clear();
                     serverSubscriptions.clear();
@@ -160,8 +161,8 @@ final class MqttClientImpl implements MqttClient {
                     try {
                         scheduleConnectIfRequired(host, port, true);
                     } catch (Exception exception) {
-                        if (callback != null) {
-                            callback.connectionLost(exception);
+                        if (clientCallback != null) {
+                            clientCallback.connectionLost(exception);
                         }
                     }
                 });
@@ -169,8 +170,8 @@ final class MqttClientImpl implements MqttClient {
                 try {
                     scheduleConnectIfRequired(host, port, reconnect);
                 } catch (Exception exception) {
-                    if (callback != null) {
-                        callback.connectionLost(exception);
+                    if (clientCallback != null) {
+                        clientCallback.connectionLost(exception);
                     }
                 }
             }
@@ -230,8 +231,8 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the server acknowledges our subscribe request
      */
     @Override
-    public Future<Void> on(String topic, MqttHandler handler) {
-        return on(topic, handler, MqttQoS.AT_MOST_ONCE);
+    public void on(String topic, MqttHandler handler, BasicCallback callback) {
+        on(topic, handler, callback, MqttQoS.AT_MOST_ONCE);
     }
 
     /**
@@ -243,8 +244,8 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the server acknowledges our subscribe request
      */
     @Override
-    public Future<Void> on(String topic, MqttHandler handler, MqttQoS qos) {
-        return createSubscription(topic, handler, false, qos);
+    public void on(String topic, MqttHandler handler, BasicCallback callback, MqttQoS qos) {
+        createSubscription(topic, handler, callback, false, qos);
     }
 
     /**
@@ -256,8 +257,8 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the server acknowledges our subscribe request
      */
     @Override
-    public Future<Void> once(String topic, MqttHandler handler) {
-        return once(topic, handler, MqttQoS.AT_MOST_ONCE);
+    public void once(String topic, MqttHandler handler, BasicCallback callback) {
+        once(topic, handler, callback, MqttQoS.AT_MOST_ONCE);
     }
 
     /**
@@ -270,8 +271,8 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the server acknowledges our subscribe request
      */
     @Override
-    public Future<Void> once(String topic, MqttHandler handler, MqttQoS qos) {
-        return createSubscription(topic, handler, true, qos);
+    public void once(String topic, MqttHandler handler, BasicCallback callback, MqttQoS qos) {
+        createSubscription(topic, handler, callback, true, qos);
     }
 
     /**
@@ -322,8 +323,8 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the message is sent out of the MqttClient
      */
     @Override
-    public PublishFutures publish(String topic, ByteBuf payload) {
-        return publish(topic, payload, MqttQoS.AT_MOST_ONCE, false);
+    public ChannelFuture publish(String topic, ByteBuf payload, BasicCallback callback) {
+        return publish(topic, payload, callback, MqttQoS.AT_MOST_ONCE, false);
     }
 
     /**
@@ -335,8 +336,8 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the message is delivered to the server
      */
     @Override
-    public PublishFutures publish(String topic, ByteBuf payload, MqttQoS qos) {
-        return publish(topic, payload, qos, false);
+    public ChannelFuture publish(String topic, ByteBuf payload, BasicCallback callback, MqttQoS qos) {
+        return publish(topic, payload, callback, qos, false);
     }
 
     /**
@@ -348,8 +349,8 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the message is sent out of the MqttClient
      */
     @Override
-    public PublishFutures publish(String topic, ByteBuf payload, boolean retain) {
-        return publish(topic, payload, MqttQoS.AT_MOST_ONCE, retain);
+    public ChannelFuture publish(String topic, ByteBuf payload, BasicCallback callback, boolean retain) {
+        return publish(topic, payload, callback, MqttQoS.AT_MOST_ONCE, retain);
     }
 
     /**
@@ -362,29 +363,28 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the message is delivered to the server
      */
     @Override
-    public PublishFutures publish(String topic, ByteBuf payload, MqttQoS qos, boolean retain) {
-        Promise<Void> future = new DefaultPromise<>(this.eventLoop.next());
+    public ChannelFuture publish(String topic, ByteBuf payload, BasicCallback callback, MqttQoS qos, boolean retain) {
         MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH, false, qos, retain, 0);
         MqttPublishVariableHeader variableHeader = new MqttPublishVariableHeader(topic, getNewMessageId().messageId());
         MqttPublishMessage message = new MqttPublishMessage(fixedHeader, variableHeader, payload);
-        MqttPendingPublish pendingPublish = new MqttPendingPublish(variableHeader.packetId(), future, payload.retain(), message, qos);
+        MqttPendingPublish pendingPublish = new MqttPendingPublish(variableHeader.packetId(), callback, payload.retain(), message, qos);
         this.pendingPublishes.put(pendingPublish.getMessageId(), pendingPublish);
         ChannelFuture channelFuture = this.sendAndFlushPacket(message);
 
         if (channelFuture != null) {
             pendingPublish.setSent(true);
             if (channelFuture.cause() != null) {
-                future.setFailure(channelFuture.cause());
-                return new PublishFutures(channelFuture, future);
+                callback.onFailure(channelFuture.cause());
+                return channelFuture;
             }
         }
         if (pendingPublish.isSent() && pendingPublish.getQos() == MqttQoS.AT_MOST_ONCE) {
             this.pendingPublishes.remove(pendingPublish.getMessageId());
-            pendingPublish.getFuture().setSuccess(null); //We don't get an ACK for QOS 0
+            callback.onSuccess();
         } else if (!pendingPublish.isSent()) {
             this.pendingPublishes.remove(pendingPublish.getMessageId());
         }
-        return new PublishFutures(channelFuture, future);
+        return channelFuture;
     }
 
     /**
@@ -407,8 +407,8 @@ final class MqttClientImpl implements MqttClient {
     }
 
     @Override
-    public void setCallback(MqttClientCallback callback) {
-        this.callback = callback;
+    public void setClientCallback(MqttClientCallback clientCallback) {
+        this.clientCallback = clientCallback;
     }
 
 
@@ -419,8 +419,8 @@ final class MqttClientImpl implements MqttClient {
     }
 
     public void onSuccessfulReconnect() {
-        if (callback != null) {
-            callback.onSuccessfulReconnect();
+        if (clientCallback != null) {
+            clientCallback.onSuccessfulReconnect();
         }
     }
 
@@ -444,37 +444,35 @@ final class MqttClientImpl implements MqttClient {
         return MqttMessageIdVariableHeader.from(messageId);
     }
 
-    private Future<Void> createSubscription(String topic, MqttHandler handler, boolean once, MqttQoS qos) {
+    private void createSubscription(String topic, MqttHandler handler, BasicCallback callback, boolean once, MqttQoS qos) {
         if (this.pendingSubscribeTopics.contains(topic)) {
             Optional<Map.Entry<Integer, MqttPendingSubscription>> subscriptionEntry = this.pendingSubscriptions.entrySet().stream().filter((e) -> e.getValue().getTopic().equals(topic)).findAny();
             if (subscriptionEntry.isPresent()) {
                 subscriptionEntry.get().getValue().addHandler(handler, once);
-                return subscriptionEntry.get().getValue().getFuture();
+                return;
             }
         }
         if (this.serverSubscriptions.contains(topic)) {
             MqttSubscription subscription = new MqttSubscription(topic, handler, once);
             this.subscriptions.put(topic, subscription);
             this.handlerToSubscribtion.put(handler, subscription);
-            return this.channel.newSucceededFuture();
+            callback.onSuccess();
+            return;
         }
 
-        Promise<Void> future = new DefaultPromise<>(this.eventLoop.next());
         MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.SUBSCRIBE, false, MqttQoS.AT_LEAST_ONCE, false, 0);
         MqttTopicSubscription subscription = new MqttTopicSubscription(topic, qos);
         MqttMessageIdVariableHeader variableHeader = getNewMessageId();
         MqttSubscribePayload payload = new MqttSubscribePayload(Collections.singletonList(subscription));
         MqttSubscribeMessage message = new MqttSubscribeMessage(fixedHeader, variableHeader, payload);
 
-        final MqttPendingSubscription pendingSubscription = new MqttPendingSubscription(future, topic, message);
+        final MqttPendingSubscription pendingSubscription = new MqttPendingSubscription(callback, topic, message);
         pendingSubscription.addHandler(handler, once);
         this.pendingSubscriptions.put(variableHeader.messageId(), pendingSubscription);
         this.pendingSubscribeTopics.add(topic);
         pendingSubscription.setSent(this.sendAndFlushPacket(message) != null); //If not sent, we will send it when the connection is opened
 
         pendingSubscription.startRetransmitTimer(this.eventLoop.next(), this::sendAndFlushPacket);
-
-        return future;
     }
 
     private void checkSubscribtions(String topic, Promise<Void> promise) {

@@ -20,23 +20,23 @@ import io.netty.channel.EventLoop;
 import io.netty.handler.codec.mqtt.MqttMessage;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import io.netty.handler.codec.mqtt.MqttQoS;
-import io.netty.util.concurrent.Promise;
+import org.thingsboard.mqtt.broker.util.BasicCallback;
 
 import java.util.function.Consumer;
 
 final class MqttPendingPublish {
 
     private final int messageId;
-    private final Promise<Void> future;
+    private final BasicCallback callback;
     private final ByteBuf payload;
     private final MqttPublishMessage message;
     private final MqttQoS qos;
 
     private boolean sent = false;
 
-    MqttPendingPublish(int messageId, Promise<Void> future, ByteBuf payload, MqttPublishMessage message, MqttQoS qos) {
+    MqttPendingPublish(int messageId, BasicCallback callback, ByteBuf payload, MqttPublishMessage message, MqttQoS qos) {
         this.messageId = messageId;
-        this.future = future;
+        this.callback = callback;
         this.payload = payload;
         this.message = message;
         this.qos = qos;
@@ -46,8 +46,8 @@ final class MqttPendingPublish {
         return messageId;
     }
 
-    Promise<Void> getFuture() {
-        return future;
+    BasicCallback getCallback() {
+        return callback;
     }
 
     ByteBuf getPayload() {

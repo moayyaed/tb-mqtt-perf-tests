@@ -30,6 +30,7 @@ import org.thingsboard.mqtt.broker.client.mqtt.MqttConnectResult;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttHandler;
 import org.thingsboard.mqtt.broker.client.mqtt.ReceivedMsgProcessor;
 import org.thingsboard.mqtt.broker.data.dto.HostPortDto;
+import org.thingsboard.mqtt.broker.util.ThingsBoardThreadFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -54,7 +55,7 @@ public class ClientInitializerImpl implements ClientInitializer {
 
     @PostConstruct
     public void init() {
-        EVENT_LOOP_GROUP = new NioEventLoopGroup();
+        EVENT_LOOP_GROUP = new NioEventLoopGroup(32, ThingsBoardThreadFactory.forName("just-nio-event-loop"));
     }
 
     @Override
