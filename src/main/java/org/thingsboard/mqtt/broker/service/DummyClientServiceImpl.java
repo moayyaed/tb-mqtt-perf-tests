@@ -15,7 +15,6 @@
  */
 package org.thingsboard.mqtt.broker.service;
 
-import io.netty.util.concurrent.Future;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
@@ -24,9 +23,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
-import org.thingsboard.mqtt.broker.client.mqtt.MqttConnectResult;
 import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
+import org.thingsboard.mqtt.broker.util.CallbackUtil;
 
 import javax.annotation.PreDestroy;
 import java.util.ArrayList;
@@ -67,17 +66,16 @@ public class DummyClientServiceImpl implements DummyClientService {
             String clientId = clientIdService.createDummyClientId(dummyId);
             MqttClient dummyClient = clientInitializer.createClient(clientId);
             long connectionStart = System.currentTimeMillis();
-            Future<MqttConnectResult> connectResultFuture = clientInitializer.connectClient(dummyClient);
-            connectResultFuture.addListener(future -> {
-                if (!future.isSuccess()) {
-                    log.warn("Failed to connect dummy client {}", clientId);
-                    dummyClient.disconnect();
-                } else {
-                    dummyClients.put(clientId, dummyClient);
-                    connectionStats.addValue(System.currentTimeMillis() - connectionStart);
-                }
+            clientInitializer.connectClient(CallbackUtil.createConnectCallback(connectResult -> {
+                dummyClients.put(clientId, dummyClient);
+                connectionStats.addValue(System.currentTimeMillis() - connectionStart);
                 latch.countDown();
-            });
+            }, t -> {
+                log.warn("Failed to connect dummy client {}", clientId);
+                dummyClient.disconnect();
+                latch.countDown();
+            }),
+                    dummyClient);
         });
 
         stopWatch.stop();

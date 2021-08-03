@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingsboard.mqtt.broker.service;
+package org.thingsboard.mqtt.broker.client.mqtt;
 
-import org.thingsboard.mqtt.broker.client.mqtt.ConnectCallback;
-import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
-import org.thingsboard.mqtt.broker.client.mqtt.MqttHandler;
+public interface ConnectCallback {
+    ConnectCallback DEFAULT_CALLBACK = new ConnectCallback() {
+        @Override
+        public void onSuccess(MqttConnectResult connectResult) {
+        }
 
-public interface ClientInitializer {
-    MqttClient createClient(String clientId);
+        @Override
+        public void onFailure(Throwable t) {
+        }
+    };
 
-    MqttClient createClient(String clientId, boolean cleanSession);
+    void onSuccess(MqttConnectResult connectResult);
 
-    MqttClient createClient(String clientId, boolean cleanSession, MqttHandler defaultHandler);
-
-    void connectClient(ConnectCallback connectCallback, MqttClient client);
+    void onFailure(Throwable t);
 }

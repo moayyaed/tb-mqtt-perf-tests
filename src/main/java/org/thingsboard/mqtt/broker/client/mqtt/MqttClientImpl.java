@@ -57,6 +57,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.thingsboard.mqtt.broker.client.mqtt.ConnectCallback.DEFAULT_CALLBACK;
+
 /**
  * Represents an MqttClientImpl connected to a single MQTT server. Will try to keep the connection going at all times
  */
@@ -109,8 +111,8 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the connection is opened and we received an CONNACK
      */
     @Override
-    public Future<MqttConnectResult> connect(String host) {
-        return connect(host, 1883);
+    public void connect(ConnectCallback connectCallback, String host) {
+        connect(connectCallback, host, 1883);
     }
 
     /**
@@ -121,22 +123,21 @@ final class MqttClientImpl implements MqttClient {
      * @return A future which will be completed when the connection is opened and we received an CONNACK
      */
     @Override
-    public Future<MqttConnectResult> connect(String host, int port) {
-        return connect(host, port, false);
+    public void connect(ConnectCallback connectCallback, String host, int port) {
+        connect(connectCallback, host, port, false);
     }
 
-    private Future<MqttConnectResult> connect(String host, int port, boolean reconnect) {
+    private void connect(ConnectCallback connectCallback, String host, int port, boolean reconnect) {
         if (this.eventLoop == null) {
             this.eventLoop = new NioEventLoopGroup();
         }
         this.host = host;
         this.port = port;
-        Promise<MqttConnectResult> connectFuture = new DefaultPromise<>(this.eventLoop.next());
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(this.eventLoop);
         bootstrap.channel(clientConfig.getChannelClass());
         bootstrap.remoteAddress(host, port);
-        bootstrap.handler(new MqttChannelInitializer(connectFuture, host, port, clientConfig.getSslContext(), receivedMsgProcessor));
+        bootstrap.handler(new MqttChannelInitializer(connectCallback, host, port, clientConfig.getSslContext(), receivedMsgProcessor));
         ChannelFuture future = bootstrap.connect();
 
         future.addListener((ChannelFutureListener) f -> {
@@ -176,7 +177,6 @@ final class MqttClientImpl implements MqttClient {
                 }
             }
         });
-        return connectFuture;
     }
 
     private void scheduleConnectIfRequired(String host, int port, boolean reconnect) {
@@ -184,7 +184,7 @@ final class MqttClientImpl implements MqttClient {
             if (reconnect) {
                 this.reconnect = true;
             }
-            eventLoop.schedule((Runnable) () -> connect(host, port, reconnect), clientConfig.getReconnectDelay(), TimeUnit.SECONDS);
+            eventLoop.schedule(() -> connect(DEFAULT_CALLBACK, host, port, reconnect), clientConfig.getReconnectDelay(), TimeUnit.SECONDS);
         }
     }
 
@@ -194,11 +194,11 @@ final class MqttClientImpl implements MqttClient {
     }
 
     @Override
-    public Future<MqttConnectResult> reconnect() {
+    public void reconnect(ConnectCallback connectCallback) {
         if (host == null) {
             throw new IllegalStateException("Cannot reconnect. Call connect() first");
         }
-        return connect(host, port);
+        connect(connectCallback, host, port);
     }
 
     /**
@@ -526,15 +526,15 @@ final class MqttClientImpl implements MqttClient {
 
     private class MqttChannelInitializer extends ChannelInitializer<SocketChannel> {
 
-        private final Promise<MqttConnectResult> connectFuture;
+        private final ConnectCallback connectCallback;
         private final String host;
         private final int port;
         private final SslContext sslContext;
         private final ReceivedMsgProcessor receivedMsgProcessor;
 
 
-        public MqttChannelInitializer(Promise<MqttConnectResult> connectFuture, String host, int port, SslContext sslContext, ReceivedMsgProcessor receivedMsgProcessor) {
-            this.connectFuture = connectFuture;
+        public MqttChannelInitializer(ConnectCallback connectCallback, String host, int port, SslContext sslContext, ReceivedMsgProcessor receivedMsgProcessor) {
+            this.connectCallback = connectCallback;
             this.host = host;
             this.port = port;
             this.sslContext = sslContext;
@@ -551,7 +551,7 @@ final class MqttClientImpl implements MqttClient {
             ch.pipeline().addLast("mqttEncoder", MqttEncoder.INSTANCE);
             ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(MqttClientImpl.this.clientConfig.getTimeoutSeconds(), MqttClientImpl.this.clientConfig.getTimeoutSeconds(), 0));
             ch.pipeline().addLast("mqttPingHandler", new MqttPingHandler(MqttClientImpl.this.clientConfig.getTimeoutSeconds()));
-            ch.pipeline().addLast("mqttHandler", new MqttChannelHandler(MqttClientImpl.this, connectFuture, receivedMsgProcessor));
+            ch.pipeline().addLast("mqttHandler", new MqttChannelHandler(MqttClientImpl.this, connectCallback, receivedMsgProcessor));
         }
     }
 

@@ -42,12 +42,12 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
 
     private final MqttClientImpl client;
     private final ReceivedMsgProcessor receivedMsgProcessor;
-    private final Promise<MqttConnectResult> connectFuture;
+    private final ConnectCallback connectCallback;
 
-    MqttChannelHandler(MqttClientImpl client, Promise<MqttConnectResult> connectFuture, ReceivedMsgProcessor receivedMsgProcessor) {
+    MqttChannelHandler(MqttClientImpl client, ConnectCallback connectCallback, ReceivedMsgProcessor receivedMsgProcessor) {
         this.client = client;
         this.receivedMsgProcessor = receivedMsgProcessor;
-        this.connectFuture = connectFuture;
+        this.connectCallback = connectCallback;
     }
 
     @Override
@@ -143,7 +143,7 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
     private void handleConack(Channel channel, MqttConnAckMessage message) {
         switch (message.variableHeader().connectReturnCode()) {
             case CONNECTION_ACCEPTED:
-                this.connectFuture.setSuccess(new MqttConnectResult(true, MqttConnectReturnCode.CONNECTION_ACCEPTED, channel.closeFuture()));
+                this.connectCallback.onSuccess(new MqttConnectResult(true, MqttConnectReturnCode.CONNECTION_ACCEPTED, channel.closeFuture()));
 
                 this.client.getPendingSubscriptions().entrySet().stream().filter((e) -> !e.getValue().isSent()).forEach((e) -> {
                     channel.write(e.getValue().getSubscribeMessage());
@@ -170,7 +170,7 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
             case CONNECTION_REFUSED_NOT_AUTHORIZED:
             case CONNECTION_REFUSED_SERVER_UNAVAILABLE:
             case CONNECTION_REFUSED_UNACCEPTABLE_PROTOCOL_VERSION:
-                this.connectFuture.setSuccess(new MqttConnectResult(false, message.variableHeader().connectReturnCode(), channel.closeFuture()));
+                this.connectCallback.onSuccess(new MqttConnectResult(false, message.variableHeader().connectReturnCode(), channel.closeFuture()));
                 channel.close();
                 // Don't start reconnect logic here
                 break;

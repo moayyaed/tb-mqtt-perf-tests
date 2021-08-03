@@ -15,6 +15,9 @@
  */
 package org.thingsboard.mqtt.broker.util;
 
+import org.thingsboard.mqtt.broker.client.mqtt.ConnectCallback;
+import org.thingsboard.mqtt.broker.client.mqtt.MqttConnectResult;
+
 import java.util.function.Consumer;
 
 public class CallbackUtil {
@@ -24,6 +27,24 @@ public class CallbackUtil {
             public void onSuccess() {
                 if (onSuccess != null) {
                     onSuccess.run();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (onFailure != null) {
+                    onFailure.accept(t);
+                }
+            }
+        };
+    }
+
+    public static ConnectCallback createConnectCallback(Consumer<MqttConnectResult> onSuccess, Consumer<Throwable> onFailure) {
+        return new ConnectCallback() {
+            @Override
+            public void onSuccess(MqttConnectResult connectResult) {
+                if (onSuccess != null) {
+                    onSuccess.accept(connectResult);
                 }
             }
 

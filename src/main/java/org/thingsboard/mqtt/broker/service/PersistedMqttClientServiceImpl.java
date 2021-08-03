@@ -27,6 +27,7 @@ import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.PreConnectedSubscriberInfo;
 import org.thingsboard.mqtt.broker.data.dto.MqttClientDto;
 import org.thingsboard.mqtt.broker.data.PersistentClientType;
+import org.thingsboard.mqtt.broker.util.CallbackUtil;
 import org.thingsboard.mqtt.broker.util.TestClusterUtil;
 
 import java.util.List;
@@ -92,13 +93,17 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
         for (PreConnectedSubscriberInfo preConnectedSubscriberInfo : persistedNodeSubscribers) {
             String clientId = clientIdService.createSubscriberClientId(preConnectedSubscriberInfo.getSubscriberGroup(), preConnectedSubscriberInfo.getSubscriberIndex());
             MqttClient mqttClient = clientInitializer.createClient(clientId, true);
-            clientInitializer.connectClient(mqttClient).addListener(future -> {
-                if (!future.isSuccess()) {
-                    log.warn("[{}] Failed to clear persisted session", clientId);
-                }
-                mqttClient.disconnect();
-                countDownLatch.countDown();
-            });
+            clientInitializer.connectClient(CallbackUtil.createConnectCallback(
+                    connectResult -> {
+                        mqttClient.disconnect();
+                        countDownLatch.countDown();
+                    }, t -> {
+                        log.warn("[{}] Failed to clear persisted session", clientId);
+                        mqttClient.disconnect();
+                        countDownLatch.countDown();
+                    }
+                    ),
+                    mqttClient);
         }
 
         countDownLatch.await(waitTime, TimeUnit.SECONDS);

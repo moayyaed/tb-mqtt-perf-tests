@@ -90,17 +90,18 @@ public class PublisherServiceImpl implements PublisherService {
             String clientId = clientIdService.createPublisherClientId(publisherGroup, publisherIndex);
             String topic = publisherGroup.getTopicPrefix() + publisherIndex;
             MqttClient pubClient = clientInitializer.createClient(clientId);
-            Future<MqttConnectResult> connectResultFuture = clientInitializer.connectClient(pubClient);
-            connectResultFuture.addListener(future -> {
-                if (!future.isSuccess()) {
-                    log.warn("[{}] Failed to connect publisher", clientId);
-                    pubClient.disconnect();
-                } else {
-                    publisherInfos.put(clientId, new PublisherInfo(pubClient, clientId, topic,
-                            publisherGroup.isDebugEnabled() ? new DescriptiveStatistics() : null));
-                }
-                latch.countDown();
-            });
+            clientInitializer.connectClient(CallbackUtil.createConnectCallback(
+                    connectResult -> {
+                        publisherInfos.put(clientId, new PublisherInfo(pubClient, clientId, topic,
+                                publisherGroup.isDebugEnabled() ? new DescriptiveStatistics() : null));
+                        latch.countDown();
+                    }, t -> {
+                        log.warn("[{}] Failed to connect publisher", clientId);
+                        pubClient.disconnect();
+                        latch.countDown();
+                    }
+                    ),
+                    pubClient);
         });
     }
 

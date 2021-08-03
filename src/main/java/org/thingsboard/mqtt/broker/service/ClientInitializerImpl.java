@@ -18,15 +18,13 @@ package org.thingsboard.mqtt.broker.service;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.handler.codec.mqtt.MqttVersion;
-import io.netty.util.concurrent.Future;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
+import org.thingsboard.mqtt.broker.client.mqtt.ConnectCallback;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClientConfig;
-import org.thingsboard.mqtt.broker.client.mqtt.MqttConnectResult;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttHandler;
 import org.thingsboard.mqtt.broker.client.mqtt.ReceivedMsgProcessor;
 import org.thingsboard.mqtt.broker.data.dto.HostPortDto;
@@ -81,32 +79,9 @@ public class ClientInitializerImpl implements ClientInitializer {
     }
 
     @Override
-    public Future<MqttConnectResult> connectClient(MqttClient client) {
+    public void connectClient(ConnectCallback connectCallback, MqttClient client) {
         HostPortDto hostPort = hostPortService.getHostPort();
-        return client.connect(hostPort.getHost(), hostPort.getPort());
-    }
-
-    @Override
-    // TODO: remove this
-    public MqttClient createAndConnectClient(String clientId, boolean cleanSession, MqttHandler defaultHandler) {
-        MqttClient client = createClient(clientId, cleanSession, defaultHandler);
-        MqttConnectResult result;
-        Future<MqttConnectResult> connectFuture = connectClient(client);
-        try {
-            result = connectFuture.get(connectTimeout, TimeUnit.SECONDS);
-        } catch (Exception ex) {
-            connectFuture.cancel(true);
-            client.disconnect();
-            log.error("[{}] Failed to connect to MQTT Broker", clientId, ex);
-            throw new RuntimeException("Failed to connect to MQTT broker with client " + clientId);
-        }
-        if (!result.isSuccess()) {
-            connectFuture.cancel(true);
-            client.disconnect();
-            throw new RuntimeException(String.format("Failed to connect to MQTT broker with client %s. Result code is: %s",
-                    clientId, result.getReturnCode()));
-        }
-        return client;
+        client.connect(connectCallback, hostPort.getHost(), hostPort.getPort());
     }
 
     @PreDestroy

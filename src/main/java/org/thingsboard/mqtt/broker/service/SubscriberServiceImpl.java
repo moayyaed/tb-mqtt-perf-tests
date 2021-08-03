@@ -77,16 +77,18 @@ public class SubscriberServiceImpl implements SubscriberService {
             MqttClient subClient = clientInitializer.createClient(clientId, cleanSession, (s, mqttMessageByteBuf, receivedTime) -> {
                 processReceivedMsg(subscribeStats, subscriberInfo, mqttMessageByteBuf, receivedTime);
             });
-            clientInitializer.connectClient(subClient).addListener(future -> {
-                if (!future.isSuccess()) {
-                    log.warn("[{}] Failed to connect subscriber", clientId);
-                    subClient.disconnect();
-                } else {
-                    subscriberInfo.setSubscriber(subClient);
-                    subscriberInfos.put(clientId, subscriberInfo);
-                }
-                latch.countDown();
-            });
+            clientInitializer.connectClient(CallbackUtil.createConnectCallback(
+                    connectResult -> {
+                        subscriberInfo.setSubscriber(subClient);
+                        subscriberInfos.put(clientId, subscriberInfo);
+                        latch.countDown();
+                    }, t -> {
+                        log.warn("[{}] Failed to connect subscriber", clientId);
+                        subClient.disconnect();
+                        latch.countDown();
+                    }
+                    ),
+                    subClient);
         });
     }
 
