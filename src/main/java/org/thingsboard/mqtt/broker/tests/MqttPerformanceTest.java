@@ -112,18 +112,18 @@ public class MqttPerformanceTest {
         DescriptiveStatistics acknowledgedStats = publishStats.getPublishAcknowledgedStats();
         DescriptiveStatistics sentStats = publishStats.getPublishSentLatencyStats();
 
-        log.info("Latency stats: avg - {}, median - {}, max - {}, min - {}, 95th - {}, lost messages - {}, duplicated messages - {}, total received messages - {}, " +
+        log.info("Latency stats: median - {}, avg - {}, max - {}, min - {}, 95th - {}, lost messages - {}, duplicated messages - {}, total received messages - {}, " +
                         "publish sent messages - {}, publish sent latency median - {}, publish sent latency max - {}, " +
                         "publish acknowledged messages - {}, publish acknowledged latency median - {}, publish acknowledged latency max - {}, " +
                         "msg processing latency median - {}.",
-                generalLatencyStats.getSum() / generalLatencyStats.getN(),
+                generalLatencyStats.getPercentile(50),
                 generalLatencyStats.getMean(), generalLatencyStats.getMax(),
                 generalLatencyStats.getMin(), generalLatencyStats.getPercentile(95),
                 analysisResult.getLostMessages(), analysisResult.getDuplicatedMessages(),
                 generalLatencyStats.getN(),
-                sentStats.getN(), sentStats.getMean(), sentStats.getMax(),
-                acknowledgedStats.getN(), acknowledgedStats.getMean(), acknowledgedStats.getMax(),
-                msgProcessingLatencyStats.getMean()
+                sentStats.getN(), sentStats.getPercentile(50), sentStats.getMax(),
+                acknowledgedStats.getN(), acknowledgedStats.getPercentile(50), acknowledgedStats.getMax(),
+                msgProcessingLatencyStats.getPercentile(50)
         );
 
         publisherService.printDebugPublishersStats();
