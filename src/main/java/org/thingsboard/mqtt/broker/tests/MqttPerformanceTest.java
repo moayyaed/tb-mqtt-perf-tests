@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2021 The Thingsboard Authors
+ * Copyright © 2016-2022 The Thingsboard Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
+import org.thingsboard.mqtt.broker.data.ClientCredentialsType;
 import org.thingsboard.mqtt.broker.data.Message;
 import org.thingsboard.mqtt.broker.data.PersistentClientType;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberAnalysisResult;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
-import org.thingsboard.mqtt.broker.service.orchestration.ClusterSynchronizer;
+import org.thingsboard.mqtt.broker.data.dto.MqttClientCredentialsDto;
 import org.thingsboard.mqtt.broker.service.DummyClientService;
 import org.thingsboard.mqtt.broker.service.PayloadGenerator;
 import org.thingsboard.mqtt.broker.service.PersistedMqttClientService;
@@ -35,19 +36,23 @@ import org.thingsboard.mqtt.broker.service.PublishStats;
 import org.thingsboard.mqtt.broker.service.PublisherService;
 import org.thingsboard.mqtt.broker.service.SubscribeStats;
 import org.thingsboard.mqtt.broker.service.SubscriberService;
+import org.thingsboard.mqtt.broker.service.TbBrokerRestService;
+import org.thingsboard.mqtt.broker.service.orchestration.ClusterSynchronizer;
 import org.thingsboard.mqtt.broker.service.orchestration.TestRestService;
 import org.thingsboard.mqtt.broker.util.ValidationUtil;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class MqttPerformanceTest {
+
     private static final ObjectMapper mapper = new ObjectMapper();
+    public static final String DEFAULT_USER_NAME = "default";
 
     private final DummyClientService dummyClientService;
     private final SubscriberService subscriberService;
@@ -57,6 +62,9 @@ public class MqttPerformanceTest {
     private final PayloadGenerator payloadGenerator;
     private final TestRestService testRestService;
     private final ClusterSynchronizer clusterSynchronizer;
+
+    @Autowired(required = false)
+    private TbBrokerRestService tbBrokerRestService;
 
     @PostConstruct
     public void init() throws Exception {
@@ -69,6 +77,7 @@ public class MqttPerformanceTest {
 
         printTestRunConfiguration();
 
+        final UUID defaultCredentialsId = createDefaultMqttCredentials();
 
         persistedMqttClientService.clearPersistedSessions();
         persistedMqttClientService.removeApplicationClients();
@@ -132,6 +141,20 @@ public class MqttPerformanceTest {
         // wait for all MQTT clients to close
         Thread.sleep(2000);
         persistedMqttClientService.removeApplicationClients();
+
+        removeDefaultCredentials(defaultCredentialsId);
+
+        log.info("Performance test finished.");
+    }
+
+    private UUID createDefaultMqttCredentials() {
+        return UUID.fromString(tbBrokerRestService.createClientCredentials(
+                new MqttClientCredentialsDto(null, DEFAULT_USER_NAME, PersistentClientType.DEVICE, ClientCredentialsType.MQTT_BASIC)
+        ));
+    }
+
+    private void removeDefaultCredentials(UUID id) {
+        tbBrokerRestService.removeClientCredentials(id);
     }
 
     private void printTestRunConfiguration() throws Exception {

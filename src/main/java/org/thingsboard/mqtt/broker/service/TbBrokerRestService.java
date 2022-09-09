@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2021 The Thingsboard Authors
+ * Copyright © 2016-2022 The Thingsboard Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,17 @@
  */
 package org.thingsboard.mqtt.broker.service;
 
-import org.thingsboard.mqtt.broker.data.dto.MqttClientDto;
+import org.thingsboard.mqtt.broker.data.ShortMqttClientCredentials;
+import org.thingsboard.mqtt.broker.data.dto.MqttClientCredentialsDto;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface TbBrokerRestService {
-    MqttClientDto getClient(String clientId);
 
-    List<MqttClientDto> getAllClients();
+    List<ShortMqttClientCredentials> getAllClientCredentials();
 
-    void createClient(MqttClientDto clientDto);
+    String createClientCredentials(MqttClientCredentialsDto clientCredentialsDto);
 
-    void removeClient(String clientId);
+    void removeClientCredentials(UUID id);
 }

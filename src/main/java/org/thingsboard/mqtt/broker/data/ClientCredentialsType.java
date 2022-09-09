@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingsboard.mqtt.broker.service.orchestration;
+package org.thingsboard.mqtt.broker.data;
 
-public interface ClusterSynchronizer {
-    void notifyClusterReady();
-
-    void awaitClusterReady();
+public enum ClientCredentialsType {
+    MQTT_BASIC,
+    SSL
 }

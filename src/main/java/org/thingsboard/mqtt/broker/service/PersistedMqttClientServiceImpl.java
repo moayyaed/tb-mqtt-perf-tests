@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2021 The Thingsboard Authors
+ * Copyright © 2016-2022 The Thingsboard Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,16 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
-import org.thingsboard.mqtt.broker.data.PreConnectedSubscriberInfo;
-import org.thingsboard.mqtt.broker.data.dto.MqttClientDto;
+import org.thingsboard.mqtt.broker.data.ClientCredentialsType;
 import org.thingsboard.mqtt.broker.data.PersistentClientType;
+import org.thingsboard.mqtt.broker.data.PreConnectedSubscriberInfo;
+import org.thingsboard.mqtt.broker.data.ShortMqttClientCredentials;
+import org.thingsboard.mqtt.broker.data.dto.MqttClientCredentialsDto;
+import org.thingsboard.mqtt.broker.tests.MqttPerformanceTest;
 import org.thingsboard.mqtt.broker.util.CallbackUtil;
 import org.thingsboard.mqtt.broker.util.TestClusterUtil;
 
@@ -57,26 +61,40 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
             return;
         }
 
-        List<PreConnectedSubscriberInfo> nodeSubscribers = TestClusterUtil.getTestNodeSubscribers(testRunConfiguration, testRunClusterConfig);
-        List<PreConnectedSubscriberInfo> applicationNodeSubscribers = nodeSubscribers.stream()
-                .filter(preConnectedSubscriberInfo -> preConnectedSubscriberInfo.getSubscriberGroup().getPersistentSessionInfo() != null)
-                .filter(preConnectedSubscriberInfo -> preConnectedSubscriberInfo.getSubscriberGroup().getPersistentSessionInfo().getClientType() == PersistentClientType.APPLICATION)
-                .collect(Collectors.toList());
-        if (applicationNodeSubscribers.isEmpty()) {
-            return;
-        }
+        List<PreConnectedSubscriberInfo> applicationNodeSubscribers = getAppSubscribers();
+        if (CollectionUtils.isEmpty(applicationNodeSubscribers)) return;
+
+        List<ShortMqttClientCredentials> allClientCredentials = tbBrokerRestService.getAllClientCredentials();
 
         log.info("Initializing {} {} subscribers.", applicationNodeSubscribers.size(), PersistentClientType.APPLICATION);
         for (PreConnectedSubscriberInfo preConnectedSubscriberInfo : applicationNodeSubscribers) {
             String clientId = clientIdService.createSubscriberClientId(preConnectedSubscriberInfo.getSubscriberGroup(), preConnectedSubscriberInfo.getSubscriberIndex());
-            MqttClientDto client = tbBrokerRestService.getClient(clientId);
-            if (client == null) {
-                tbBrokerRestService.createClient(new MqttClientDto(clientId, clientId, PersistentClientType.APPLICATION));
-            } else if (client.getType() == PersistentClientType.DEVICE){
-                log.error("Client with ID {} exists with {} client type.", client, PersistentClientType.DEVICE);
+            ShortMqttClientCredentials credentials = findCredentialsByClientId(allClientCredentials, clientId);
+            if (credentials == null) {
+                tbBrokerRestService.createClientCredentials(
+                        new MqttClientCredentialsDto(clientId, clientId, PersistentClientType.APPLICATION, ClientCredentialsType.MQTT_BASIC)
+                );
+            } else if (credentials.getClientType() == PersistentClientType.DEVICE) {
+                log.error("Client with ID {} exists with {} client type.", credentials, PersistentClientType.DEVICE);
                 throw new RuntimeException("Client with ID " + clientId + " exists with " + PersistentClientType.DEVICE + " type");
             }
         }
+    }
+
+    private List<PreConnectedSubscriberInfo> getAppSubscribers() {
+        List<PreConnectedSubscriberInfo> nodeSubscribers = TestClusterUtil.getTestNodeSubscribers(testRunConfiguration, testRunClusterConfig);
+        return nodeSubscribers.stream()
+                .filter(preConnectedSubscriberInfo -> preConnectedSubscriberInfo.getSubscriberGroup().getPersistentSessionInfo() != null)
+                .filter(preConnectedSubscriberInfo -> preConnectedSubscriberInfo.getSubscriberGroup().getPersistentSessionInfo().getClientType() == PersistentClientType.APPLICATION)
+                .collect(Collectors.toList());
+    }
+
+    private ShortMqttClientCredentials findCredentialsByClientId(List<ShortMqttClientCredentials> allClientCredentials, String clientId) {
+        return allClientCredentials
+                .stream()
+                .filter(credentials -> credentials.getName().equals(clientId))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
@@ -92,16 +110,16 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
         CountDownLatch countDownLatch = new CountDownLatch(persistedNodeSubscribers.size());
         for (PreConnectedSubscriberInfo preConnectedSubscriberInfo : persistedNodeSubscribers) {
             String clientId = clientIdService.createSubscriberClientId(preConnectedSubscriberInfo.getSubscriberGroup(), preConnectedSubscriberInfo.getSubscriberIndex());
-            MqttClient mqttClient = clientInitializer.createClient(clientId, true);
+            MqttClient mqttClient = clientInitializer.createClient(clientId, MqttPerformanceTest.DEFAULT_USER_NAME, true);
             clientInitializer.connectClient(CallbackUtil.createConnectCallback(
-                    connectResult -> {
-                        mqttClient.disconnect();
-                        countDownLatch.countDown();
-                    }, t -> {
-                        log.warn("[{}] Failed to clear persisted session", clientId);
-                        mqttClient.disconnect();
-                        countDownLatch.countDown();
-                    }
+                            connectResult -> {
+                                mqttClient.disconnect();
+                                countDownLatch.countDown();
+                            }, t -> {
+                                log.warn("[{}] Failed to clear persisted session", clientId);
+                                mqttClient.disconnect();
+                                countDownLatch.countDown();
+                            }
                     ),
                     mqttClient);
         }
@@ -117,22 +135,22 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
             return;
         }
 
-        List<PreConnectedSubscriberInfo> nodeSubscribers = TestClusterUtil.getTestNodeSubscribers(testRunConfiguration, testRunClusterConfig);
-        List<PreConnectedSubscriberInfo> applicationNodeSubscribers = nodeSubscribers.stream()
-                .filter(preConnectedSubscriberInfo -> preConnectedSubscriberInfo.getSubscriberGroup().getPersistentSessionInfo() != null)
-                .filter(preConnectedSubscriberInfo -> preConnectedSubscriberInfo.getSubscriberGroup().getPersistentSessionInfo().getClientType() == PersistentClientType.APPLICATION)
-                .collect(Collectors.toList());
-        if (applicationNodeSubscribers.isEmpty()) {
-            return;
-        }
+        List<PreConnectedSubscriberInfo> applicationNodeSubscribers = getAppSubscribers();
+        if (CollectionUtils.isEmpty(applicationNodeSubscribers)) return;
+
+        List<ShortMqttClientCredentials> allClientCredentials = tbBrokerRestService.getAllClientCredentials();
 
         log.info("Removing {} {} subscribers.", applicationNodeSubscribers.size(), PersistentClientType.APPLICATION);
         for (PreConnectedSubscriberInfo preConnectedSubscriberInfo : applicationNodeSubscribers) {
             String clientId = clientIdService.createSubscriberClientId(preConnectedSubscriberInfo.getSubscriberGroup(), preConnectedSubscriberInfo.getSubscriberIndex());
+            ShortMqttClientCredentials credentials = findCredentialsByClientId(allClientCredentials, clientId);
+            if (credentials == null) {
+                return;
+            }
             try {
-                tbBrokerRestService.removeClient(clientId);
+                tbBrokerRestService.removeClientCredentials(credentials.getId());
             } catch (Exception e) {
-                log.warn("[{}] Failed to remove {} client", clientId, PersistentClientType.APPLICATION);
+                log.warn("[{}] Failed to remove {} client", clientId, PersistentClientType.APPLICATION, e);
             }
         }
     }

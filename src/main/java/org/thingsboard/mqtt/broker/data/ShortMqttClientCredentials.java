@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingsboard.mqtt.broker.service.orchestration;
+package org.thingsboard.mqtt.broker.data;
 
-public interface ClusterSynchronizer {
-    void notifyClusterReady();
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    void awaitClusterReady();
+import java.util.UUID;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ShortMqttClientCredentials {
+    private UUID id;
+    private String name;
+    private PersistentClientType clientType;
+    private ClientCredentialsType credentialsType;
+    private long createdTime;
 }

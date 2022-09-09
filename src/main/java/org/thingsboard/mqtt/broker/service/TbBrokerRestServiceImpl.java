@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2021 The Thingsboard Authors
+ * Copyright © 2016-2022 The Thingsboard Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.thingsboard.mqtt.broker.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,14 +26,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.thingsboard.mqtt.broker.data.PageData;
+import org.thingsboard.mqtt.broker.data.ShortMqttClientCredentials;
 import org.thingsboard.mqtt.broker.data.dto.LoginDto;
 import org.thingsboard.mqtt.broker.data.dto.LoginResponseDto;
-import org.thingsboard.mqtt.broker.data.dto.MqttClientDto;
+import org.thingsboard.mqtt.broker.data.dto.MqttClientCredentialsDto;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -64,40 +67,36 @@ public class TbBrokerRestServiceImpl implements TbBrokerRestService {
     }
 
     @Override
-    public MqttClientDto getClient(String clientId) {
-        return restTemplate.getForEntity(tbUri + "/api/mqtt/client/" + clientId, MqttClientDto.class).getBody();
-    }
-
-    @Override
-    public List<MqttClientDto> getAllClients() {
-        List<MqttClientDto> clients = new ArrayList<>();
+    public List<ShortMqttClientCredentials> getAllClientCredentials() {
+        List<ShortMqttClientCredentials> clientCredentials = new ArrayList<>();
         boolean hasNext;
         int currentPage = 0;
-        int pageSize = 10;
+        int pageSize = 50;
         do {
-            PageData<MqttClientDto> pageData = restTemplate.exchange(tbUri + "/api/mqtt/client?pageSize=" + pageSize + "&page=" + currentPage,
+            PageData<ShortMqttClientCredentials> pageData = restTemplate.exchange(tbUri + "/api/mqtt/client/credentials?pageSize=" + pageSize + "&page=" + currentPage,
                     HttpMethod.GET, null,
-                    new ParameterizedTypeReference<PageData<MqttClientDto>>() {
+                    new ParameterizedTypeReference<PageData<ShortMqttClientCredentials>>() {
                     },
                     Map.of()
             ).getBody();
             hasNext = pageData.hasNext();
-            clients.addAll(pageData.getData());
+            clientCredentials.addAll(pageData.getData());
             currentPage++;
         } while (hasNext);
-        return clients;
+        return clientCredentials;
     }
 
     @Override
-    public void createClient(MqttClientDto clientDto) {
-        MqttClientDto savedClientDto = restTemplate.postForEntity(tbUri + "/api/mqtt/client", clientDto, MqttClientDto.class).getBody();
+    public String createClientCredentials(MqttClientCredentialsDto clientCredentialsDto) {
+        JsonNode savedClientDto = restTemplate.postForEntity(tbUri + "/api/mqtt/client/credentials", clientCredentialsDto, JsonNode.class).getBody();
         if (savedClientDto == null) {
-            throw new RuntimeException("Failed to save MQTT client");
+            throw new RuntimeException("Failed to save MQTT client credentials!");
         }
+        return savedClientDto.get("id").asText();
     }
 
     @Override
-    public void removeClient(String clientId) {
-        restTemplate.delete(tbUri + "/api/mqtt/client/" + clientId);
+    public void removeClientCredentials(UUID id) {
+        restTemplate.delete(tbUri + "/api/mqtt/client/credentials/" + id.toString());
     }
 }

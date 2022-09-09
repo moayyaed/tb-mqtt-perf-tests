@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2021 The Thingsboard Authors
+ * Copyright © 2016-2022 The Thingsboard Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,6 @@ package org.thingsboard.mqtt.broker.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
-import io.netty.util.concurrent.Future;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -30,11 +27,13 @@ import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.Message;
+import org.thingsboard.mqtt.broker.data.PersistentClientType;
 import org.thingsboard.mqtt.broker.data.PreConnectedSubscriberInfo;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberAnalysisResult;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberInfo;
+import org.thingsboard.mqtt.broker.tests.MqttPerformanceTest;
 import org.thingsboard.mqtt.broker.util.CallbackUtil;
 import org.thingsboard.mqtt.broker.util.TestClusterUtil;
 
@@ -74,33 +73,49 @@ public class SubscriberServiceImpl implements SubscriberService {
             boolean cleanSession = subscriberGroup.getPersistentSessionInfo() == null;
             SubscriberInfo subscriberInfo = new SubscriberInfo(null, subscriberIndex, clientId, new AtomicInteger(0), subscriberGroup,
                     subscriberGroup.isDebugEnabled() ? new DescriptiveStatistics() : null);
-            MqttClient subClient = clientInitializer.createClient(clientId, cleanSession, (s, mqttMessageByteBuf, receivedTime) -> {
-                processReceivedMsg(subscribeStats, subscriberInfo, mqttMessageByteBuf, receivedTime);
-            });
+
+            MqttClient subClient;
+            if (subscriberGroup.getPersistentSessionInfo() != null && PersistentClientType.APPLICATION == subscriberGroup.getPersistentSessionInfo().getClientType()) {
+                subClient = getClient(clientId, null, cleanSession, subscribeStats, subscriberInfo);
+            } else {
+                subClient = getClient(clientId, MqttPerformanceTest.DEFAULT_USER_NAME, cleanSession, subscribeStats, subscriberInfo);
+            }
+
             clientInitializer.connectClient(CallbackUtil.createConnectCallback(
-                    connectResult -> {
-                        subscriberInfo.setSubscriber(subClient);
-                        subscriberInfos.put(clientId, subscriberInfo);
-                        latch.countDown();
-                    }, t -> {
-                        log.warn("[{}] Failed to connect subscriber", clientId);
-                        subClient.disconnect();
-                        latch.countDown();
-                    }
+                            connectResult -> {
+                                subscriberInfo.setSubscriber(subClient);
+                                subscriberInfos.put(clientId, subscriberInfo);
+                                latch.countDown();
+                            }, t -> {
+                                log.warn("[{}] Failed to connect subscriber", clientId);
+                                subClient.disconnect();
+                                latch.countDown();
+                            }
                     ),
                     subClient);
         });
     }
 
+    private MqttClient getClient(String clientId, String defaultUserName, boolean cleanSession, SubscribeStats subscribeStats, SubscriberInfo subscriberInfo) {
+        return clientInitializer.createClient(
+                clientId,
+                defaultUserName,
+                cleanSession,
+                (s, mqttMessageByteBuf, receivedTime) -> processReceivedMsg(subscribeStats, subscriberInfo, mqttMessageByteBuf, receivedTime)
+        );
+    }
+
     @Override
     public void subscribe(SubscribeStats subscribeStats) {
-        clusterProcessService.process("SUBSCRIBERS_SUBSCRIBE", new ArrayList<>(subscriberInfos.values()), (latch, subscriberInfo) -> {
-            subscriberInfo.getSubscriber().on(subscriberInfo.getSubscriberGroup().getTopicFilter(), (topic, mqttMessageByteBuf, receivedTime) -> {
-                processReceivedMsg(subscribeStats, subscriberInfo, mqttMessageByteBuf, receivedTime);
-            },
-                    CallbackUtil.createCallback(latch::countDown, t -> latch.countDown()),
-                    testRunConfiguration.getSubscriberQoS());
-        });
+        clusterProcessService.process(
+                "SUBSCRIBERS_SUBSCRIBE",
+                new ArrayList<>(subscriberInfos.values()),
+                (latch, subscriberInfo) ->
+                        subscriberInfo.getSubscriber().on(
+                                subscriberInfo.getSubscriberGroup().getTopicFilter(),
+                                (topic, mqttMessageByteBuf, receivedTime) -> processReceivedMsg(subscribeStats, subscriberInfo, mqttMessageByteBuf, receivedTime),
+                                CallbackUtil.createCallback(latch::countDown, t -> latch.countDown()),
+                                testRunConfiguration.getSubscriberQoS()));
     }
 
     private void processReceivedMsg(SubscribeStats subscribeStats, SubscriberInfo subscriberInfo, ByteBuf mqttMessageByteBuf, long receivedTime) {

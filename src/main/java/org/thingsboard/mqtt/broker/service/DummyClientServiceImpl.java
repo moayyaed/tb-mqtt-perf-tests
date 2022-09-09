@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2021 The Thingsboard Authors
+ * Copyright © 2016-2022 The Thingsboard Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
+import org.thingsboard.mqtt.broker.tests.MqttPerformanceTest;
 import org.thingsboard.mqtt.broker.util.CallbackUtil;
 
 import javax.annotation.PreDestroy;
@@ -64,7 +65,7 @@ public class DummyClientServiceImpl implements DummyClientService {
 
         clusterProcessService.process("DUMMIES_CONNECT", preConnectedDummyIndexes, (latch, dummyId) -> {
             String clientId = clientIdService.createDummyClientId(dummyId);
-            MqttClient dummyClient = clientInitializer.createClient(clientId);
+            MqttClient dummyClient = clientInitializer.createClient(clientId, MqttPerformanceTest.DEFAULT_USER_NAME);
             long connectionStart = System.currentTimeMillis();
             clientInitializer.connectClient(CallbackUtil.createConnectCallback(connectResult -> {
                 dummyClients.put(clientId, dummyClient);

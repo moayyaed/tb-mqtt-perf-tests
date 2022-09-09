@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2021 The Thingsboard Authors
+ * Copyright © 2016-2022 The Thingsboard Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,19 +57,20 @@ public class ClientInitializerImpl implements ClientInitializer {
     }
 
     @Override
-    public MqttClient createClient(String clientId) {
-        return createClient(clientId, true, null);
+    public MqttClient createClient(String clientId, String userName) {
+        return createClient(clientId, userName, true, null);
     }
 
     @Override
-    public MqttClient createClient(String clientId, boolean cleanSession) {
-        return createClient(clientId, cleanSession, null);
+    public MqttClient createClient(String clientId, String userName, boolean cleanSession) {
+        return createClient(clientId, userName, cleanSession, null);
     }
 
     @Override
-    public MqttClient createClient(String clientId, boolean cleanSession, MqttHandler defaultHandler) {
+    public MqttClient createClient(String clientId, String userName, boolean cleanSession, MqttHandler defaultHandler) {
         MqttClientConfig config = new MqttClientConfig(sslConfig.getSslContext());
         config.setClientId(clientId);
+        config.setUsername(userName);
         config.setCleanSession(cleanSession);
         config.setProtocolVersion(MqttVersion.MQTT_3_1_1);
         config.setTimeoutSeconds(keepAliveSeconds);

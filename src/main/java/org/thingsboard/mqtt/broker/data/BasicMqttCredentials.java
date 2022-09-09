@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2021 The Thingsboard Authors
+ * Copyright © 2016-2022 The Thingsboard Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingsboard.mqtt.broker.data.dto;
+package org.thingsboard.mqtt.broker.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.thingsboard.mqtt.broker.data.PersistentClientType;
 
-import java.util.UUID;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class MqttClientDto {
+public class BasicMqttCredentials {
     private String clientId;
-    private String name;
-    private PersistentClientType type;
+    private String userName;
+    private String password;
+    private List<String> authorizationRulePatterns;
 }

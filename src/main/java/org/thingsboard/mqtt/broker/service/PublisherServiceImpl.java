@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2021 The Thingsboard Authors
+ * Copyright © 2016-2022 The Thingsboard Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
-import io.netty.util.concurrent.Future;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
-import org.thingsboard.mqtt.broker.client.mqtt.MqttConnectResult;
 import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.Message;
@@ -89,7 +87,7 @@ public class PublisherServiceImpl implements PublisherService {
             int publisherIndex = preConnectedPublisherInfo.getPublisherIndex();
             String clientId = clientIdService.createPublisherClientId(publisherGroup, publisherIndex);
             String topic = publisherGroup.getTopicPrefix() + publisherIndex;
-            MqttClient pubClient = clientInitializer.createClient(clientId);
+            MqttClient pubClient = clientInitializer.createClient(clientId, MqttPerformanceTest.DEFAULT_USER_NAME);
             clientInitializer.connectClient(CallbackUtil.createConnectCallback(
                     connectResult -> {
                         publisherInfos.put(clientId, new PublisherInfo(pubClient, clientId, topic,
