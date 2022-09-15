@@ -120,6 +120,7 @@ public class DummyClientServiceImpl implements DummyClientService {
 
             CountDownLatch countDownLatch = new CountDownLatch(dummyClients.size());
             for (MqttClient mqttClient : dummyClients.values()) {
+                mqttClient.getClientConfig().setCleanSession(true);
                 clientInitializer.connectClient(CallbackUtil.createConnectCallback(
                                 connectResult -> {
                                     mqttClient.disconnect();
