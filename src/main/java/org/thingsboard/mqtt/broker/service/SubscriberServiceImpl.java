@@ -135,7 +135,7 @@ public class SubscriberServiceImpl implements SubscriberService {
             }
             subscriberInfo.getTotalReceivedMsgs().incrementAndGet();
         } catch (Exception e) {
-            log.error("[{}] Failed to process msg", subscriberInfo.getId());
+            log.error("[{}] Failed to process msg", subscriberInfo.getId(), e);
         }
     }
 

@@ -148,13 +148,20 @@ public class MqttPerformanceTest {
     }
 
     private UUID createDefaultMqttCredentials() {
-        return UUID.fromString(tbBrokerRestService.createClientCredentials(
-                new MqttClientCredentialsDto(null, DEFAULT_USER_NAME, PersistentClientType.DEVICE, ClientCredentialsType.MQTT_BASIC)
-        ));
+        try {
+            return UUID.fromString(tbBrokerRestService.createClientCredentials(
+                    new MqttClientCredentialsDto(null, DEFAULT_USER_NAME, PersistentClientType.DEVICE, ClientCredentialsType.MQTT_BASIC)
+            ));
+        } catch (Exception e) {
+            log.warn("Default credentials are already created!", e);
+        }
+        return null;
     }
 
     private void removeDefaultCredentials(UUID id) {
-        tbBrokerRestService.removeClientCredentials(id);
+        if (id != null) {
+            tbBrokerRestService.removeClientCredentials(id);
+        }
     }
 
     private void printTestRunConfiguration() throws Exception {
