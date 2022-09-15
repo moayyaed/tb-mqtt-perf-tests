@@ -44,8 +44,8 @@ public class ClusterProcessServiceImpl implements ClusterProcessService {
             return;
         }
 
-        int maxConcurrentNodeOperations = testRunConfiguration.getMaxConcurrentOperations() / testRunClusterConfig.getParallelTestsCount() != 0 ?
-                testRunConfiguration.getMaxConcurrentOperations() / testRunClusterConfig.getParallelTestsCount() : 1;
+        int maxOperationsPerSingleRun = testRunConfiguration.getMaxConcurrentOperations() / testRunClusterConfig.getParallelTestsCount();
+        int maxConcurrentNodeOperations = maxOperationsPerSingleRun != 0 ? maxOperationsPerSingleRun : 1;
 
         log.info("Started processing {} with {} task.", elements.size(), taskName);
         for (int i = 0; i < elements.size(); i += maxConcurrentNodeOperations) {
@@ -61,7 +61,8 @@ public class ClusterProcessServiceImpl implements ClusterProcessService {
             }
 
             try {
-                latch.await(waitTime, TimeUnit.SECONDS);
+                var result = latch.await(waitTime, TimeUnit.SECONDS);
+                log.info("[{}] The result of await processing is: {}", taskName, result);
             } catch (InterruptedException e) {
                 log.error("Failed to wait for the {} to finish.", taskName);
                 throw new RuntimeException("Failed to wait for the " + taskName + " to finish");

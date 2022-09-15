@@ -19,4 +19,6 @@ public interface DummyClientService {
     void connectDummyClients() throws InterruptedException;
 
     void disconnectDummyClients();
+
+    void clearPersistedSessions() throws InterruptedException;
 }

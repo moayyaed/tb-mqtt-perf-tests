@@ -59,6 +59,7 @@ test-run:
   publisher-warmup-wait-time: "${TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS:30}"
   cluster-process-wait-time: "${TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS:30}"
   clear-persisted-sessions-wait-time: "${TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS:30}"
+  dummy_clients_persistent: "${TEST_RUN_DUMMY_CLIENTS_PERSISTENT:false}"
   logs:
     msg-processing-queue-period: "${TEST_RUN_LOGS_MSG_PROCESSING_QUEUE_PERIOD:15000}"
 
