@@ -124,7 +124,8 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
                     mqttClient);
         }
 
-        countDownLatch.await(waitTime, TimeUnit.SECONDS);
+        var result = countDownLatch.await(waitTime, TimeUnit.SECONDS);
+        log.info("The result of await processing for clear persisted sessions is: {}", result);
         stopWatch.stop();
         log.info("Clearing {} persisted sessions took {} ms", persistedNodeSubscribers.size(), stopWatch.getTime());
     }

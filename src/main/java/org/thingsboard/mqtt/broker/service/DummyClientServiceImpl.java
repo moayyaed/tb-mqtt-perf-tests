@@ -134,7 +134,8 @@ public class DummyClientServiceImpl implements DummyClientService {
                         mqttClient);
             }
 
-            countDownLatch.await(waitTime, TimeUnit.SECONDS);
+            var result = countDownLatch.await(waitTime, TimeUnit.SECONDS);
+            log.info("The result of await processing for dummy clients clear persisted sessions is: {}", result);
             stopWatch.stop();
             log.info("Clearing {} dummy persisted sessions took {} ms", dummyClients.size(), stopWatch.getTime());
             dummyClients = null;

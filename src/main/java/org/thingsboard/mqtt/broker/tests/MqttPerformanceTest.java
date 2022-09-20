@@ -155,7 +155,7 @@ public class MqttPerformanceTest {
                     new MqttClientCredentialsDto(null, DEFAULT_USER_NAME, PersistentClientType.DEVICE, ClientCredentialsType.MQTT_BASIC)
             ));
         } catch (Exception e) {
-            log.warn("Default credentials are already created!", e);
+            log.warn("[{}][{}] Could not create client credentials!", DEFAULT_USER_NAME, PersistentClientType.DEVICE, e);
         }
         return null;
     }
