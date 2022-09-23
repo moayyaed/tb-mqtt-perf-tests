@@ -24,6 +24,8 @@ public interface PublisherService {
 
     void disconnectPublishers();
 
+    void clearPersistedSessions() throws InterruptedException;
+
     void printDebugPublishersStats();
 
 }

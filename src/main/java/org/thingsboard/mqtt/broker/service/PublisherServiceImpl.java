@@ -60,6 +60,10 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Value("${test-run.publisher-warmup-wait-time}")
     private int warmupWaitTime;
+    @Value("${test-run.publisher_clients_persistent:false}")
+    private boolean publisherClientsPersistent;
+    @Value("${test-run.clear-persisted-sessions-wait-time}")
+    private int waitTime;
 
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
@@ -87,17 +91,17 @@ public class PublisherServiceImpl implements PublisherService {
             int publisherIndex = preConnectedPublisherInfo.getPublisherIndex();
             String clientId = clientIdService.createPublisherClientId(publisherGroup, publisherIndex);
             String topic = publisherGroup.getTopicPrefix() + publisherIndex;
-            MqttClient pubClient = clientInitializer.createClient(clientId, MqttPerformanceTest.DEFAULT_USER_NAME);
+            MqttClient pubClient = clientInitializer.createClient(clientId, MqttPerformanceTest.DEFAULT_USER_NAME, !publisherClientsPersistent);
             clientInitializer.connectClient(CallbackUtil.createConnectCallback(
-                    connectResult -> {
-                        publisherInfos.put(clientId, new PublisherInfo(pubClient, clientId, topic,
-                                publisherGroup.isDebugEnabled() ? new DescriptiveStatistics() : null));
-                        latch.countDown();
-                    }, t -> {
-                        log.warn("[{}] Failed to connect publisher", clientId);
-                        pubClient.disconnect();
-                        latch.countDown();
-                    }
+                            connectResult -> {
+                                publisherInfos.put(clientId, new PublisherInfo(pubClient, clientId, topic,
+                                        publisherGroup.isDebugEnabled() ? new DescriptiveStatistics() : null));
+                                latch.countDown();
+                            }, t -> {
+                                log.warn("[{}] Failed to connect publisher", clientId);
+                                pubClient.disconnect();
+                                latch.countDown();
+                            }
                     ),
                     pubClient);
         });
@@ -202,6 +206,33 @@ public class PublisherServiceImpl implements PublisherService {
                 log.error("[{}] Failed to disconnect publisher", publisherInfo.getClientId());
             }
         }
+    }
+
+    @Override
+    public void clearPersistedSessions() throws InterruptedException {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        CountDownLatch countDownLatch = new CountDownLatch(publisherInfos.size());
+        for (PublisherInfo publisherInfo : publisherInfos.values()) {
+            publisherInfo.getPublisher().getClientConfig().setCleanSession(true);
+            clientInitializer.connectClient(CallbackUtil.createConnectCallback(
+                            connectResult -> {
+                                publisherInfo.getPublisher().disconnect();
+                                countDownLatch.countDown();
+                            }, t -> {
+                                log.warn("[{}] Failed to clear publisher persisted session", publisherInfo.getPublisher().getClientConfig().getClientId());
+                                publisherInfo.getPublisher().disconnect();
+                                countDownLatch.countDown();
+                            }
+                    ),
+                    publisherInfo.getPublisher());
+        }
+
+        var result = countDownLatch.await(waitTime, TimeUnit.SECONDS);
+        log.info("The result of await processing for publisher clients clear persisted sessions is: {}", result);
+        stopWatch.stop();
+        log.info("Clearing {} publisher persisted sessions took {} ms", publisherInfos.size(), stopWatch.getTime());
     }
 
     @Override

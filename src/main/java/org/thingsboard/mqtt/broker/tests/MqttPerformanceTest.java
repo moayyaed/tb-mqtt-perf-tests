@@ -119,6 +119,8 @@ public class MqttPerformanceTest {
 
         dummyClientService.clearPersistedSessions();
 
+        publisherService.clearPersistedSessions();
+
         SubscriberAnalysisResult analysisResult = subscriberService.analyzeReceivedMessages();
         DescriptiveStatistics acknowledgedStats = publishStats.getPublishAcknowledgedStats();
         DescriptiveStatistics sentStats = publishStats.getPublishSentLatencyStats();
