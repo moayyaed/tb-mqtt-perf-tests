@@ -79,6 +79,7 @@ public class MqttPerformanceTest {
 
         final UUID defaultCredentialsId = createDefaultMqttCredentials();
 
+        log.info("Start clear persisted Sessions.");
         persistedMqttClientService.clearPersistedSessions();
         persistedMqttClientService.removeApplicationClients();
         Thread.sleep(2000);
@@ -103,8 +104,8 @@ public class MqttPerformanceTest {
         publisherService.warmUpPublishers();
         Thread.sleep(1000);
 
+        log.info("Start msg publishing.");
         PublishStats publishStats = publisherService.startPublishing();
-
 
         Thread.sleep(TimeUnit.SECONDS.toMillis(testRunConfiguration.getSecondsToRun() + testRunConfiguration.getAdditionalSecondsToWait()));
 
@@ -113,12 +114,13 @@ public class MqttPerformanceTest {
         dummyClientService.disconnectDummyClients();
 
         // wait for all MQTT clients to close
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         persistedMqttClientService.clearPersistedSessions();
 
         dummyClientService.clearPersistedSessions();
 
+        log.info("Start clear persisted Sessions.");
         publisherService.clearPersistedSessions();
 
         SubscriberAnalysisResult analysisResult = subscriberService.analyzeReceivedMessages();
