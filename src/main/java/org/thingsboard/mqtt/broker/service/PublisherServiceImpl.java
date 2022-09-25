@@ -17,8 +17,7 @@ package org.thingsboard.mqtt.broker.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.UnpooledByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -246,12 +245,8 @@ public class PublisherServiceImpl implements PublisherService {
         }
     }
 
-    private static final ByteBufAllocator ALLOCATOR = new UnpooledByteBufAllocator(false);
-
     private static ByteBuf toByteBuf(byte[] bytes) {
-        ByteBuf payload = ALLOCATOR.buffer();
-        payload.writeBytes(bytes);
-        return payload;
+        return Unpooled.wrappedBuffer(bytes);
     }
 
     @Getter
