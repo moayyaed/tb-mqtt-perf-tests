@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 import org.thingsboard.mqtt.broker.data.BasicMqttCredentials;
 import org.thingsboard.mqtt.broker.data.ClientCredentialsType;
 import org.thingsboard.mqtt.broker.data.PersistentClientType;
+import org.thingsboard.mqtt.broker.data.PubSubAuthorizationRules;
 import org.thingsboard.mqtt.broker.util.JacksonUtil;
 
 @Data
@@ -41,10 +42,10 @@ public class MqttClientCredentialsDto {
     }
 
     private BasicMqttCredentials newBasicCredentials(String clientId) {
-        return new BasicMqttCredentials(clientId, null, null, null);
+        return new BasicMqttCredentials(clientId, null, null, new PubSubAuthorizationRules());
     }
 
     private BasicMqttCredentials newBasicCredentials() {
-        return new BasicMqttCredentials(null, "default", null, null);
+        return new BasicMqttCredentials(null, "default", null, new PubSubAuthorizationRules());
     }
 }

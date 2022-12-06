@@ -19,12 +19,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BasicMqttCredentials {
-    private String clientId;
-    private String userName;
-    private String password;
-    private PubSubAuthorizationRules authRules;
+public class PubSubAuthorizationRules {
+
+    private List<String> pubAuthRulePatterns;
+    private List<String> subAuthRulePatterns;
+
 }

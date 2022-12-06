@@ -22,7 +22,7 @@
 
     <groupId>org.thingsboard.mqtt-broker</groupId>
     <artifactId>performance-tests</artifactId>
-    <version>1.0.35</version>
+    <version>1.0.36</version>
     <packaging>jar</packaging>
 
     <name>ThingsBoard MQTT Broker Performance Tests</name>
@@ -45,7 +45,7 @@
         <pkg.user>thingsboard</pkg.user>
         <pkg.unixLogFolder>/var/log/${pkg.name}</pkg.unixLogFolder>
         <pkg.installFolder>/usr/share/${pkg.name}</pkg.installFolder>
-        <docker.repo>schwarzit-int-sit-siot-docker-local.jfrog.io</docker.repo>
+        <docker.repo>thingsboard</docker.repo>
         <dockerfile.skip>true</dockerfile.skip>
         <docker.name>tb-mqtt-broker-performance-tests</docker.name>
         <pkg.implementationTitle>ThingsBoard MQTT Broker Performance Tests</pkg.implementationTitle>
