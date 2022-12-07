@@ -73,7 +73,7 @@ data:
         "dummyClients": 0,
         "secondsToRun": 60,
         "additionalSecondsToWait": 30,
-        "maxMsgsPerPublisherPerSecond": 1,
+        "maxMsgsPerPublisherPerMinute": 60,
         "publisherQosValue": 1,
         "subscriberQosValue": 1,
         "payloadSize": 512

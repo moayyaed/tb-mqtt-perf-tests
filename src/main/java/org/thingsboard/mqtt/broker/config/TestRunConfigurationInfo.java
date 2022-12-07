@@ -32,7 +32,7 @@ public class TestRunConfigurationInfo {
     private int dummyClients;
     private int secondsToRun;
     private int additionalSecondsToWait;
-    private int maxMsgsPerPublisherPerSecond;
+    private int maxMsgsPerPublisherPerMinute;
     private int publisherQosValue;
     private int subscriberQosValue;
     private int minPayloadSize;

@@ -26,7 +26,9 @@
       "id": 3,
       "subscribers": 15,
       "topicFilter": "europe/ua/kyiv/#",
-      "expectedPublisherGroups": [1],
+      "expectedPublisherGroups": [
+        1
+      ],
       "persistentSessionInfo": {
         "clientType": "APPLICATION"
       },
@@ -36,11 +38,33 @@
   "dummyClients": 10000,
   "secondsToRun": 60,
   "additionalSecondsToWait": 30,
-  "maxMsgsPerPublisherPerSecond": 1,
+  "maxMsgsPerPublisherPerMinute": 60,
   "publisherQosValue": 1,
   "subscriberQosValue": 1,
   "minPayloadSize": 1,
-  "telemetryKeys": ["temperature", "humidity", "location", "pressure", "longitude", "latitude", "id", "ts", "timestamp", "date",
-    "time", "speed", "acceleration", "radiation", "rate", "water_level", "precipitation", "quantity", "depth", "delta", "name", "store"],
+  "telemetryKeys": [
+    "temperature",
+    "humidity",
+    "location",
+    "pressure",
+    "longitude",
+    "latitude",
+    "id",
+    "ts",
+    "timestamp",
+    "date",
+    "time",
+    "speed",
+    "acceleration",
+    "radiation",
+    "rate",
+    "water_level",
+    "precipitation",
+    "quantity",
+    "depth",
+    "delta",
+    "name",
+    "store"
+  ],
   "maxConcurrentOperations": 1000
 }

@@ -193,12 +193,12 @@ public class MqttPerformanceTest {
         Message randomMsg = new Message(System.currentTimeMillis(), true, payloadGenerator.generatePayload());
         log.info("Test run info: publishers - {}, non-persistent subscribers - {}, regular persistent subscribers - {}, " +
                         "'APPLICATION' persistent subscribers - {}, dummy client connections - {}, " +
-                        "publisher QoS - {}, subscriber QoS - {}, max messages per second - {}, " +
+                        "publisher QoS - {}, subscriber QoS - {}, max messages per minute - {}, " +
                         "run time - {}s, total published messages - {}, expected total received messages - {}, " +
                         "msg bytes size - {}",
                 totalPublishers, nonPersistedSubscribers, persistedDevicesSubscribers,
                 persistedApplicationsSubscribers, testRunConfiguration.getNumberOfDummyClients(),
-                testRunConfiguration.getPublisherQoS(), testRunConfiguration.getSubscriberQoS(), testRunConfiguration.getMaxMessagesPerPublisherPerSecond(),
+                testRunConfiguration.getPublisherQoS(), testRunConfiguration.getSubscriberQoS(), testRunConfiguration.getMaxMessagesPerPublisherPerMinute(),
                 testRunConfiguration.getSecondsToRun(), totalPublishedMessages, totalExpectedReceivedMessages,
                 mapper.writeValueAsBytes(randomMsg).length);
     }
