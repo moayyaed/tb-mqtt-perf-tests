@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
+import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -123,7 +124,7 @@ public class PublisherServiceImpl implements PublisherService {
                                     log.error("[{}] Error acknowledging warmup msg", publisherInfo.getClientId(), t);
                                     warmupCDL.countDown();
                                 }),
-                        testRunConfiguration.getPublisherQoS());
+                        MqttQoS.AT_MOST_ONCE);
             } catch (Exception e) {
                 log.error("[{}] Failed to publish", publisherInfo.getClientId(), e);
                 throw e;
@@ -209,29 +210,31 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public void clearPersistedSessions() throws InterruptedException {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
+        if (publisherClientsPersistent) {
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
 
-        CountDownLatch countDownLatch = new CountDownLatch(publisherInfos.size());
-        for (PublisherInfo publisherInfo : publisherInfos.values()) {
-            publisherInfo.getPublisher().getClientConfig().setCleanSession(true);
-            clientInitializer.connectClient(CallbackUtil.createConnectCallback(
-                            connectResult -> {
-                                publisherInfo.getPublisher().disconnect();
-                                countDownLatch.countDown();
-                            }, t -> {
-                                log.warn("[{}] Failed to clear publisher persisted session", publisherInfo.getPublisher().getClientConfig().getClientId());
-                                publisherInfo.getPublisher().disconnect();
-                                countDownLatch.countDown();
-                            }
-                    ),
-                    publisherInfo.getPublisher());
+            CountDownLatch countDownLatch = new CountDownLatch(publisherInfos.size());
+            for (PublisherInfo publisherInfo : publisherInfos.values()) {
+                publisherInfo.getPublisher().getClientConfig().setCleanSession(true);
+                clientInitializer.connectClient(CallbackUtil.createConnectCallback(
+                                connectResult -> {
+                                    publisherInfo.getPublisher().disconnect();
+                                    countDownLatch.countDown();
+                                }, t -> {
+                                    log.warn("[{}] Failed to clear publisher persisted session", publisherInfo.getPublisher().getClientConfig().getClientId());
+                                    publisherInfo.getPublisher().disconnect();
+                                    countDownLatch.countDown();
+                                }
+                        ),
+                        publisherInfo.getPublisher());
+            }
+
+            var result = countDownLatch.await(waitTime, TimeUnit.SECONDS);
+            log.info("The result of await processing for publisher clients clear persisted sessions is: {}", result);
+            stopWatch.stop();
+            log.info("Clearing {} publisher persisted sessions took {} ms", publisherInfos.size(), stopWatch.getTime());
         }
-
-        var result = countDownLatch.await(waitTime, TimeUnit.SECONDS);
-        log.info("The result of await processing for publisher clients clear persisted sessions is: {}", result);
-        stopWatch.stop();
-        log.info("Clearing {} publisher persisted sessions took {} ms", publisherInfos.size(), stopWatch.getTime());
     }
 
     @Override

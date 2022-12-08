@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.data.ClientCredentialsType;
@@ -65,6 +66,9 @@ public class MqttPerformanceTest {
 
     @Autowired(required = false)
     private TbBrokerRestService tbBrokerRestService;
+
+    @Value("${test-run.wait-time-after-clients-disconnect-ms}")
+    private int waitTimeAfterDisconnectsMs;
 
     @PostConstruct
     public void init() throws Exception {
@@ -114,13 +118,13 @@ public class MqttPerformanceTest {
         dummyClientService.disconnectDummyClients();
 
         // wait for all MQTT clients to close
-        Thread.sleep(2000);
+        Thread.sleep(waitTimeAfterDisconnectsMs);
 
         persistedMqttClientService.clearPersistedSessions();
 
         dummyClientService.clearPersistedSessions();
 
-        log.info("Start clear persisted Sessions.");
+        log.info("Start clear publishers persisted Sessions.");
         publisherService.clearPersistedSessions();
 
         SubscriberAnalysisResult analysisResult = subscriberService.analyzeReceivedMessages();
