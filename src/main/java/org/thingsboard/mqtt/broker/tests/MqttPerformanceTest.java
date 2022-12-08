@@ -69,6 +69,8 @@ public class MqttPerformanceTest {
 
     @Value("${test-run.wait-time-after-clients-disconnect-ms}")
     private int waitTimeAfterDisconnectsMs;
+    @Value("${test-run.publisher-warmup-enabled:false}")
+    private boolean publisherWarmUpEnabled;
 
     @PostConstruct
     public void init() throws Exception {
@@ -104,9 +106,12 @@ public class MqttPerformanceTest {
         if (orchestratorNotified) {
             clusterSynchronizer.awaitClusterReady();
         }
-        Thread.sleep(2000);
-        publisherService.warmUpPublishers();
-        Thread.sleep(1000);
+
+        if (publisherWarmUpEnabled) {
+            Thread.sleep(2000);
+            publisherService.warmUpPublishers();
+            Thread.sleep(1000);
+        }
 
         log.info("Start msg publishing.");
         PublishStats publishStats = publisherService.startPublishing();
