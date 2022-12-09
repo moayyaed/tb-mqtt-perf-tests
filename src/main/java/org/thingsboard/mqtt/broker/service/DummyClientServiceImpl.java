@@ -115,6 +115,7 @@ public class DummyClientServiceImpl implements DummyClientService {
     @Override
     public void clearPersistedSessions() throws InterruptedException {
         if (dummyClientsPersistent) {
+            log.info("Start clear dummy persisted Sessions.");
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
 

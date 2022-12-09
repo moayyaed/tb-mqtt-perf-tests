@@ -99,6 +99,7 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
 
     @Override
     public void clearPersistedSessions() throws InterruptedException {
+        log.info("Start clear persisted Sessions.");
         List<PreConnectedSubscriberInfo> nodeSubscribers = TestClusterUtil.getTestNodeSubscribers(testRunConfiguration, testRunClusterConfig);
         List<PreConnectedSubscriberInfo> persistedNodeSubscribers = nodeSubscribers.stream()
                 .filter(preConnectedSubscriberInfo -> preConnectedSubscriberInfo.getSubscriberGroup().getPersistentSessionInfo() != null)

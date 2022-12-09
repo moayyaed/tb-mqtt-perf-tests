@@ -157,6 +157,7 @@ public class PublisherServiceImpl implements PublisherService {
                 log.debug("Pause between ticks is bigger than expected, expected pause - {} ms, actual pause - {} ms", publishPeriodMs, actualPublishTickPause);
             }
             for (PublisherInfo publisherInfo : publisherInfos.values()) {
+                sleep(publishPeriodMs);
                 try {
                     Message message = new Message(System.currentTimeMillis(), false, payloadGenerator.generatePayload());
                     byte[] messageBytes = mapper.writeValueAsBytes(message);
@@ -170,15 +171,13 @@ public class PublisherServiceImpl implements PublisherService {
                                             log.debug("[{}] Acknowledged msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
                                         }
                                     },
-                                    t -> {
-                                        log.debug("[{}] Failed to send msg. Exception - {}, message - {}", publisherInfo.getClientId(), t.getClass().getSimpleName(), t.getMessage());
-                                    }
+                                    t -> log.debug("[{}] Failed to send msg.", publisherInfo.getClientId(), t)
                             ),
                             testRunConfiguration.getPublisherQoS());
                     publishSentFuture
                             .addListener(future -> {
                                         if (!future.isSuccess()) {
-                                            log.debug("[{}] Error sending msg, reason - {}", publisherInfo.getClientId(), future.cause().getMessage());
+                                            log.debug("[{}] Error sending msg.", publisherInfo.getClientId(), future.cause());
                                         } else {
                                             publishSentLatencyStats.addValue(System.currentTimeMillis() - message.getCreateTime());
                                             if (publisherInfo.isDebug()) {
@@ -193,6 +192,23 @@ public class PublisherServiceImpl implements PublisherService {
             }
         }, 0, publishPeriodMs, TimeUnit.MILLISECONDS);
         return new PublishStats(publishSentLatencyStats, publishAcknowledgedStats);
+    }
+
+    private void sleep(int publishPeriodMs) {
+        try {
+            int sleepMs = publishPeriodMs / publisherInfos.size();
+            if (sleepMs > 0) {
+                Thread.sleep(sleepMs);
+            } else {
+                int sleepNanos = publishPeriodMs % publisherInfos.size();
+                if (sleepNanos > 999999) {
+                    return;
+                }
+                Thread.sleep(0, sleepNanos);
+            }
+        } catch (InterruptedException e) {
+            log.warn("Failed to wait a bit!", e);
+        }
     }
 
     @Override
@@ -211,6 +227,7 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public void clearPersistedSessions() throws InterruptedException {
         if (publisherClientsPersistent) {
+            log.info("Start clear publishers persisted Sessions.");
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
 

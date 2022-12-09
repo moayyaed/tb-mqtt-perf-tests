@@ -69,6 +69,8 @@ public class MqttPerformanceTest {
 
     @Value("${test-run.wait-time-after-clients-disconnect-ms}")
     private int waitTimeAfterDisconnectsMs;
+    @Value("${test-run.wait-time-clients-closed-ms}")
+    private int waitTimeClientsClosedMs;
     @Value("${test-run.publisher-warmup-enabled:false}")
     private boolean publisherWarmUpEnabled;
 
@@ -126,10 +128,7 @@ public class MqttPerformanceTest {
         Thread.sleep(waitTimeAfterDisconnectsMs);
 
         persistedMqttClientService.clearPersistedSessions();
-
         dummyClientService.clearPersistedSessions();
-
-        log.info("Start clear publishers persisted Sessions.");
         publisherService.clearPersistedSessions();
 
         SubscriberAnalysisResult analysisResult = subscriberService.analyzeReceivedMessages();
@@ -154,7 +153,7 @@ public class MqttPerformanceTest {
         subscriberService.printDebugSubscribersStats();
 
         // wait for all MQTT clients to close
-        Thread.sleep(2000);
+        Thread.sleep(waitTimeClientsClosedMs);
         persistedMqttClientService.removeApplicationClients();
 
         removeDefaultCredentials(defaultCredentialsId);
