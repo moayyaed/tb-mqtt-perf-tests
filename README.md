@@ -12,7 +12,7 @@ from different clients.
 
 ## Running
 
-See [k8s](/k8s/README/) README for more details.
+See [k8s](/k8s/README.md) README for more details.
 
 Main configuration parameters:
 
