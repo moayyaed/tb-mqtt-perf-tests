@@ -1,0 +1,173 @@
+#
+# Copyright © 2016-2022 The Thingsboard Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: broker-tests
+spec:
+  serviceName: broker-tests
+  replicas: 30
+  podManagementPolicy: "Parallel"
+  selector:
+    matchLabels:
+      app: broker-tests
+  template:
+    metadata:
+      labels:
+        app: broker-tests
+    spec:
+      volumes:
+        - name: mqtt-broker-test-run-config
+          configMap:
+            name: mqtt-broker-test-run-config
+            items:
+              - key: test_run_config.json
+                path: test_run_config.json
+              - key: logback.xml
+                path: logback.xml
+              - key: tb-mqtt-broker-performance-tests.conf
+                path: tb-mqtt-broker-performance-tests.conf
+      containers:
+        - name: server
+          imagePullPolicy: IfNotPresent
+          image: thingsboard/tb-mqtt-broker-performance-tests:1.0.40
+          resources:
+            limits:
+              cpu: 2
+              memory: 3000Mi
+            requests:
+              cpu: 2
+              memory: 3000Mi
+          ports:
+            - containerPort: 8088
+              name: http
+            - containerPort: 9999 # DO NOT expose Java Management Extensions (JMX) port to any service.
+              name: jmx           # The main purpose is port-forwarding from the command line
+          env:
+            - name: TEST_RUN_CONFIGURATION_FILE
+              value: "/config/test_run_config.json"
+            - name: BROKER_TYPE
+              value: "THINGSBOARD"
+            - name: MQTT_HOST
+              value: "tb-broker"
+            - name: MQTT_PORT
+              value: "1883"
+            - name: TB_URI
+              value: "http://tb-broker:8083"
+            - name: ORCHESTRATION_NODE
+              value: "false"
+            - name: HTTP_BIND_PORT
+              value: "8088"
+            - name: TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS
+              value: "600"
+            - name: TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS
+              value: "600"
+            - name: TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS
+              value: "600"
+            - name: TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS
+              value: "600"
+            - name: TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT
+              value: "60000"
+          volumeMounts:
+            - mountPath: /config
+              name: mqtt-broker-test-run-config
+          command: [ 'sh', '-c', 'while [ ! -f /tmp/test-finished ]; do sleep 2; done;' ]
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker-tests
+spec:
+  type: ClusterIP
+  selector:
+    app: broker-tests
+  ports:
+    - port: 8088
+      name: http
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: broker-tests-orchestrator
+spec:
+  serviceName: broker-tests-orchestrator
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broker-tests-orchestrator
+  template:
+    metadata:
+      labels:
+        app: broker-tests-orchestrator
+    spec:
+      volumes:
+        - name: mqtt-broker-orchestrator-config
+          configMap:
+            name: mqtt-broker-orchestrator-config
+            items:
+              - key: logback.xml
+                path: logback.xml
+              - key: tb-mqtt-broker-orchestrator-tests.conf
+                path: tb-mqtt-broker-performance-tests.conf
+      containers:
+        - name: server
+          imagePullPolicy: IfNotPresent
+          image: thingsboard/tb-mqtt-broker-performance-tests:1.0.40
+          resources:
+            limits:
+              cpu: "500m"
+              memory: 500Mi
+            requests:
+              cpu: "500m"
+              memory: 500Mi
+          ports:
+            - containerPort: 8088
+              name: http
+          env:
+            - name: ORCHESTRATION_NODE
+              value: "true"
+            - name: HTTP_BIND_PORT
+              value: "8088"
+          volumeMounts:
+            - mountPath: /config
+              name: mqtt-broker-orchestrator-config
+            - mountPath: /var/log/tb-mqtt-broker-performance-tests/
+              name: logs
+              readOnly: false
+      restartPolicy: Always
+  volumeClaimTemplates:
+    - metadata:
+        name: logs
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker-tests-orchestrator
+spec:
+  type: ClusterIP
+  selector:
+    app: broker-tests-orchestrator
+  ports:
+    - port: 8088
+      name: http

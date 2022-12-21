@@ -1,0 +1,426 @@
+#
+# Copyright © 2016-2022 The Thingsboard Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mqtt-broker-test-run-config
+  labels:
+    name: mqtt-broker-test-run-config
+data:
+  tb-mqtt-broker-performance-tests.conf: |
+    # Memory for 3Gi pod (2Gi heap + 1Gi stack and etc)
+    export JAVA_OPTS="$JAVA_OPTS -Xmx2048M -Xms2048M -Xss384k -XX:+AlwaysPreTouch"
+    export JAVA_OPTS="$JAVA_OPTS -Dplatform=deb"
+    export JAVA_OPTS="$JAVA_OPTS -XX:+IgnoreUnrecognizedVMOptions -XX:+HeapDumpOnOutOfMemoryError"
+    export JAVA_OPTS="$JAVA_OPTS -XX:-UseBiasedLocking -XX:+UseTLAB -XX:+ResizeTLAB -XX:+PerfDisableSharedMem -XX:+UseCondCardMark"
+    export JAVA_OPTS="$JAVA_OPTS -XX:CMSWaitDuration=10000 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:+CMSParallelInitialMarkEnabled"
+    export JAVA_OPTS="$JAVA_OPTS -XX:+CMSEdenChunksRecordAlways -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly"
+    
+    # JMX
+    export JAVA_OPTS="$JAVA_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.rmi.port=9999"
+    export JAVA_OPTS="$JAVA_OPTS -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1"
+    
+    export LOADER_PATH==/usr/share/tb-mqtt-broker-performance-tests/conf
+  logback.xml: |
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <configuration scan="true">
+        
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+            </layout>
+        </appender>
+        
+        <logger name="org.thingsboard.mqtt.broker" level="INFO"/>
+        
+        <logger name="org.thingsboard.mqtt.broker.service.PublisherServiceImpl" level="DEBUG"/>
+        <logger name="org.thingsboard.mqtt.broker.service.SubscriberServiceImpl" level="TRACE"/>
+        <logger name="org.thingsboard.mqtt.broker.service.ClusterProcessServiceImpl" level="DEBUG"/>
+        
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    
+    </configuration>
+  test_run_config.json: |
+    {
+      "publisherGroups": [
+        {
+          "id": 1,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/brkl/east/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 2,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/brkl/west/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 3,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/brkl/north/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 4,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/brkl/south/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 5,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/manh/east/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 6,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/manh/west/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 7,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/manh/north/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 8,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/manh/south/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 9,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/qns/east/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 10,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/qns/west/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 11,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/qns/north/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 12,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/qns/south/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 13,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/brx/east/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 14,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/brx/west/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 15,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/brx/north/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 16,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/brx/south/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 17,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/si/east/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 18,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/si/west/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 19,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/si/north/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 20,
+          "publishers": 50000,
+          "topicPrefix": "usa/ny/si/south/",
+          "clientIdPrefix": null
+        }
+      ],
+      "subscriberGroups": [
+        {
+          "id": 1,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/brkl/east/+",
+          "expectedPublisherGroups": [
+            1],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 2,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/brkl/west/+",
+          "expectedPublisherGroups": [
+            2],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 3,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/brkl/north/+",
+          "expectedPublisherGroups": [
+            3],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 4,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/brkl/south/+",
+          "expectedPublisherGroups": [
+            4],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 5,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/manh/east/+",
+          "expectedPublisherGroups": [
+            5],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 6,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/manh/west/+",
+          "expectedPublisherGroups": [
+            6],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 7,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/manh/north/+",
+          "expectedPublisherGroups": [
+            7],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 8,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/manh/south/+",
+          "expectedPublisherGroups": [
+            8],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 9,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/qns/east/+",
+          "expectedPublisherGroups": [
+            9],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 10,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/qns/west/+",
+          "expectedPublisherGroups": [
+            10
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 11,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/qns/north/+",
+          "expectedPublisherGroups": [
+            11],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 12,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/qns/south/+",
+          "expectedPublisherGroups": [
+            12],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 13,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/brx/east/+",
+          "expectedPublisherGroups": [
+            13],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 14,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/brx/west/+",
+          "expectedPublisherGroups": [
+            14],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 15,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/brx/north/+",
+          "expectedPublisherGroups": [
+            15],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 16,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/brx/south/+",
+          "expectedPublisherGroups": [
+            16
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 17,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/si/east/+",
+          "expectedPublisherGroups": [
+            17
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 18,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/si/west/+",
+          "expectedPublisherGroups": [
+            18],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 19,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/si/north/+",
+          "expectedPublisherGroups": [
+            19],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 20,
+          "subscribers": 1,
+          "topicFilter": "usa/ny/si/south/+",
+          "expectedPublisherGroups": [
+            20],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        }
+      ],
+      "dummyClients": 0,
+      "secondsToRun": 300,
+      "additionalSecondsToWait": 0,
+      "maxMsgsPerPublisherPerMinute": 1,
+      "publisherQosValue": 1,
+      "subscriberQosValue": 1,
+      "minPayloadSize": 256,
+      "maxConcurrentOperations": 10000,
+      "telemetryKeys": [
+        "latitude",
+        "longitude",
+        "speed",
+        "acceleration",
+        "fuel",
+        "batteryLevel",
+        "location",
+        "ts"
+      ]
+    }
