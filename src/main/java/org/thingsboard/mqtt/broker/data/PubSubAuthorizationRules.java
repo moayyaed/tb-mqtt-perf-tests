@@ -29,4 +29,7 @@ public class PubSubAuthorizationRules {
     private List<String> pubAuthRulePatterns;
     private List<String> subAuthRulePatterns;
 
+    public static PubSubAuthorizationRules newInstance(List<String> authRules) {
+        return new PubSubAuthorizationRules(authRules, authRules);
+    }
 }

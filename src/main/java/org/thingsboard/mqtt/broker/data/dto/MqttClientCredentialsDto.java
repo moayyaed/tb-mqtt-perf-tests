@@ -24,6 +24,8 @@ import org.thingsboard.mqtt.broker.data.PersistentClientType;
 import org.thingsboard.mqtt.broker.data.PubSubAuthorizationRules;
 import org.thingsboard.mqtt.broker.util.JacksonUtil;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -42,10 +44,10 @@ public class MqttClientCredentialsDto {
     }
 
     private BasicMqttCredentials newBasicCredentials(String clientId) {
-        return new BasicMqttCredentials(clientId, null, null, new PubSubAuthorizationRules());
+        return new BasicMqttCredentials(clientId, null, null, PubSubAuthorizationRules.newInstance(List.of(".*")));
     }
 
     private BasicMqttCredentials newBasicCredentials() {
-        return new BasicMqttCredentials(null, "default", null, new PubSubAuthorizationRules());
+        return new BasicMqttCredentials(null, "default", null, PubSubAuthorizationRules.newInstance(List.of(".*")));
     }
 }
