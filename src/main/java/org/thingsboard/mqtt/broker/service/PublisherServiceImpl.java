@@ -145,7 +145,7 @@ public class PublisherServiceImpl implements PublisherService {
         DescriptiveStatistics publishSentLatencyStats = new DescriptiveStatistics();
         DescriptiveStatistics publishAcknowledgedStats = new DescriptiveStatistics();
         AtomicInteger publishedMessagesPerPublisher = new AtomicInteger();
-        int publishPeriodMs = 1000 / testRunConfiguration.getMaxMessagesPerPublisherPerMinute() * 60;
+        int publishPeriodMs = 1000 / testRunConfiguration.getMaxMessagesPerPublisherPerSecond();
         AtomicLong lastPublishTickTime = new AtomicLong(System.currentTimeMillis());
         publishScheduler.scheduleAtFixedRate(() -> {
             if (publishedMessagesPerPublisher.getAndIncrement() >= testRunConfiguration.getTotalPublisherMessagesCount()) {

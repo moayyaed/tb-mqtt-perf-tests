@@ -62,8 +62,8 @@ public class FileTestRunConfiguration implements TestRunConfiguration {
     }
 
     @Override
-    public int getMaxMessagesPerPublisherPerMinute() {
-        return testRunConfigurationInfo.getMaxMsgsPerPublisherPerMinute();
+    public int getMaxMessagesPerPublisherPerSecond() {
+        return testRunConfigurationInfo.getMaxMsgsPerPublisherPerSecond();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class FileTestRunConfiguration implements TestRunConfiguration {
 
     @Override
     public int getTotalPublisherMessagesCount() {
-        return getMaxMessagesPerPublisherPerMinute() * getSecondsToRun() / 60;
+        return getMaxMessagesPerPublisherPerSecond() * getSecondsToRun();
     }
 
     @Override

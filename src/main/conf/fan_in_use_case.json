@@ -38,7 +38,7 @@
   "dummyClients": 10000,
   "secondsToRun": 60,
   "additionalSecondsToWait": 30,
-  "maxMsgsPerPublisherPerMinute": 60,
+  "maxMsgsPerPublisherPerSecond": 1,
   "publisherQosValue": 1,
   "subscriberQosValue": 1,
   "minPayloadSize": 1,

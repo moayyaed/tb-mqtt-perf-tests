@@ -28,7 +28,7 @@ public interface TestRunConfiguration {
 
     List<PublisherGroup> getPublishersConfig();
 
-    int getMaxMessagesPerPublisherPerMinute();
+    int getMaxMessagesPerPublisherPerSecond();
 
     int getSecondsToRun();
 
