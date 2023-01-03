@@ -29,6 +29,16 @@ kubectl exec broker-tests-0 -- sh -c 'export TEST_RUN_TEST_NODE_URL=http://broke
 kubectl exec broker-tests-1 -- sh -c 'export TEST_RUN_TEST_NODE_URL=http://broker-tests-1.broker-tests.thingsboard-mqtt-broker.svc.cluster.local:8088;export TEST_RUN_SEQUENTIAL_NUMBER=1;export TEST_RUN_PARALLEL_TESTS_COUNT=2;export TEST_RUN_TEST_ORCHESTRATOR_URL=http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088;start-tb-mqtt-broker-performance-tests.sh;' > broker-tests-1.log 2>&1 &
 ```
 
+**5** Test Pods:
+
+```
+kubectl exec broker-tests-0 -- sh -c 'export TEST_RUN_TEST_NODE_URL=http://broker-tests-0.broker-tests.thingsboard-mqtt-broker.svc.cluster.local:8088;export TEST_RUN_SEQUENTIAL_NUMBER=0;export TEST_RUN_PARALLEL_TESTS_COUNT=5;export TEST_RUN_TEST_ORCHESTRATOR_URL=http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088;start-tb-mqtt-broker-performance-tests.sh;' > broker-tests-0.log 2>&1 &
+kubectl exec broker-tests-1 -- sh -c 'export TEST_RUN_TEST_NODE_URL=http://broker-tests-1.broker-tests.thingsboard-mqtt-broker.svc.cluster.local:8088;export TEST_RUN_SEQUENTIAL_NUMBER=1;export TEST_RUN_PARALLEL_TESTS_COUNT=5;export TEST_RUN_TEST_ORCHESTRATOR_URL=http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088;start-tb-mqtt-broker-performance-tests.sh;' > broker-tests-1.log 2>&1 &
+kubectl exec broker-tests-2 -- sh -c 'export TEST_RUN_TEST_NODE_URL=http://broker-tests-2.broker-tests.thingsboard-mqtt-broker.svc.cluster.local:8088;export TEST_RUN_SEQUENTIAL_NUMBER=2;export TEST_RUN_PARALLEL_TESTS_COUNT=5;export TEST_RUN_TEST_ORCHESTRATOR_URL=http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088;start-tb-mqtt-broker-performance-tests.sh;' > broker-tests-2.log 2>&1 &
+kubectl exec broker-tests-3 -- sh -c 'export TEST_RUN_TEST_NODE_URL=http://broker-tests-3.broker-tests.thingsboard-mqtt-broker.svc.cluster.local:8088;export TEST_RUN_SEQUENTIAL_NUMBER=3;export TEST_RUN_PARALLEL_TESTS_COUNT=5;export TEST_RUN_TEST_ORCHESTRATOR_URL=http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088;start-tb-mqtt-broker-performance-tests.sh;' > broker-tests-3.log 2>&1 &
+kubectl exec broker-tests-4 -- sh -c 'export TEST_RUN_TEST_NODE_URL=http://broker-tests-4.broker-tests.thingsboard-mqtt-broker.svc.cluster.local:8088;export TEST_RUN_SEQUENTIAL_NUMBER=4;export TEST_RUN_PARALLEL_TESTS_COUNT=5;export TEST_RUN_TEST_ORCHESTRATOR_URL=http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088;start-tb-mqtt-broker-performance-tests.sh;' > broker-tests-4.log 2>&1 &
+```
+
 **40** Test Pods:
 
 ```

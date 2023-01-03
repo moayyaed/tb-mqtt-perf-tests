@@ -27,8 +27,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 @RequiredArgsConstructor
 public class PayloadGeneratorImpl implements PayloadGenerator {
-    private final TestRunConfiguration testRunConfiguration;
 
+    private final TestRunConfiguration testRunConfiguration;
 
     @Override
     public byte[] generatePayload() {

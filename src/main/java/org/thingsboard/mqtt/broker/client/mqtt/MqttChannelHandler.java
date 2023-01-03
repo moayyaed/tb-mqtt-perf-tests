@@ -149,15 +149,6 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
                     e.getValue().setSent(true);
                 });
 
-                this.client.getPendingPublishes().forEach((id, publish) -> {
-                    if (publish.isSent()) return;
-                    channel.write(publish.getMessage());
-                    publish.setSent(true);
-                    if (publish.getQos() == MqttQoS.AT_MOST_ONCE) {
-                        publish.getCallback().onSuccess();//We don't get an ACK for QOS 0
-                        this.client.getPendingPublishes().remove(publish.getMessageId());
-                    }
-                });
                 channel.flush();
                 if (this.client.isReconnect()) {
                     this.client.onSuccessfulReconnect();
@@ -243,7 +234,6 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
         pendingPublish.getCallback().onSuccess();
         pendingPublish.onPubackReceived();
         this.client.getPendingPublishes().remove(message.variableHeader().messageId());
-        pendingPublish.getPayload().release();
     }
 
     private void handlePubrec(Channel channel, MqttMessage message) {
@@ -275,7 +265,6 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
         MqttPendingPublish pendingPublish = this.client.getPendingPublishes().get(variableHeader.messageId());
         pendingPublish.getCallback().onSuccess();
         this.client.getPendingPublishes().remove(variableHeader.messageId());
-        pendingPublish.getPayload().release();
         pendingPublish.onPubcompReceived();
     }
 }

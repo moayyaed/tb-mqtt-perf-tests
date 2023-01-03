@@ -15,10 +15,8 @@
  */
 package org.thingsboard.mqtt.broker.client.mqtt;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.EventLoop;
 import io.netty.handler.codec.mqtt.MqttMessage;
-import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import org.thingsboard.mqtt.broker.util.BasicCallback;
 
@@ -28,17 +26,13 @@ final class MqttPendingPublish {
 
     private final int messageId;
     private final BasicCallback callback;
-    private final ByteBuf payload;
-    private final MqttPublishMessage message;
     private final MqttQoS qos;
 
     private boolean sent = false;
 
-    MqttPendingPublish(int messageId, BasicCallback callback, ByteBuf payload, MqttPublishMessage message, MqttQoS qos) {
+    MqttPendingPublish(int messageId, BasicCallback callback, MqttQoS qos) {
         this.messageId = messageId;
         this.callback = callback;
-        this.payload = payload;
-        this.message = message;
         this.qos = qos;
     }
 
@@ -50,9 +44,6 @@ final class MqttPendingPublish {
         return callback;
     }
 
-    ByteBuf getPayload() {
-        return payload;
-    }
 
     boolean isSent() {
         return sent;
@@ -62,9 +53,6 @@ final class MqttPendingPublish {
         this.sent = sent;
     }
 
-    MqttPublishMessage getMessage() {
-        return message;
-    }
 
     MqttQoS getQos() {
         return qos;

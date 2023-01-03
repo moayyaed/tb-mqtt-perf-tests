@@ -20,7 +20,7 @@ metadata:
   name: broker-tests
 spec:
   serviceName: broker-tests
-  replicas: 30
+  replicas: 40
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -41,10 +41,12 @@ spec:
                 path: logback.xml
               - key: tb-mqtt-broker-performance-tests.conf
                 path: tb-mqtt-broker-performance-tests.conf
+      nodeSelector:
+        role: tb-perf-test
       containers:
         - name: server
           imagePullPolicy: IfNotPresent
-          image: thingsboard/tb-mqtt-broker-performance-tests:1.0.40
+          image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.42
           resources:
             limits:
               cpu: 2
@@ -55,7 +57,7 @@ spec:
           ports:
             - containerPort: 8088
               name: http
-            - containerPort: 9999 # DO NOT expose Java Management Extensions (JMX) port to any service.
+            - containerPort: 9199 # DO NOT expose Java Management Extensions (JMX) port to any service.
               name: jmx           # The main purpose is port-forwarding from the command line
           env:
             - name: TEST_RUN_CONFIGURATION_FILE
@@ -124,10 +126,12 @@ spec:
                 path: logback.xml
               - key: tb-mqtt-broker-orchestrator-tests.conf
                 path: tb-mqtt-broker-performance-tests.conf
+      nodeSelector:
+        role: tb-perf-test
       containers:
         - name: server
           imagePullPolicy: IfNotPresent
-          image: thingsboard/tb-mqtt-broker-performance-tests:1.0.40
+          image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.42
           resources:
             limits:
               cpu: "500m"

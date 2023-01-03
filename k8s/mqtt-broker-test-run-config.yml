@@ -31,7 +31,7 @@ data:
     export JAVA_OPTS="$JAVA_OPTS -XX:+CMSEdenChunksRecordAlways -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly"
     
     # JMX
-    export JAVA_OPTS="$JAVA_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.rmi.port=9999"
+    export JAVA_OPTS="$JAVA_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9199 -Dcom.sun.management.jmxremote.rmi.port=9199"
     export JAVA_OPTS="$JAVA_OPTS -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1"
     
     export LOADER_PATH==/usr/share/tb-mqtt-broker-performance-tests/conf
@@ -47,9 +47,9 @@ data:
         
         <logger name="org.thingsboard.mqtt.broker" level="INFO"/>
         
-        <logger name="org.thingsboard.mqtt.broker.service.PublisherServiceImpl" level="DEBUG"/>
-        <logger name="org.thingsboard.mqtt.broker.service.SubscriberServiceImpl" level="TRACE"/>
-        <logger name="org.thingsboard.mqtt.broker.service.ClusterProcessServiceImpl" level="DEBUG"/>
+        <logger name="org.thingsboard.mqtt.broker.service.PublisherServiceImpl" level="INFO"/>
+        <logger name="org.thingsboard.mqtt.broker.service.SubscriberServiceImpl" level="INFO"/>
+        <logger name="org.thingsboard.mqtt.broker.service.ClusterProcessServiceImpl" level="INFO"/>
         
         <root level="INFO">
             <appender-ref ref="STDOUT"/>
@@ -61,121 +61,121 @@ data:
       "publisherGroups": [
         {
           "id": 1,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/brkl/east/",
           "clientIdPrefix": null
         },
         {
           "id": 2,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/brkl/west/",
           "clientIdPrefix": null
         },
         {
           "id": 3,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/brkl/north/",
           "clientIdPrefix": null
         },
         {
           "id": 4,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/brkl/south/",
           "clientIdPrefix": null
         },
         {
           "id": 5,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/manh/east/",
           "clientIdPrefix": null
         },
         {
           "id": 6,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/manh/west/",
           "clientIdPrefix": null
         },
         {
           "id": 7,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/manh/north/",
           "clientIdPrefix": null
         },
         {
           "id": 8,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/manh/south/",
           "clientIdPrefix": null
         },
         {
           "id": 9,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/qns/east/",
           "clientIdPrefix": null
         },
         {
           "id": 10,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/qns/west/",
           "clientIdPrefix": null
         },
         {
           "id": 11,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/qns/north/",
           "clientIdPrefix": null
         },
         {
           "id": 12,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/qns/south/",
           "clientIdPrefix": null
         },
         {
           "id": 13,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/brx/east/",
           "clientIdPrefix": null
         },
         {
           "id": 14,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/brx/west/",
           "clientIdPrefix": null
         },
         {
           "id": 15,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/brx/north/",
           "clientIdPrefix": null
         },
         {
           "id": 16,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/brx/south/",
           "clientIdPrefix": null
         },
         {
           "id": 17,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/si/east/",
           "clientIdPrefix": null
         },
         {
           "id": 18,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/si/west/",
           "clientIdPrefix": null
         },
         {
           "id": 19,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/si/north/",
           "clientIdPrefix": null
         },
         {
           "id": 20,
-          "publishers": 50000,
+          "publishers": 10000,
           "topicPrefix": "usa/ny/si/south/",
           "clientIdPrefix": null
         }
@@ -405,22 +405,19 @@ data:
           "clientIdPrefix": null
         }
       ],
-      "dummyClients": 0,
+      "dummyClients": 800000,
       "secondsToRun": 300,
-      "additionalSecondsToWait": 0,
+      "additionalSecondsToWait": 5,
       "maxMsgsPerPublisherPerSecond": 1,
       "publisherQosValue": 1,
       "subscriberQosValue": 1,
-      "minPayloadSize": 256,
+      "minPayloadSize": 1,
       "maxConcurrentOperations": 10000,
       "telemetryKeys": [
-        "latitude",
-        "longitude",
+        "lat",
+        "long",
         "speed",
-        "acceleration",
         "fuel",
-        "batteryLevel",
-        "location",
-        "ts"
+        "batLvl"
       ]
     }

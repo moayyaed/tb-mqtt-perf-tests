@@ -154,7 +154,9 @@ public class PublisherServiceImpl implements PublisherService {
             long now = System.currentTimeMillis();
             long actualPublishTickPause = now - lastPublishTickTime.getAndSet(now);
             if (actualPublishTickPause > publishPeriodMs * 1.5) {
-                log.debug("Pause between ticks is bigger than expected, expected pause - {} ms, actual pause - {} ms", publishPeriodMs, actualPublishTickPause);
+                if (log.isDebugEnabled()) {
+                    log.debug("Pause between ticks is bigger than expected, expected pause - {} ms, actual pause - {} ms", publishPeriodMs, actualPublishTickPause);
+                }
             }
             for (PublisherInfo publisherInfo : publisherInfos.values()) {
                 try {
