@@ -49,10 +49,10 @@ spec:
           image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.42
           resources:
             limits:
-              cpu: 2
+              cpu: "1800m"
               memory: 3000Mi
             requests:
-              cpu: 2
+              cpu: "1800m"
               memory: 3000Mi
           ports:
             - containerPort: 8088

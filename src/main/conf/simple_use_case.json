@@ -62,7 +62,7 @@
     },
     {
       "id": 11,
-      "publishers": 0,
+      "publishers": 2000,
       "topicPrefix": "usa/ny/qns/north/",
       "clientIdPrefix": null
     },
@@ -244,7 +244,7 @@
     },
     {
       "id": 11,
-      "subscribers": 0,
+      "subscribers": 1,
       "topicFilter": "usa/ny/qns/north/+",
       "expectedPublisherGroups": [
         11
