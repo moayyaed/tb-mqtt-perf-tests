@@ -84,6 +84,8 @@ spec:
               value: "600"
             - name: TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT
               value: "60000"
+            - name: STATS_ENABLED
+              value: "false"
           volumeMounts:
             - mountPath: /config
               name: mqtt-broker-test-run-config
