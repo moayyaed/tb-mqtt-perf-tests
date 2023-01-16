@@ -43,9 +43,8 @@ public class ClientInitializerImpl implements ClientInitializer {
     private final SslConfig sslConfig;
     private final ReceivedMsgProcessor receivedMsgProcessor;
 
-
-    @Value("${mqtt.client.connect-timeout-seconds:5}")
-    private int connectTimeout;
+    @Value("${mqtt.netty.worker_group_thread_count:12}")
+    private int groupThreadCount;
     @Value("${mqtt.client.keep-alive-seconds:600}")
     private int keepAliveSeconds;
 
@@ -53,7 +52,7 @@ public class ClientInitializerImpl implements ClientInitializer {
 
     @PostConstruct
     public void init() {
-        EVENT_LOOP_GROUP = new NioEventLoopGroup(32, ThingsBoardThreadFactory.forName("just-nio-event-loop"));
+        EVENT_LOOP_GROUP = new NioEventLoopGroup(groupThreadCount, ThingsBoardThreadFactory.forName("just-nio-event-loop"));
     }
 
     @Override

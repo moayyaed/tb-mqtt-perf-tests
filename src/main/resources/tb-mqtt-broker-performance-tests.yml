@@ -37,6 +37,8 @@ mqtt:
     trust_store_type: "${SECURITY_MQTT_SSL_TRUST_STORE_TYPE:JKS}"
   client:
     keep-alive-seconds: "${CLIENT_KEEP_ALIVE_SECONDS:600}"
+  netty:
+    worker_group_thread_count: "${MQTT_NETTY_WORKER_GROUP_THREADS:12}"
 broker:
   type: "${BROKER_TYPE:THINGSBOARD}"
 #  type: "${BROKER_TYPE:OTHER}"
@@ -67,6 +69,8 @@ test-run:
   logs:
     msg-processing-queue-period: "${TEST_RUN_LOGS_MSG_PROCESSING_QUEUE_PERIOD:15000}"
 
+stats:
+  enabled: "${STATS_ENABLED:true}"
 
 server:
   port: "${HTTP_BIND_PORT:8088}"

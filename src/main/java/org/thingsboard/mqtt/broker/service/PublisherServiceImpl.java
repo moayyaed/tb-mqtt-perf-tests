@@ -38,6 +38,7 @@ import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.PublisherInfo;
 import org.thingsboard.mqtt.broker.tests.MqttPerformanceTest;
 import org.thingsboard.mqtt.broker.util.CallbackUtil;
+import org.thingsboard.mqtt.broker.util.ThingsBoardThreadFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,14 +57,8 @@ import java.util.concurrent.atomic.AtomicLong;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
 public class PublisherServiceImpl implements PublisherService {
-    private final ObjectMapper mapper = new ObjectMapper();
 
-    @Value("${test-run.publisher-warmup-wait-time}")
-    private int warmupWaitTime;
-    @Value("${test-run.publisher_clients_persistent:false}")
-    private boolean publisherClientsPersistent;
-    @Value("${test-run.clear-persisted-sessions-wait-time}")
-    private int waitTime;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
@@ -73,7 +68,16 @@ public class PublisherServiceImpl implements PublisherService {
     private final ClusterProcessService clusterProcessService;
 
     private final Map<String, PublisherInfo> publisherInfos = new ConcurrentHashMap<>();
-    private final ScheduledExecutorService publishScheduler = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService publishScheduler = Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName("publish-scheduler"));
+
+    @Value("${test-run.publisher-warmup-wait-time}")
+    private int warmupWaitTime;
+    @Value("${test-run.publisher_clients_persistent:false}")
+    private boolean publisherClientsPersistent;
+    @Value("${test-run.clear-persisted-sessions-wait-time}")
+    private int waitTime;
+    @Value("${stats.enabled:true}")
+    private boolean statsEnabled;
 
     @Override
     public void connectPublishers() {
@@ -166,7 +170,9 @@ public class PublisherServiceImpl implements PublisherService {
                             CallbackUtil.createCallback(
                                     () -> {
                                         long ackLatency = System.currentTimeMillis() - message.getCreateTime();
-                                        publishAcknowledgedStats.addValue(ackLatency);
+                                        if (statsEnabled) {
+                                            publishAcknowledgedStats.addValue(ackLatency);
+                                        }
                                         if (publisherInfo.isDebug()) {
                                             publisherInfo.getAcknowledgeLatencyStats().addValue(ackLatency);
                                             log.debug("[{}] Acknowledged msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
@@ -180,7 +186,9 @@ public class PublisherServiceImpl implements PublisherService {
                                         if (!future.isSuccess()) {
                                             log.debug("[{}] Error sending msg.", publisherInfo.getClientId(), future.cause());
                                         } else {
-                                            publishSentLatencyStats.addValue(System.currentTimeMillis() - message.getCreateTime());
+                                            if (statsEnabled) {
+                                                publishSentLatencyStats.addValue(System.currentTimeMillis() - message.getCreateTime());
+                                            }
                                             if (publisherInfo.isDebug()) {
                                                 log.debug("[{}] Sent msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
                                             }

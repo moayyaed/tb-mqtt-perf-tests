@@ -19,6 +19,7 @@ import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.thingsboard.mqtt.broker.util.ThingsBoardThreadFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -40,8 +41,8 @@ public class ReceivedMsgProcessorImpl implements ReceivedMsgProcessor {
 
     private final BlockingQueue<ReceivedMessage> pendingMessagesQueue = new LinkedBlockingQueue<>();
 
-    private final ExecutorService handlerExecutor = Executors.newSingleThreadExecutor();
-    private final ScheduledExecutorService logScheduler = Executors.newSingleThreadScheduledExecutor();
+    private final ExecutorService handlerExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("msg-receive-handler"));
+    private final ScheduledExecutorService logScheduler = Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName("log-scheduler"));
 
     @PostConstruct
     public void init() {

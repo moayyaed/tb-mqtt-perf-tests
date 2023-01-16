@@ -46,11 +46,11 @@ final class MqttPingHandler extends ChannelInboundHandlerAdapter {
             return;
         }
         MqttMessage message = (MqttMessage) msg;
-        if(message.fixedHeader().messageType() == MqttMessageType.PINGREQ){
+        if (message.fixedHeader().messageType() == MqttMessageType.PINGREQ) {
             this.handlePingReq(ctx.channel());
-        } else if(message.fixedHeader().messageType() == MqttMessageType.PINGRESP){
+        } else if (message.fixedHeader().messageType() == MqttMessageType.PINGRESP) {
             this.handlePingResp();
-        }else{
+        } else {
             ctx.fireChannelRead(ReferenceCountUtil.retain(msg));
         }
     }
@@ -59,11 +59,10 @@ final class MqttPingHandler extends ChannelInboundHandlerAdapter {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         super.userEventTriggered(ctx, evt);
 
-        if(evt instanceof IdleStateEvent){
+        if (evt instanceof IdleStateEvent) {
             IdleStateEvent event = (IdleStateEvent) evt;
-            switch(event.state()){
+            switch (event.state()) {
                 case READER_IDLE:
-                    break;
                 case WRITER_IDLE:
                     this.sendPingReq(ctx.channel());
                     break;
@@ -71,11 +70,11 @@ final class MqttPingHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private void sendPingReq(Channel channel){
+    private void sendPingReq(Channel channel) {
         MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PINGREQ, false, MqttQoS.AT_MOST_ONCE, false, 0);
         channel.writeAndFlush(new MqttMessage(fixedHeader));
 
-        if(this.pingRespTimeout != null){
+        if (this.pingRespTimeout == null) {
             this.pingRespTimeout = channel.eventLoop().schedule(() -> {
                 MqttFixedHeader fixedHeader2 = new MqttFixedHeader(MqttMessageType.DISCONNECT, false, MqttQoS.AT_MOST_ONCE, false, 0);
                 channel.writeAndFlush(new MqttMessage(fixedHeader2)).addListener(ChannelFutureListener.CLOSE);
@@ -84,13 +83,13 @@ final class MqttPingHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private void handlePingReq(Channel channel){
+    private void handlePingReq(Channel channel) {
         MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PINGRESP, false, MqttQoS.AT_MOST_ONCE, false, 0);
         channel.writeAndFlush(new MqttMessage(fixedHeader));
     }
 
-    private void handlePingResp(){
-        if(this.pingRespTimeout != null && !this.pingRespTimeout.isCancelled() && !this.pingRespTimeout.isDone()){
+    private void handlePingResp() {
+        if (this.pingRespTimeout != null && !this.pingRespTimeout.isCancelled() && !this.pingRespTimeout.isDone()) {
             this.pingRespTimeout.cancel(true);
             this.pingRespTimeout = null;
         }

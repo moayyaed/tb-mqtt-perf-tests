@@ -20,6 +20,7 @@ import io.netty.buffer.ByteBuf;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,9 @@ public class SubscriberServiceImpl implements SubscriberService {
     private final ClusterProcessService clusterProcessService;
 
     private final Map<String, SubscriberInfo> subscriberInfos = new ConcurrentHashMap<>();
+
+    @Value("${stats.enabled:true}")
+    private boolean statsEnabled;
 
     @Override
     public void connectSubscribers(SubscribeStats subscribeStats) {
@@ -127,8 +131,10 @@ public class SubscriberServiceImpl implements SubscriberService {
                 return;
             }
             long msgLatency = receivedTime - message.getCreateTime();
-            subscribeStats.getLatencyStats().addValue(msgLatency);
-            subscribeStats.getMsgProcessingLatencyStats().addValue(now - receivedTime);
+            if (statsEnabled) {
+                subscribeStats.getLatencyStats().addValue(msgLatency);
+                subscribeStats.getMsgProcessingLatencyStats().addValue(now - receivedTime);
+            }
             if (subscriberInfo.getLatencyStats() != null) {
                 subscriberInfo.getLatencyStats().addValue(msgLatency);
                 log.debug("[{}] Received msg with time {}", subscriberInfo.getClientId(), message.getCreateTime());
