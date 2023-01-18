@@ -22,8 +22,8 @@ metadata:
     name: mqtt-broker-test-run-config
 data:
   tb-mqtt-broker-performance-tests.conf: |
-    # Memory for 3Gi pod (2Gi heap + 1Gi stack and etc)
-    export JAVA_OPTS="$JAVA_OPTS -Xmx2048M -Xms2048M -Xss384k -XX:+AlwaysPreTouch"
+    # Memory for 1Gi pod (0.5Gi heap + 0.5Gi stack and etc)
+    export JAVA_OPTS="$JAVA_OPTS -Xmx512M -Xms512M -Xss384k -XX:+AlwaysPreTouch"
     export JAVA_OPTS="$JAVA_OPTS -Dplatform=deb"
     export JAVA_OPTS="$JAVA_OPTS -XX:+IgnoreUnrecognizedVMOptions -XX:+HeapDumpOnOutOfMemoryError"
     export JAVA_OPTS="$JAVA_OPTS -XX:-UseBiasedLocking -XX:+UseTLAB -XX:+ResizeTLAB -XX:+PerfDisableSharedMem -XX:+UseCondCardMark"
