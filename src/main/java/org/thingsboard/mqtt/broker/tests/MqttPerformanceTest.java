@@ -73,6 +73,8 @@ public class MqttPerformanceTest {
     private int waitTimeClientsClosedMs;
     @Value("${test-run.publisher-warmup-enabled:false}")
     private boolean publisherWarmUpEnabled;
+    @Value("${test-run.max_total_clients_per_iteration:0}")
+    private int maxTotalClientsPerIteration;
 
     @PostConstruct
     public void init() throws Exception {
@@ -112,7 +114,7 @@ public class MqttPerformanceTest {
         if (publisherWarmUpEnabled) {
             Thread.sleep(2000);
             publisherService.warmUpPublishers();
-            Thread.sleep(1000);
+            Thread.sleep(3000);
         }
 
         log.info("Start msg publishing.");
@@ -196,8 +198,15 @@ public class MqttPerformanceTest {
                         && subscriberGroup.getPersistentSessionInfo().getClientType() == PersistentClientType.DEVICE)
                 .mapToInt(SubscriberGroup::getSubscribers)
                 .sum();
-        int totalPublishedMessages = totalPublishers * testRunConfiguration.getTotalPublisherMessagesCount();
-        int totalExpectedReceivedMessages = subscriberService.calculateTotalExpectedReceivedMessages();
+        int totalPublishedMessages;
+        int totalExpectedReceivedMessages;
+        if (maxTotalClientsPerIteration > 0) {
+            totalPublishedMessages = maxTotalClientsPerIteration * testRunConfiguration.getTotalPublisherMessagesCount();
+            totalExpectedReceivedMessages = totalPublishedMessages;
+        } else {
+            totalPublishedMessages = totalPublishers * testRunConfiguration.getTotalPublisherMessagesCount();
+            totalExpectedReceivedMessages = subscriberService.calculateTotalExpectedReceivedMessages();
+        }
         Message randomMsg = new Message(System.currentTimeMillis(), true, payloadGenerator.generatePayload());
         log.info("Test run info: publishers - {}, non-persistent subscribers - {}, regular persistent subscribers - {}, " +
                         "'APPLICATION' persistent subscribers - {}, dummy client connections - {}, " +

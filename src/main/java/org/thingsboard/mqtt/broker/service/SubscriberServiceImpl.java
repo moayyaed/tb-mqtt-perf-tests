@@ -64,6 +64,8 @@ public class SubscriberServiceImpl implements SubscriberService {
 
     @Value("${stats.enabled:true}")
     private boolean statsEnabled;
+    @Value("${test-run.max_total_clients_per_iteration:0}")
+    private int maxTotalClientsPerIteration;
 
     @Override
     public void connectSubscribers(SubscribeStats subscribeStats) {
@@ -164,7 +166,12 @@ public class SubscriberServiceImpl implements SubscriberService {
         int lostMessages = 0;
         int duplicatedMessages = 0;
         for (SubscriberInfo subscriberInfo : subscriberInfos.values()) {
-            int expectedReceivedMsgs = getSubscriberExpectedReceivedMsgs(testRunConfiguration.getTotalPublisherMessagesCount(), publisherGroupsById, subscriberInfo.getSubscriberGroup());
+            int expectedReceivedMsgs;
+            if (maxTotalClientsPerIteration > 0) {
+                continue;
+            } else {
+                expectedReceivedMsgs = getSubscriberExpectedReceivedMsgs(testRunConfiguration.getTotalPublisherMessagesCount(), publisherGroupsById, subscriberInfo.getSubscriberGroup());
+            }
             int actualReceivedMsgs = subscriberInfo.getTotalReceivedMsgs().get();
             if (actualReceivedMsgs != expectedReceivedMsgs) {
                 log.trace("[{}] Expected messages count - {}, actual messages count - {}",

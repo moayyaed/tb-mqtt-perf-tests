@@ -32,3 +32,4 @@ Main configuration parameters:
 * TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS - max time in seconds to wait for clients to connect/subscribe to topics
 * TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS - max time in seconds to wait to clear persisted sessions
 * TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT - time in milliseconds to sleep after the clients started disconnecting
+* TEST_RUN_MAX_TOTAL_CLIENTS_PER_ITERATION - max number out of all publisher that will be used per publishing iteration

@@ -47,6 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -70,6 +71,8 @@ public class PublisherServiceImpl implements PublisherService {
     private final Map<String, PublisherInfo> publisherInfos = new ConcurrentHashMap<>();
     private final ScheduledExecutorService publishScheduler = Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName("publish-scheduler"));
 
+    @Value("${test-run.publisher-warmup-count:0}")
+    private int publisherWarmUpCount;
     @Value("${test-run.publisher-warmup-wait-time}")
     private int warmupWaitTime;
     @Value("${test-run.publisher_clients_persistent:false}")
@@ -78,6 +81,8 @@ public class PublisherServiceImpl implements PublisherService {
     private int waitTime;
     @Value("${stats.enabled:true}")
     private boolean statsEnabled;
+    @Value("${test-run.max_total_clients_per_iteration:0}")
+    private int maxTotalClientsPerIteration;
 
     @Override
     public void connectPublishers() {
@@ -117,21 +122,23 @@ public class PublisherServiceImpl implements PublisherService {
         stopWatch.start();
         CountDownLatch warmupCDL = new CountDownLatch(publisherInfos.size());
         AtomicBoolean successfulWarmUp = new AtomicBoolean(true);
-        for (PublisherInfo publisherInfo : publisherInfos.values()) {
-            try {
-                Message message = new Message(System.currentTimeMillis(), true, payloadGenerator.generatePayload());
-                publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(mapper.writeValueAsBytes(message)),
-                        CallbackUtil.createCallback(
-                                warmupCDL::countDown,
-                                t -> {
-                                    successfulWarmUp.getAndSet(false);
-                                    log.error("[{}] Error acknowledging warmup msg", publisherInfo.getClientId(), t);
-                                    warmupCDL.countDown();
-                                }),
-                        MqttQoS.AT_MOST_ONCE);
-            } catch (Exception e) {
-                log.error("[{}] Failed to publish", publisherInfo.getClientId(), e);
-                throw e;
+        for (int i = 0; i < publisherWarmUpCount; i++) {
+            for (PublisherInfo publisherInfo : publisherInfos.values()) {
+                try {
+                    Message message = new Message(System.currentTimeMillis(), true, payloadGenerator.generatePayload());
+                    publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(mapper.writeValueAsBytes(message)),
+                            CallbackUtil.createCallback(
+                                    warmupCDL::countDown,
+                                    t -> {
+                                        successfulWarmUp.getAndSet(false);
+                                        log.error("[{}] Error acknowledging warmup msg", publisherInfo.getClientId(), t);
+                                        warmupCDL.countDown();
+                                    }),
+                            MqttQoS.AT_MOST_ONCE);
+                } catch (Exception e) {
+                    log.error("[{}] Failed to publish", publisherInfo.getClientId(), e);
+                    throw e;
+                }
             }
         }
 
@@ -146,6 +153,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public PublishStats startPublishing() {
+        final List<PublisherInfo> publishers = new ArrayList<>(publisherInfos.values());
         DescriptiveStatistics publishSentLatencyStats = new DescriptiveStatistics();
         DescriptiveStatistics publishAcknowledgedStats = new DescriptiveStatistics();
         AtomicInteger publishedMessagesPerPublisher = new AtomicInteger();
@@ -162,45 +170,57 @@ public class PublisherServiceImpl implements PublisherService {
                     log.debug("Pause between ticks is bigger than expected, expected pause - {} ms, actual pause - {} ms", publishPeriodMs, actualPublishTickPause);
                 }
             }
-            for (PublisherInfo publisherInfo : publisherInfos.values()) {
-                try {
-                    Message message = new Message(System.currentTimeMillis(), false, payloadGenerator.generatePayload());
-                    byte[] messageBytes = mapper.writeValueAsBytes(message);
-                    ChannelFuture publishSentFuture = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes),
-                            CallbackUtil.createCallback(
-                                    () -> {
-                                        long ackLatency = System.currentTimeMillis() - message.getCreateTime();
-                                        if (statsEnabled) {
-                                            publishAcknowledgedStats.addValue(ackLatency);
-                                        }
-                                        if (publisherInfo.isDebug()) {
-                                            publisherInfo.getAcknowledgeLatencyStats().addValue(ackLatency);
-                                            log.debug("[{}] Acknowledged msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
-                                        }
-                                    },
-                                    t -> log.debug("[{}] Failed to send msg.", publisherInfo.getClientId(), t)
-                            ),
-                            testRunConfiguration.getPublisherQoS());
-                    publishSentFuture
-                            .addListener(future -> {
-                                        if (!future.isSuccess()) {
-                                            log.debug("[{}] Error sending msg.", publisherInfo.getClientId(), future.cause());
-                                        } else {
-                                            if (statsEnabled) {
-                                                publishSentLatencyStats.addValue(System.currentTimeMillis() - message.getCreateTime());
-                                            }
-                                            if (publisherInfo.isDebug()) {
-                                                log.debug("[{}] Sent msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
-                                            }
-                                        }
-                                    }
-                            );
-                } catch (Exception e) {
-                    log.error("[{}] Failed to publish", publisherInfo.getClientId(), e);
+            if (maxTotalClientsPerIteration > 0) {
+                int randomNumber = getRandomNumber(0, publishers.size() - maxTotalClientsPerIteration);
+                for (int i = 0; i < maxTotalClientsPerIteration; i++) {
+                    process(publishSentLatencyStats, publishAcknowledgedStats, publishers.get(randomNumber));
+                    randomNumber++;
+                }
+            } else {
+                for (PublisherInfo publisherInfo : publisherInfos.values()) {
+                    process(publishSentLatencyStats, publishAcknowledgedStats, publisherInfo);
                 }
             }
         }, 0, publishPeriodMs, TimeUnit.MILLISECONDS);
         return new PublishStats(publishSentLatencyStats, publishAcknowledgedStats);
+    }
+
+    private void process(DescriptiveStatistics publishSentLatencyStats, DescriptiveStatistics publishAcknowledgedStats, PublisherInfo publisherInfo) {
+        try {
+            Message message = new Message(System.currentTimeMillis(), false, payloadGenerator.generatePayload());
+            byte[] messageBytes = mapper.writeValueAsBytes(message);
+            ChannelFuture publishSentFuture = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes),
+                    CallbackUtil.createCallback(
+                            () -> {
+                                long ackLatency = System.currentTimeMillis() - message.getCreateTime();
+                                if (statsEnabled) {
+                                    publishAcknowledgedStats.addValue(ackLatency);
+                                }
+                                if (publisherInfo.isDebug()) {
+                                    publisherInfo.getAcknowledgeLatencyStats().addValue(ackLatency);
+                                    log.debug("[{}] Acknowledged msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
+                                }
+                            },
+                            t -> log.debug("[{}] Failed to send msg.", publisherInfo.getClientId(), t)
+                    ),
+                    testRunConfiguration.getPublisherQoS());
+            publishSentFuture
+                    .addListener(future -> {
+                                if (!future.isSuccess()) {
+                                    log.debug("[{}] Error sending msg.", publisherInfo.getClientId(), future.cause());
+                                } else {
+                                    if (statsEnabled) {
+                                        publishSentLatencyStats.addValue(System.currentTimeMillis() - message.getCreateTime());
+                                    }
+                                    if (publisherInfo.isDebug()) {
+                                        log.debug("[{}] Sent msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
+                                    }
+                                }
+                            }
+                    );
+        } catch (Exception e) {
+            log.error("[{}] Failed to publish", publisherInfo.getClientId(), e);
+        }
     }
 
     @Override
@@ -259,6 +279,10 @@ public class PublisherServiceImpl implements PublisherService {
 
     private static ByteBuf toByteBuf(byte[] bytes) {
         return Unpooled.wrappedBuffer(bytes);
+    }
+
+    public int getRandomNumber(int min, int max) {
+        return ThreadLocalRandom.current().nextInt(min, max);
     }
 
     @Getter
