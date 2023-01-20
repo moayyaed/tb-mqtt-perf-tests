@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
-import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -134,7 +133,7 @@ public class PublisherServiceImpl implements PublisherService {
                                         log.error("[{}] Error acknowledging warmup msg", publisherInfo.getClientId(), t);
                                         warmupCDL.countDown();
                                     }),
-                            MqttQoS.AT_MOST_ONCE);
+                            testRunConfiguration.getPublisherQoS());
                 } catch (Exception e) {
                     log.error("[{}] Failed to publish", publisherInfo.getClientId(), e);
                     throw e;
