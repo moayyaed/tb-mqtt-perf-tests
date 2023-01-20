@@ -16,6 +16,7 @@
 package org.thingsboard.mqtt.broker.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Iterables;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -40,13 +41,13 @@ import org.thingsboard.mqtt.broker.util.CallbackUtil;
 import org.thingsboard.mqtt.broker.util.ThingsBoardThreadFactory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -152,7 +153,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public PublishStats startPublishing() {
-        final List<PublisherInfo> publishers = new ArrayList<>(publisherInfos.values());
+        final Iterator<PublisherInfo> publisherInfoIterator = Iterables.cycle(publisherInfos.values()).iterator();
         DescriptiveStatistics publishSentLatencyStats = new DescriptiveStatistics();
         DescriptiveStatistics publishAcknowledgedStats = new DescriptiveStatistics();
         AtomicInteger publishedMessagesPerPublisher = new AtomicInteger();
@@ -170,10 +171,8 @@ public class PublisherServiceImpl implements PublisherService {
                 }
             }
             if (maxTotalClientsPerIteration > 0) {
-                int randomNumber = getRandomNumber(0, publishers.size() - maxTotalClientsPerIteration);
                 for (int i = 0; i < maxTotalClientsPerIteration; i++) {
-                    process(publishSentLatencyStats, publishAcknowledgedStats, publishers.get(randomNumber));
-                    randomNumber++;
+                    process(publishSentLatencyStats, publishAcknowledgedStats, publisherInfoIterator.next());
                 }
             } else {
                 for (PublisherInfo publisherInfo : publisherInfos.values()) {
@@ -278,10 +277,6 @@ public class PublisherServiceImpl implements PublisherService {
 
     private static ByteBuf toByteBuf(byte[] bytes) {
         return Unpooled.wrappedBuffer(bytes);
-    }
-
-    public int getRandomNumber(int min, int max) {
-        return ThreadLocalRandom.current().nextInt(min, max);
     }
 
     @Getter
