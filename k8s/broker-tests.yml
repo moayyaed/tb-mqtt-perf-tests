@@ -50,10 +50,10 @@ spec:
           resources:
             limits:
               cpu: "800m"
-              memory: 1Gi
+              memory: 1500Mi
             requests:
               cpu: "800m"
-              memory: 1Gi
+              memory: 1500Mi
           ports:
             - containerPort: 8088
               name: http
@@ -86,6 +86,8 @@ spec:
               value: "60000"
             - name: STATS_ENABLED
               value: "false"
+            - name: TEST_RUN_MAX_TOTAL_CLIENTS_PER_ITERATION
+              value: "5000"
           volumeMounts:
             - mountPath: /config
               name: mqtt-broker-test-run-config

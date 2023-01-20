@@ -22,8 +22,8 @@ metadata:
     name: mqtt-broker-test-run-config
 data:
   tb-mqtt-broker-performance-tests.conf: |
-    # Memory for 1Gi pod (0.5Gi heap + 0.5Gi stack and etc)
-    export JAVA_OPTS="$JAVA_OPTS -Xmx512M -Xms512M -Xss384k -XX:+AlwaysPreTouch"
+    # Memory for 1.5Gi pod (1Gi heap + 0.5Gi stack and etc)
+    export JAVA_OPTS="$JAVA_OPTS -Xmx1024M -Xms1024M -Xss384k -XX:+AlwaysPreTouch"
     export JAVA_OPTS="$JAVA_OPTS -Dplatform=deb"
     export JAVA_OPTS="$JAVA_OPTS -XX:+IgnoreUnrecognizedVMOptions -XX:+HeapDumpOnOutOfMemoryError"
     export JAVA_OPTS="$JAVA_OPTS -XX:-UseBiasedLocking -XX:+UseTLAB -XX:+ResizeTLAB -XX:+PerfDisableSharedMem -XX:+UseCondCardMark"
@@ -61,121 +61,121 @@ data:
       "publisherGroups": [
         {
           "id": 1,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/brkl/east/",
           "clientIdPrefix": null
         },
         {
           "id": 2,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/brkl/west/",
           "clientIdPrefix": null
         },
         {
           "id": 3,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/brkl/north/",
           "clientIdPrefix": null
         },
         {
           "id": 4,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/brkl/south/",
           "clientIdPrefix": null
         },
         {
           "id": 5,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/manh/east/",
           "clientIdPrefix": null
         },
         {
           "id": 6,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/manh/west/",
           "clientIdPrefix": null
         },
         {
           "id": 7,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/manh/north/",
           "clientIdPrefix": null
         },
         {
           "id": 8,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/manh/south/",
           "clientIdPrefix": null
         },
         {
           "id": 9,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/qns/east/",
           "clientIdPrefix": null
         },
         {
           "id": 10,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/qns/west/",
           "clientIdPrefix": null
         },
         {
           "id": 11,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/qns/north/",
           "clientIdPrefix": null
         },
         {
           "id": 12,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/qns/south/",
           "clientIdPrefix": null
         },
         {
           "id": 13,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/brx/east/",
           "clientIdPrefix": null
         },
         {
           "id": 14,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/brx/west/",
           "clientIdPrefix": null
         },
         {
           "id": 15,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/brx/north/",
           "clientIdPrefix": null
         },
         {
           "id": 16,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/brx/south/",
           "clientIdPrefix": null
         },
         {
           "id": 17,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/si/east/",
           "clientIdPrefix": null
         },
         {
           "id": 18,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/si/west/",
           "clientIdPrefix": null
         },
         {
           "id": 19,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/si/north/",
           "clientIdPrefix": null
         },
         {
           "id": 20,
-          "publishers": 10000,
+          "publishers": 50000,
           "topicPrefix": "usa/ny/si/south/",
           "clientIdPrefix": null
         }
@@ -405,7 +405,7 @@ data:
           "clientIdPrefix": null
         }
       ],
-      "dummyClients": 800000,
+      "dummyClients": 0,
       "secondsToRun": 300,
       "additionalSecondsToWait": 5,
       "maxMsgsPerPublisherPerSecond": 1,
