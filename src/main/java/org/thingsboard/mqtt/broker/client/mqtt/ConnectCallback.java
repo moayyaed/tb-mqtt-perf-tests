@@ -16,15 +16,6 @@
 package org.thingsboard.mqtt.broker.client.mqtt;
 
 public interface ConnectCallback {
-    ConnectCallback DEFAULT_CALLBACK = new ConnectCallback() {
-        @Override
-        public void onSuccess(MqttConnectResult connectResult) {
-        }
-
-        @Override
-        public void onFailure(Throwable t) {
-        }
-    };
 
     void onSuccess(MqttConnectResult connectResult);
 
