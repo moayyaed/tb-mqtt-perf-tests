@@ -57,8 +57,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.thingsboard.mqtt.broker.client.mqtt.ConnectCallback.DEFAULT_CALLBACK;
-
 /**
  * Represents an MqttClientImpl connected to a single MQTT server. Will try to keep the connection going at all times
  */
@@ -160,7 +158,7 @@ final class MqttClientImpl implements MqttClient {
                     pendingSubscribeTopics.clear();
                     handlerToSubscribtion.clear();
                     try {
-                        scheduleConnectIfRequired(host, port, true);
+                        scheduleConnectIfRequired(connectCallback, host, port, true);
                     } catch (Exception exception) {
                         if (clientCallback != null) {
                             clientCallback.connectionLost(exception);
@@ -169,7 +167,7 @@ final class MqttClientImpl implements MqttClient {
                 });
             } else {
                 try {
-                    scheduleConnectIfRequired(host, port, reconnect);
+                    scheduleConnectIfRequired(connectCallback, host, port, reconnect);
                 } catch (Exception exception) {
                     if (clientCallback != null) {
                         clientCallback.connectionLost(exception);
@@ -179,12 +177,12 @@ final class MqttClientImpl implements MqttClient {
         });
     }
 
-    private void scheduleConnectIfRequired(String host, int port, boolean reconnect) {
+    private void scheduleConnectIfRequired(ConnectCallback connectCallback, String host, int port, boolean reconnect) {
         if (clientConfig.isReconnect() && !disconnected) {
             if (reconnect) {
                 this.reconnect = true;
             }
-            eventLoop.schedule(() -> connect(DEFAULT_CALLBACK, host, port, reconnect), clientConfig.getReconnectDelay(), TimeUnit.SECONDS);
+            eventLoop.schedule(() -> connect(connectCallback, host, port, reconnect), clientConfig.getReconnectDelay(), TimeUnit.SECONDS);
         }
     }
 
