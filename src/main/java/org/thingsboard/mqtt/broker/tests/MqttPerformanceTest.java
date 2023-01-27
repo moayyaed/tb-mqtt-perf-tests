@@ -71,8 +71,8 @@ public class MqttPerformanceTest {
     private int waitTimeAfterDisconnectsMs;
     @Value("${test-run.wait-time-clients-closed-ms}")
     private int waitTimeClientsClosedMs;
-    @Value("${test-run.publisher-warmup-enabled:false}")
-    private boolean publisherWarmUpEnabled;
+    @Value("${test-run.publisher-warmup-sleep:5}")
+    private int publisherWarmUpSleep;
     @Value("${test-run.max_total_clients_per_iteration:0}")
     private int maxTotalClientsPerIteration;
 
@@ -111,11 +111,9 @@ public class MqttPerformanceTest {
             clusterSynchronizer.awaitClusterReady();
         }
 
-        if (publisherWarmUpEnabled) {
-            Thread.sleep(2000);
-            publisherService.warmUpPublishers();
-            Thread.sleep(3000);
-        }
+        Thread.sleep(2000);
+        publisherService.warmUpPublishers();
+        Thread.sleep(publisherWarmUpSleep);
 
         log.info("Start msg publishing.");
         PublishStats publishStats = publisherService.startPublishing();
