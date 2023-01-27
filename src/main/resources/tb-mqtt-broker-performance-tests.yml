@@ -60,7 +60,7 @@ test-run:
   parallel-tests-count: "${TEST_RUN_PARALLEL_TESTS_COUNT:1}"
   publisher-warmup-count: "${TEST_RUN_PUBLISHER_WARMUP_COUNT:10}"
   publisher-warmup-wait-time: "${TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS:30}"
-  publisher-warmup-sleep: "${TEST_RUN_PUBLISHER_WARMUP_SLEEP_SECONDS:5}"
+  publisher-warmup-sleep: "${TEST_RUN_PUBLISHER_WARMUP_SLEEP_MS:5000}"
   cluster-process-wait-time: "${TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS:60}"
   clear-persisted-sessions-wait-time: "${TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS:60}"
   wait-time-after-clients-disconnect-ms: "${TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT:5000}"

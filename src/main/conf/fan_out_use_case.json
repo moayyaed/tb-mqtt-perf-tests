@@ -1,0 +1,37 @@
+{
+  "publisherGroups": [
+    {
+      "id": 1,
+      "publishers": 10,
+      "topicPrefix": "europe/ua/kyiv/tb/",
+      "clientIdPrefix": null
+    }
+  ],
+  "subscriberGroups": [
+    {
+      "id": 1,
+      "subscribers": 10000,
+      "topicFilter": "europe/ua/kyiv/tb/+",
+      "expectedPublisherGroups": [
+        1
+      ],
+      "persistentSessionInfo": null,
+      "clientIdPrefix": null
+    }
+  ],
+  "dummyClients": 0,
+  "secondsToRun": 30,
+  "additionalSecondsToWait": 5,
+  "maxMsgsPerPublisherPerSecond": 10,
+  "publisherQosValue": 1,
+  "subscriberQosValue": 1,
+  "minPayloadSize": 1,
+  "maxConcurrentOperations": 10000,
+  "telemetryKeys": [
+    "lat",
+    "long",
+    "speed",
+    "fuel",
+    "batLvl"
+  ]
+}
