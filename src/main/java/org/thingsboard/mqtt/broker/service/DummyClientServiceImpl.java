@@ -90,7 +90,7 @@ public class DummyClientServiceImpl implements DummyClientService {
         stopWatch.stop();
         int totalNodeDummies = testRunConfiguration.getNumberOfDummyClients() / testRunClusterConfig.getParallelTestsCount()
                 + (testRunConfiguration.getNumberOfDummyClients() % testRunClusterConfig.getParallelTestsCount() > testRunClusterConfig.getSequentialNumber() ? 1 : 0);
-        log.info("Connecting {} dummy clients took {} ms, median connection time - {}, max connection time - {}, 95 percentile connection time - {}.",
+        log.info("Connecting {} dummy clients took {} ms, avg connection time - {}, max connection time - {}, 95 percentile connection time - {}.",
                 totalNodeDummies, stopWatch.getTime(), connectionStats.getMean(),
                 connectionStats.getMax(), connectionStats.getPercentile(95.0));
     }
