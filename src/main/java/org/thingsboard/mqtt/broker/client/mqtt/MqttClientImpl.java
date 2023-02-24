@@ -49,6 +49,7 @@ import org.thingsboard.mqtt.broker.util.BasicCallback;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -75,8 +76,8 @@ final class MqttClientImpl implements MqttClient {
 
     private final MqttClientConfig clientConfig;
     private final ReceivedMsgProcessor receivedMsgProcessor;
-
     private final MqttHandler defaultHandler;
+    private final Iterator<String> ipAddrIterator;
 
     private EventLoopGroup eventLoop;
 
@@ -95,10 +96,12 @@ final class MqttClientImpl implements MqttClient {
      *
      * @param clientConfig The config object to use while looking for settings
      */
-    public MqttClientImpl(MqttClientConfig clientConfig, MqttHandler defaultHandler, ReceivedMsgProcessor receivedMsgProcessor) {
+    public MqttClientImpl(MqttClientConfig clientConfig, MqttHandler defaultHandler,
+                          ReceivedMsgProcessor receivedMsgProcessor, Iterator<String> ipAddrIterator) {
         this.clientConfig = clientConfig;
         this.defaultHandler = defaultHandler;
         this.receivedMsgProcessor = receivedMsgProcessor;
+        this.ipAddrIterator = ipAddrIterator;
     }
 
     /**
@@ -135,6 +138,12 @@ final class MqttClientImpl implements MqttClient {
         bootstrap.group(this.eventLoop);
         bootstrap.channel(clientConfig.getChannelClass());
         bootstrap.remoteAddress(host, port);
+
+        if (ipAddrIterator != null) {
+            String ipAddr = ipAddrIterator.next();
+            bootstrap.localAddress(ipAddr, 0);
+        }
+
         bootstrap.handler(new MqttChannelInitializer(connectCallback, host, port, clientConfig.getSslContext(), receivedMsgProcessor));
         ChannelFuture future = bootstrap.connect();
 

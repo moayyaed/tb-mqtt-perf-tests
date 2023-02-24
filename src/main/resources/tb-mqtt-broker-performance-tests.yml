@@ -37,6 +37,8 @@ mqtt:
     trust_store_type: "${SECURITY_MQTT_SSL_TRUST_STORE_TYPE:JKS}"
   client:
     keep-alive-seconds: "${CLIENT_KEEP_ALIVE_SECONDS:600}"
+    # Comma-separated list of IP addresses
+    ip_addresses: "${CLIENT_IP_ADDRESSES:}"
   netty:
     worker_group_thread_count: "${MQTT_NETTY_WORKER_GROUP_THREADS:12}"
 broker:

@@ -15,6 +15,7 @@
  */
 package org.thingsboard.mqtt.broker.service;
 
+import com.google.common.collect.Iterables;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.handler.codec.mqtt.MqttVersion;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.thingsboard.mqtt.broker.client.mqtt.ConnectCallback;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClient;
 import org.thingsboard.mqtt.broker.client.mqtt.MqttClientConfig;
@@ -32,6 +34,9 @@ import org.thingsboard.mqtt.broker.util.ThingsBoardThreadFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -47,12 +52,19 @@ public class ClientInitializerImpl implements ClientInitializer {
     private int groupThreadCount;
     @Value("${mqtt.client.keep-alive-seconds:600}")
     private int keepAliveSeconds;
+    @Value("${mqtt.client.ip_addresses}")
+    private String ipAddressStr;
 
-    private EventLoopGroup EVENT_LOOP_GROUP;
+    private EventLoopGroup eventLoopGroup;
+    private Iterator<String> ipAddrIterator;
 
     @PostConstruct
     public void init() {
-        EVENT_LOOP_GROUP = new NioEventLoopGroup(groupThreadCount, ThingsBoardThreadFactory.forName("just-nio-event-loop"));
+        eventLoopGroup = new NioEventLoopGroup(groupThreadCount, ThingsBoardThreadFactory.forName("just-nio-event-loop"));
+        if (!StringUtils.isEmpty(ipAddressStr)) {
+            List<String> ipAddrList = Arrays.asList(ipAddressStr.split(","));
+            ipAddrIterator = Iterables.cycle(ipAddrList).iterator();
+        }
     }
 
     @Override
@@ -73,8 +85,8 @@ public class ClientInitializerImpl implements ClientInitializer {
         config.setCleanSession(cleanSession);
         config.setProtocolVersion(MqttVersion.MQTT_3_1_1);
         config.setTimeoutSeconds(keepAliveSeconds);
-        MqttClient client = MqttClient.create(config, defaultHandler, receivedMsgProcessor);
-        client.setEventLoop(EVENT_LOOP_GROUP);
+        MqttClient client = MqttClient.create(config, defaultHandler, receivedMsgProcessor, ipAddrIterator);
+        client.setEventLoop(eventLoopGroup);
         return client;
     }
 
@@ -86,8 +98,8 @@ public class ClientInitializerImpl implements ClientInitializer {
 
     @PreDestroy
     public void destroy() {
-        if (!EVENT_LOOP_GROUP.isShutdown()) {
-            EVENT_LOOP_GROUP.shutdownGracefully(0, 5, TimeUnit.SECONDS);
+        if (!eventLoopGroup.isShutdown()) {
+            eventLoopGroup.shutdownGracefully(0, 5, TimeUnit.SECONDS);
         }
     }
 }

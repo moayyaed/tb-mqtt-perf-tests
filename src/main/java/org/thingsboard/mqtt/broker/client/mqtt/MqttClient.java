@@ -24,6 +24,8 @@ import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.util.concurrent.Future;
 import org.thingsboard.mqtt.broker.util.BasicCallback;
 
+import java.util.Iterator;
+
 public interface MqttClient {
 
     /**
@@ -182,8 +184,9 @@ public interface MqttClient {
      * @param config The config object to use while looking for settings
      * @param defaultHandler The handler for incoming messages that do not match any topic subscriptions
      */
-    static MqttClient create(MqttClientConfig config, MqttHandler defaultHandler, ReceivedMsgProcessor receivedMsgProcessor){
-        return new MqttClientImpl(config, defaultHandler, receivedMsgProcessor);
+    static MqttClient create(MqttClientConfig config, MqttHandler defaultHandler,
+                             ReceivedMsgProcessor receivedMsgProcessor, Iterator<String> ipAddrIterator) {
+        return new MqttClientImpl(config, defaultHandler, receivedMsgProcessor, ipAddrIterator);
     }
 
     /**
