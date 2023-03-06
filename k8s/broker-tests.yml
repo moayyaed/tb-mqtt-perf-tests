@@ -46,7 +46,7 @@ spec:
       containers:
         - name: server
           imagePullPolicy: IfNotPresent
-          image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.46
+          image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.47
           resources:
             limits:
               cpu: "800m"
@@ -135,7 +135,7 @@ spec:
       containers:
         - name: server
           imagePullPolicy: IfNotPresent
-          image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.46
+          image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.47
           resources:
             limits:
               cpu: "500m"
