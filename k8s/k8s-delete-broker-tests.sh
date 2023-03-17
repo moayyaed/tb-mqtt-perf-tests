@@ -17,11 +17,10 @@
 
 set -e
 
-kubectl apply -f tb-broker-namespace.yml
 kubectl config set-context $(kubectl config current-context) --namespace=thingsboard-mqtt-broker
 
-kubectl apply -f mqtt-broker-test-run-config.yml
-kubectl apply -f mqtt-broker-orch-config.yml
+kubectl delete -f mqtt-broker-test-run-config.yml
+kubectl delete -f mqtt-broker-orch-config.yml
 
-kubectl apply -f broker-tests.yml
-kubectl apply -f tb-kafka-ui-kowl.yml
+kubectl delete -f broker-tests.yml
+kubectl delete -f tb-kafka-ui-kowl.yml

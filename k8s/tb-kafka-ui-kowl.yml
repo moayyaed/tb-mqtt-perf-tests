@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tb-kafka-ui-kowl
+spec:
+  serviceName: tb-kafka-ui-kowl
+  replicas: 1
+  podManagementPolicy: Parallel
+  selector:
+    matchLabels:
+      app: tb-kafka-ui-kowl
+  template:
+    metadata:
+      labels:
+        app: tb-kafka-ui-kowl
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      nodeSelector:
+        role: tb-perf-test
+      containers:
+        - name: server
+          imagePullPolicy: Always
+          image: quay.io/cloudhut/kowl:master
+          resources:
+            requests:
+              cpu: 200m
+              memory: 200Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi
+          ports:
+            - containerPort: 8080
+              name: http8080
+          env:
+            - name: KAFKA_BROKERS
+              value: ""
+      restartPolicy: Always
