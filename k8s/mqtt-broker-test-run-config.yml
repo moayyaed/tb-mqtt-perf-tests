@@ -22,8 +22,8 @@ metadata:
     name: mqtt-broker-test-run-config
 data:
   tb-mqtt-broker-performance-tests.conf: |
-    # Memory for 1.5Gi pod (1Gi heap + 0.5Gi stack and etc)
-    export JAVA_OPTS="$JAVA_OPTS -Xmx1024M -Xms1024M -Xss384k -XX:+AlwaysPreTouch"
+    # Memory for 1Gi pod (0.5Gi heap + 0.5Gi stack and etc)
+    #export JAVA_OPTS="$JAVA_OPTS -Xmx512M -Xms512M -Xss384k -XX:+AlwaysPreTouch"
     export JAVA_OPTS="$JAVA_OPTS -Dplatform=deb"
     export JAVA_OPTS="$JAVA_OPTS -XX:+IgnoreUnrecognizedVMOptions -XX:+HeapDumpOnOutOfMemoryError"
     export JAVA_OPTS="$JAVA_OPTS -XX:-UseBiasedLocking -XX:+UseTLAB -XX:+ResizeTLAB -XX:+PerfDisableSharedMem -XX:+UseCondCardMark"
@@ -61,121 +61,121 @@ data:
       "publisherGroups": [
         {
           "id": 1,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/brkl/east/",
           "clientIdPrefix": null
         },
         {
           "id": 2,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/brkl/west/",
           "clientIdPrefix": null
         },
         {
           "id": 3,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/brkl/north/",
           "clientIdPrefix": null
         },
         {
           "id": 4,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/brkl/south/",
           "clientIdPrefix": null
         },
         {
           "id": 5,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/manh/east/",
           "clientIdPrefix": null
         },
         {
           "id": 6,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/manh/west/",
           "clientIdPrefix": null
         },
         {
           "id": 7,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/manh/north/",
           "clientIdPrefix": null
         },
         {
           "id": 8,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/manh/south/",
           "clientIdPrefix": null
         },
         {
           "id": 9,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/qns/east/",
           "clientIdPrefix": null
         },
         {
           "id": 10,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/qns/west/",
           "clientIdPrefix": null
         },
         {
           "id": 11,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/qns/north/",
           "clientIdPrefix": null
         },
         {
           "id": 12,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/qns/south/",
           "clientIdPrefix": null
         },
         {
           "id": 13,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/brx/east/",
           "clientIdPrefix": null
         },
         {
           "id": 14,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/brx/west/",
           "clientIdPrefix": null
         },
         {
           "id": 15,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/brx/north/",
           "clientIdPrefix": null
         },
         {
           "id": 16,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/brx/south/",
           "clientIdPrefix": null
         },
         {
           "id": 17,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/si/east/",
           "clientIdPrefix": null
         },
         {
           "id": 18,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/si/west/",
           "clientIdPrefix": null
         },
         {
           "id": 19,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/si/north/",
           "clientIdPrefix": null
         },
         {
           "id": 20,
-          "publishers": 50000,
+          "publishers": 0,
           "topicPrefix": "usa/ny/si/south/",
           "clientIdPrefix": null
         }
@@ -183,7 +183,7 @@ data:
       "subscriberGroups": [
         {
           "id": 1,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/brkl/east/+",
           "expectedPublisherGroups": [
             1],
@@ -194,7 +194,7 @@ data:
         },
         {
           "id": 2,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/brkl/west/+",
           "expectedPublisherGroups": [
             2],
@@ -205,7 +205,7 @@ data:
         },
         {
           "id": 3,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/brkl/north/+",
           "expectedPublisherGroups": [
             3],
@@ -216,7 +216,7 @@ data:
         },
         {
           "id": 4,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/brkl/south/+",
           "expectedPublisherGroups": [
             4],
@@ -227,7 +227,7 @@ data:
         },
         {
           "id": 5,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/manh/east/+",
           "expectedPublisherGroups": [
             5],
@@ -238,7 +238,7 @@ data:
         },
         {
           "id": 6,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/manh/west/+",
           "expectedPublisherGroups": [
             6],
@@ -249,7 +249,7 @@ data:
         },
         {
           "id": 7,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/manh/north/+",
           "expectedPublisherGroups": [
             7],
@@ -260,7 +260,7 @@ data:
         },
         {
           "id": 8,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/manh/south/+",
           "expectedPublisherGroups": [
             8],
@@ -271,7 +271,7 @@ data:
         },
         {
           "id": 9,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/qns/east/+",
           "expectedPublisherGroups": [
             9],
@@ -282,7 +282,7 @@ data:
         },
         {
           "id": 10,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/qns/west/+",
           "expectedPublisherGroups": [
             10
@@ -294,7 +294,7 @@ data:
         },
         {
           "id": 11,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/qns/north/+",
           "expectedPublisherGroups": [
             11],
@@ -305,7 +305,7 @@ data:
         },
         {
           "id": 12,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/qns/south/+",
           "expectedPublisherGroups": [
             12],
@@ -316,7 +316,7 @@ data:
         },
         {
           "id": 13,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/brx/east/+",
           "expectedPublisherGroups": [
             13],
@@ -327,7 +327,7 @@ data:
         },
         {
           "id": 14,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/brx/west/+",
           "expectedPublisherGroups": [
             14],
@@ -338,7 +338,7 @@ data:
         },
         {
           "id": 15,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/brx/north/+",
           "expectedPublisherGroups": [
             15],
@@ -349,7 +349,7 @@ data:
         },
         {
           "id": 16,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/brx/south/+",
           "expectedPublisherGroups": [
             16
@@ -361,7 +361,7 @@ data:
         },
         {
           "id": 17,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/si/east/+",
           "expectedPublisherGroups": [
             17
@@ -373,7 +373,7 @@ data:
         },
         {
           "id": 18,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/si/west/+",
           "expectedPublisherGroups": [
             18],
@@ -384,7 +384,7 @@ data:
         },
         {
           "id": 19,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/si/north/+",
           "expectedPublisherGroups": [
             19],
@@ -395,7 +395,7 @@ data:
         },
         {
           "id": 20,
-          "subscribers": 1,
+          "subscribers": 0,
           "topicFilter": "usa/ny/si/south/+",
           "expectedPublisherGroups": [
             20],
@@ -405,14 +405,14 @@ data:
           "clientIdPrefix": null
         }
       ],
-      "dummyClients": 0,
-      "secondsToRun": 300,
-      "additionalSecondsToWait": 5,
+      "dummyClients": 4000000,
+      "secondsToRun": 360,
+      "additionalSecondsToWait": 0,
       "maxMsgsPerPublisherPerSecond": 1,
       "publisherQosValue": 1,
       "subscriberQosValue": 1,
       "minPayloadSize": 1,
-      "maxConcurrentOperations": 10000,
+      "maxConcurrentOperations": 3000,
       "telemetryKeys": [
         "lat",
         "long",

@@ -51,13 +51,13 @@ spec:
         - name: server
           imagePullPolicy: IfNotPresent
           image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.48
-          resources:
-            limits:
-              cpu: "800m"
-              memory: 1500Mi
-            requests:
-              cpu: "800m"
-              memory: 1500Mi
+          #          resources:
+          #            limits:
+          #              cpu: "200m"
+          #              memory: 1Gi
+          #            requests:
+          #              cpu: "200m"
+          #              memory: 1Gi
           ports:
             - containerPort: 8088
               name: http
@@ -87,7 +87,9 @@ spec:
             - name: TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS
               value: "600"
             - name: TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT
-              value: "60000"
+              value: "300000"
+            - name: TEST_RUN_WAIT_TIME_MS_CLIENTS_CLOSED
+              value: "5000"
             - name: STATS_ENABLED
               value: "false"
             - name: TEST_RUN_MAX_TOTAL_CLIENTS_PER_ITERATION
@@ -140,13 +142,13 @@ spec:
         - name: server
           imagePullPolicy: IfNotPresent
           image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.48
-          resources:
-            limits:
-              cpu: "500m"
-              memory: 500Mi
-            requests:
-              cpu: "500m"
-              memory: 500Mi
+          #          resources:
+          #            limits:
+          #              cpu: "500m"
+          #              memory: 500Mi
+          #            requests:
+          #              cpu: "500m"
+          #              memory: 500Mi
           ports:
             - containerPort: 8088
               name: http
@@ -158,19 +160,19 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: mqtt-broker-orchestrator-config
-            - mountPath: /var/log/tb-mqtt-broker-performance-tests/
-              name: logs
-              readOnly: false
+      #            - mountPath: /var/log/tb-mqtt-broker-performance-tests/
+      #              name: logs
+      #              readOnly: false
       restartPolicy: Always
-  volumeClaimTemplates:
-    - metadata:
-        name: logs
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 100Mi
+#  volumeClaimTemplates:
+#    - metadata:
+#        name: logs
+#      spec:
+#        accessModes:
+#          - ReadWriteOnce
+#        resources:
+#          requests:
+#            storage: 100Mi
 ---
 apiVersion: v1
 kind: Service
