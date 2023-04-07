@@ -169,7 +169,7 @@ public class SubscriberServiceImpl implements SubscriberService {
         for (SubscriberInfo subscriberInfo : subscriberInfos.values()) {
             int expectedReceivedMsgs;
             if (maxTotalClientsPerIteration > 0) {
-                continue;
+                expectedReceivedMsgs = maxTotalClientsPerIteration * testRunConfiguration.getSecondsToRun();
             } else {
                 expectedReceivedMsgs = getSubscriberExpectedReceivedMsgs(testRunConfiguration.getTotalPublisherMessagesCount(), publisherGroupsById, subscriberInfo.getSubscriberGroup());
             }
