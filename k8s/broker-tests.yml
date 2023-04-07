@@ -49,15 +49,15 @@ spec:
         role: tb-perf-test
       containers:
         - name: server
-          imagePullPolicy: IfNotPresent
-          image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.48
-          #          resources:
-          #            limits:
-          #              cpu: "200m"
-          #              memory: 1Gi
-          #            requests:
-          #              cpu: "200m"
-          #              memory: 1Gi
+          imagePullPolicy: Always
+          image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.49
+          resources:
+            limits:
+              cpu: 6
+              memory: 10Gi
+            requests:
+              cpu: 6
+              memory: 10Gi
           ports:
             - containerPort: 8088
               name: http
@@ -79,21 +79,25 @@ spec:
             - name: HTTP_BIND_PORT
               value: "8088"
             - name: TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS
-              value: "600"
+              value: "900"
             - name: TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS
-              value: "600"
+              value: "900"
             - name: TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS
-              value: "600"
+              value: "900"
             - name: TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS
-              value: "600"
+              value: "900"
             - name: TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT
-              value: "300000"
+              value: "15000"
             - name: TEST_RUN_WAIT_TIME_MS_CLIENTS_CLOSED
               value: "5000"
             - name: STATS_ENABLED
-              value: "false"
+              value: "true"
             - name: TEST_RUN_MAX_TOTAL_CLIENTS_PER_ITERATION
               value: "5000"
+            - name: TEST_RUN_PUBLISHER_WARMUP_SLEEP_MS
+              value: "10000"
+            - name: TEST_RUN_PUBLISHER_WARMUP_COUNT
+              value: "3"
           volumeMounts:
             - mountPath: /config
               name: mqtt-broker-test-run-config
@@ -137,18 +141,18 @@ spec:
               - key: tb-mqtt-broker-orchestrator-tests.conf
                 path: tb-mqtt-broker-performance-tests.conf
       nodeSelector:
-        role: tb-perf-test
+        role: tb-kafka-ui
       containers:
         - name: server
-          imagePullPolicy: IfNotPresent
-          image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.48
-          #          resources:
-          #            limits:
-          #              cpu: "500m"
-          #              memory: 500Mi
-          #            requests:
-          #              cpu: "500m"
-          #              memory: 500Mi
+          imagePullPolicy: Always
+          image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.49
+          resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 1
+              memory: 1Gi
           ports:
             - containerPort: 8088
               name: http

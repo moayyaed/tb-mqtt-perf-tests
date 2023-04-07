@@ -22,7 +22,7 @@ metadata:
     name: mqtt-broker-orchestrator-config
 data:
   tb-mqtt-broker-orchestrator-tests.conf: |
-    #export JAVA_OPTS="$JAVA_OPTS -Xmx512M -Xms512M"
+    export JAVA_OPTS="$JAVA_OPTS -Xmx512M -Xms512M"
     export JAVA_OPTS="$JAVA_OPTS -Dplatform=deb"
     export JAVA_OPTS="$JAVA_OPTS -XX:+IgnoreUnrecognizedVMOptions -XX:+HeapDumpOnOutOfMemoryError"
     export JAVA_OPTS="$JAVA_OPTS -XX:-UseBiasedLocking -XX:+UseTLAB -XX:+ResizeTLAB -XX:+PerfDisableSharedMem -XX:+UseCondCardMark"

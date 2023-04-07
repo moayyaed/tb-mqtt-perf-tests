@@ -18,10 +18,12 @@ package org.thingsboard.mqtt.broker.data;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Set;
 
 @Getter
+@ToString
 public class SubscriberGroup {
     private final int id;
     private final int subscribers;

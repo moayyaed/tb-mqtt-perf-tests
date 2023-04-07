@@ -17,9 +17,11 @@ package org.thingsboard.mqtt.broker.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @AllArgsConstructor
+@ToString
 public class PreConnectedSubscriberInfo {
     private final SubscriberGroup subscriberGroup;
     private final int subscriberIndex;

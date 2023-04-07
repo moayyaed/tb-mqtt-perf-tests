@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.nio.file.Paths;
 
@@ -35,13 +36,7 @@ public class TestConfigApp {
 
     public static void main(String[] args) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        ObjectNode result = mapper.createObjectNode();
-
-        ArrayNode publisherGroups = createPublishersConfig(mapper);
-        result.set("publisherGroups", publisherGroups);
-
-        ArrayNode subscriberGroups = createSubscribersConfig(mapper);
-        result.set("subscriberGroups", subscriberGroups);
+        ObjectNode result = createConfig(mapper);
 
         addGeneralConfig(mapper, result);
 
@@ -54,47 +49,50 @@ public class TestConfigApp {
         result.put("dummyClients", 0);
         result.put("secondsToRun", 300);
         result.put("additionalSecondsToWait", 5);
-        result.put("maxMsgsPerPublisherPerSecond", 4);
+        result.put("maxMsgsPerPublisherPerSecond", 1);
         result.put("publisherQosValue", 1);
         result.put("subscriberQosValue", 1);
         result.put("minPayloadSize", 1);
-        result.put("maxConcurrentOperations", 10000);
+        result.put("maxConcurrentOperations", 3000);
         ArrayNode telemetryKeys = mapper.createArrayNode().add("lat").add("long").add("speed").add("fuel").add("batLvl");
         result.set("telemetryKeys", telemetryKeys);
     }
 
-    private static ArrayNode createSubscribersConfig(ObjectMapper mapper) {
+    private static ObjectNode createConfig(ObjectMapper mapper) {
+        ObjectNode result = mapper.createObjectNode();
+
         ArrayNode subscriberGroups = mapper.createArrayNode();
-        for (int i = 1; i <= 100; i++) {
+        ArrayNode publisherGroups = mapper.createArrayNode();
+        for (int i = 1; i <= 40; i++) {
+            String random = RandomStringUtils.randomAlphabetic(5);
+
             ObjectNode subscriberGroup = mapper.createObjectNode();
 
             subscriberGroup.put("id", i);
             subscriberGroup.put("subscribers", 1);
-            subscriberGroup.put("topicFilter", "test/topic/" + i + "/+");
+            subscriberGroup.put("topicFilter", "usa/" + random + "/" + i + "/+");
             ArrayNode expectedPublisherGroups = mapper.createArrayNode();
             expectedPublisherGroups.add(i);
             subscriberGroup.set("expectedPublisherGroups", expectedPublisherGroups);
-            subscriberGroup.set("persistentSessionInfo", null);
+            ObjectNode persistentSessionInfo = mapper.createObjectNode();
+            persistentSessionInfo.put("clientType", "APPLICATION");
+            subscriberGroup.set("persistentSessionInfo", persistentSessionInfo);
             subscriberGroup.set("clientIdPrefix", null);
 
             subscriberGroups.add(subscriberGroup);
-        }
-        return subscriberGroups;
-    }
 
-    private static ArrayNode createPublishersConfig(ObjectMapper mapper) {
-        ArrayNode publisherGroups = mapper.createArrayNode();
-        for (int i = 1; i <= 100; i++) {
             ObjectNode publisherGroup = mapper.createObjectNode();
 
             publisherGroup.put("id", i);
-            publisherGroup.put("publishers", 1);
-            publisherGroup.put("topicPrefix", "test/topic/" + i + "/");
+            publisherGroup.put("publishers", 50000);
+            publisherGroup.put("topicPrefix", "usa/" + random + "/" + i + "/");
             publisherGroup.set("clientIdPrefix", null);
 
             publisherGroups.add(publisherGroup);
         }
-        return publisherGroups;
+        result.set("publisherGroups", publisherGroups);
+        result.set("subscriberGroups", subscriberGroups);
+        return result;
     }
 
 }

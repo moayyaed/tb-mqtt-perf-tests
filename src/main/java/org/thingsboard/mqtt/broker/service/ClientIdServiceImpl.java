@@ -16,6 +16,7 @@
 package org.thingsboard.mqtt.broker.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
@@ -24,9 +25,11 @@ import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 @RequiredArgsConstructor
 public class ClientIdServiceImpl implements ClientIdService {
 
+    private final String random = RandomStringUtils.randomAlphabetic(5);
+
     @Override
     public String createSubscriberClientId(SubscriberGroup subscriberGroup, int subscriberId) {
-        return subscriberGroup.getClientIdPrefix() + subscriberId;
+        return subscriberGroup.getClientIdPrefix() + subscriberId + random;
     }
 
     @Override

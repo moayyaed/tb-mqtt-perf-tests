@@ -120,9 +120,12 @@ public class PublisherServiceImpl implements PublisherService {
     public void warmUpPublishers() throws Exception {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        CountDownLatch warmupCDL = new CountDownLatch(publisherInfos.size());
+        CountDownLatch warmupCDL = new CountDownLatch(publisherInfos.size() * publisherWarmUpCount);
         AtomicBoolean successfulWarmUp = new AtomicBoolean(true);
         for (int i = 0; i < publisherWarmUpCount; i++) {
+            log.info("Starting {} iteration of warmup!", i);
+            AtomicInteger counter = new AtomicInteger(0);
+
             for (PublisherInfo publisherInfo : publisherInfos.values()) {
                 try {
                     Message message = new Message(System.currentTimeMillis(), true, payloadGenerator.generatePayload());
@@ -135,6 +138,12 @@ public class PublisherServiceImpl implements PublisherService {
                                         warmupCDL.countDown();
                                     }),
                             testRunConfiguration.getPublisherQoS());
+                    int currentCounter = counter.incrementAndGet();
+                    if (currentCounter == maxTotalClientsPerIteration) {
+                        log.info("Reached {} counter of warmup! Sleeping for 2s", maxTotalClientsPerIteration);
+                        Thread.sleep(2000);
+                        counter.set(0);
+                    }
                 } catch (Exception e) {
                     log.error("[{}] Failed to publish", publisherInfo.getClientId(), e);
                     throw e;
@@ -159,8 +168,19 @@ public class PublisherServiceImpl implements PublisherService {
         AtomicInteger publishedMessagesPerPublisher = new AtomicInteger();
         int publishPeriodMs = 1000 / testRunConfiguration.getMaxMessagesPerPublisherPerSecond();
         AtomicLong lastPublishTickTime = new AtomicLong(System.currentTimeMillis());
+
+        int delay = publishPeriodMs / 100; // 10
+
+        int chunkSize;
+        if (maxTotalClientsPerIteration > 0) {
+            chunkSize = maxTotalClientsPerIteration / 100;
+        } else {
+            chunkSize = publisherInfos.values().size() / 100;
+        }
+        log.info("Chunk size is {}", chunkSize);
+
         publishScheduler.scheduleAtFixedRate(() -> {
-            if (publishedMessagesPerPublisher.getAndIncrement() >= testRunConfiguration.getTotalPublisherMessagesCount()) {
+            if (publishedMessagesPerPublisher.getAndIncrement() / 100 >= testRunConfiguration.getTotalPublisherMessagesCount()) {
                 return;
             }
             long now = System.currentTimeMillis();
@@ -171,15 +191,27 @@ public class PublisherServiceImpl implements PublisherService {
                 }
             }
             if (maxTotalClientsPerIteration > 0) {
-                for (int i = 0; i < maxTotalClientsPerIteration; i++) {
+
+
+                for (int i = 0; i < chunkSize; i++) {
                     process(publishSentLatencyStats, publishAcknowledgedStats, publisherInfoIterator.next());
                 }
+
+
+//                for (int i = 0; i < maxTotalClientsPerIteration; i++) {
+//                    process(publishSentLatencyStats, publishAcknowledgedStats, publisherInfoIterator.next());
+//                }
             } else {
-                for (PublisherInfo publisherInfo : publisherInfos.values()) {
-                    process(publishSentLatencyStats, publishAcknowledgedStats, publisherInfo);
+
+                for (int i = 0; i < chunkSize; i++) {
+                    process(publishSentLatencyStats, publishAcknowledgedStats, publisherInfoIterator.next());
                 }
+
+//                for (PublisherInfo publisherInfo : publisherInfos.values()) {
+//                    process(publishSentLatencyStats, publishAcknowledgedStats, publisherInfo);
+//                }
             }
-        }, 0, publishPeriodMs, TimeUnit.MILLISECONDS);
+        }, 0, delay, TimeUnit.MILLISECONDS);
         return new PublishStats(publishSentLatencyStats, publishAcknowledgedStats);
     }
 

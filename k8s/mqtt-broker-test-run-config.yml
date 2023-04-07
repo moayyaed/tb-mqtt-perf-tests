@@ -22,8 +22,8 @@ metadata:
     name: mqtt-broker-test-run-config
 data:
   tb-mqtt-broker-performance-tests.conf: |
-    # Memory for 1Gi pod (0.5Gi heap + 0.5Gi stack and etc)
-    #export JAVA_OPTS="$JAVA_OPTS -Xmx512M -Xms512M -Xss384k -XX:+AlwaysPreTouch"
+    # Memory for 10Gi pod
+    export JAVA_OPTS="$JAVA_OPTS -Xmx4g -Xms4g -Xss320k -XX:+AlwaysPreTouch"
     export JAVA_OPTS="$JAVA_OPTS -Dplatform=deb"
     export JAVA_OPTS="$JAVA_OPTS -XX:+IgnoreUnrecognizedVMOptions -XX:+HeapDumpOnOutOfMemoryError"
     export JAVA_OPTS="$JAVA_OPTS -XX:-UseBiasedLocking -XX:+UseTLAB -XX:+ResizeTLAB -XX:+PerfDisableSharedMem -XX:+UseCondCardMark"
@@ -61,132 +61,253 @@ data:
       "publisherGroups": [
         {
           "id": 1,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/brkl/east/",
+          "publishers": 50000,
+          "topicPrefix": "usa/laCCg/1/",
           "clientIdPrefix": null
         },
         {
           "id": 2,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/brkl/west/",
+          "publishers": 50000,
+          "topicPrefix": "usa/MCNgL/2/",
           "clientIdPrefix": null
         },
         {
           "id": 3,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/brkl/north/",
+          "publishers": 50000,
+          "topicPrefix": "usa/wLAmt/3/",
           "clientIdPrefix": null
         },
         {
           "id": 4,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/brkl/south/",
+          "publishers": 50000,
+          "topicPrefix": "usa/mHQcb/4/",
           "clientIdPrefix": null
         },
         {
           "id": 5,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/manh/east/",
+          "publishers": 50000,
+          "topicPrefix": "usa/YfLLh/5/",
           "clientIdPrefix": null
         },
         {
           "id": 6,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/manh/west/",
+          "publishers": 50000,
+          "topicPrefix": "usa/AMlns/6/",
           "clientIdPrefix": null
         },
         {
           "id": 7,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/manh/north/",
+          "publishers": 50000,
+          "topicPrefix": "usa/ZHtjJ/7/",
           "clientIdPrefix": null
         },
         {
           "id": 8,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/manh/south/",
+          "publishers": 50000,
+          "topicPrefix": "usa/tSSjj/8/",
           "clientIdPrefix": null
         },
         {
           "id": 9,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/qns/east/",
+          "publishers": 50000,
+          "topicPrefix": "usa/djEHI/9/",
           "clientIdPrefix": null
         },
         {
           "id": 10,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/qns/west/",
+          "publishers": 50000,
+          "topicPrefix": "usa/JAerQ/10/",
           "clientIdPrefix": null
         },
         {
           "id": 11,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/qns/north/",
+          "publishers": 50000,
+          "topicPrefix": "usa/SVSDO/11/",
           "clientIdPrefix": null
         },
         {
           "id": 12,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/qns/south/",
+          "publishers": 50000,
+          "topicPrefix": "usa/iIzSw/12/",
           "clientIdPrefix": null
         },
         {
           "id": 13,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/brx/east/",
+          "publishers": 50000,
+          "topicPrefix": "usa/jhKoL/13/",
           "clientIdPrefix": null
         },
         {
           "id": 14,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/brx/west/",
+          "publishers": 50000,
+          "topicPrefix": "usa/TmwVe/14/",
           "clientIdPrefix": null
         },
         {
           "id": 15,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/brx/north/",
+          "publishers": 50000,
+          "topicPrefix": "usa/feYHp/15/",
           "clientIdPrefix": null
         },
         {
           "id": 16,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/brx/south/",
+          "publishers": 50000,
+          "topicPrefix": "usa/ziwoQ/16/",
           "clientIdPrefix": null
         },
         {
           "id": 17,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/si/east/",
+          "publishers": 50000,
+          "topicPrefix": "usa/fVxFv/17/",
           "clientIdPrefix": null
         },
         {
           "id": 18,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/si/west/",
+          "publishers": 50000,
+          "topicPrefix": "usa/zAabt/18/",
           "clientIdPrefix": null
         },
         {
           "id": 19,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/si/north/",
+          "publishers": 50000,
+          "topicPrefix": "usa/EhimP/19/",
           "clientIdPrefix": null
         },
         {
           "id": 20,
-          "publishers": 0,
-          "topicPrefix": "usa/ny/si/south/",
+          "publishers": 50000,
+          "topicPrefix": "usa/hPWMS/20/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 21,
+          "publishers": 50000,
+          "topicPrefix": "usa/POtWQ/21/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 22,
+          "publishers": 50000,
+          "topicPrefix": "usa/OLfQK/22/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 23,
+          "publishers": 50000,
+          "topicPrefix": "usa/tsvZZ/23/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 24,
+          "publishers": 50000,
+          "topicPrefix": "usa/NeTWa/24/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 25,
+          "publishers": 50000,
+          "topicPrefix": "usa/YouyA/25/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 26,
+          "publishers": 50000,
+          "topicPrefix": "usa/mcuAs/26/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 27,
+          "publishers": 50000,
+          "topicPrefix": "usa/kWoAt/27/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 28,
+          "publishers": 50000,
+          "topicPrefix": "usa/rvQxa/28/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 29,
+          "publishers": 50000,
+          "topicPrefix": "usa/ZOFZW/29/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 30,
+          "publishers": 50000,
+          "topicPrefix": "usa/lxNnN/30/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 31,
+          "publishers": 50000,
+          "topicPrefix": "usa/ZtCTX/31/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 32,
+          "publishers": 50000,
+          "topicPrefix": "usa/OYlfk/32/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 33,
+          "publishers": 50000,
+          "topicPrefix": "usa/YtiIT/33/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 34,
+          "publishers": 50000,
+          "topicPrefix": "usa/FBsYR/34/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 35,
+          "publishers": 50000,
+          "topicPrefix": "usa/YcMkx/35/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 36,
+          "publishers": 50000,
+          "topicPrefix": "usa/ffpUz/36/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 37,
+          "publishers": 50000,
+          "topicPrefix": "usa/xGyaZ/37/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 38,
+          "publishers": 50000,
+          "topicPrefix": "usa/LEyNJ/38/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 39,
+          "publishers": 50000,
+          "topicPrefix": "usa/JBmsl/39/",
+          "clientIdPrefix": null
+        },
+        {
+          "id": 40,
+          "publishers": 50000,
+          "topicPrefix": "usa/DCYvj/40/",
           "clientIdPrefix": null
         }
       ],
       "subscriberGroups": [
         {
           "id": 1,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/brkl/east/+",
+          "subscribers": 1,
+          "topicFilter": "usa/laCCg/1/+",
           "expectedPublisherGroups": [
-            1],
+            1
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -194,10 +315,11 @@ data:
         },
         {
           "id": 2,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/brkl/west/+",
+          "subscribers": 1,
+          "topicFilter": "usa/MCNgL/2/+",
           "expectedPublisherGroups": [
-            2],
+            2
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -205,10 +327,11 @@ data:
         },
         {
           "id": 3,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/brkl/north/+",
+          "subscribers": 1,
+          "topicFilter": "usa/wLAmt/3/+",
           "expectedPublisherGroups": [
-            3],
+            3
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -216,10 +339,11 @@ data:
         },
         {
           "id": 4,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/brkl/south/+",
+          "subscribers": 1,
+          "topicFilter": "usa/mHQcb/4/+",
           "expectedPublisherGroups": [
-            4],
+            4
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -227,10 +351,11 @@ data:
         },
         {
           "id": 5,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/manh/east/+",
+          "subscribers": 1,
+          "topicFilter": "usa/YfLLh/5/+",
           "expectedPublisherGroups": [
-            5],
+            5
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -238,10 +363,11 @@ data:
         },
         {
           "id": 6,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/manh/west/+",
+          "subscribers": 1,
+          "topicFilter": "usa/AMlns/6/+",
           "expectedPublisherGroups": [
-            6],
+            6
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -249,10 +375,11 @@ data:
         },
         {
           "id": 7,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/manh/north/+",
+          "subscribers": 1,
+          "topicFilter": "usa/ZHtjJ/7/+",
           "expectedPublisherGroups": [
-            7],
+            7
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -260,10 +387,11 @@ data:
         },
         {
           "id": 8,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/manh/south/+",
+          "subscribers": 1,
+          "topicFilter": "usa/tSSjj/8/+",
           "expectedPublisherGroups": [
-            8],
+            8
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -271,10 +399,11 @@ data:
         },
         {
           "id": 9,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/qns/east/+",
+          "subscribers": 1,
+          "topicFilter": "usa/djEHI/9/+",
           "expectedPublisherGroups": [
-            9],
+            9
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -282,8 +411,8 @@ data:
         },
         {
           "id": 10,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/qns/west/+",
+          "subscribers": 1,
+          "topicFilter": "usa/JAerQ/10/+",
           "expectedPublisherGroups": [
             10
           ],
@@ -294,10 +423,11 @@ data:
         },
         {
           "id": 11,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/qns/north/+",
+          "subscribers": 1,
+          "topicFilter": "usa/SVSDO/11/+",
           "expectedPublisherGroups": [
-            11],
+            11
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -305,10 +435,11 @@ data:
         },
         {
           "id": 12,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/qns/south/+",
+          "subscribers": 1,
+          "topicFilter": "usa/iIzSw/12/+",
           "expectedPublisherGroups": [
-            12],
+            12
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -316,10 +447,11 @@ data:
         },
         {
           "id": 13,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/brx/east/+",
+          "subscribers": 1,
+          "topicFilter": "usa/jhKoL/13/+",
           "expectedPublisherGroups": [
-            13],
+            13
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -327,10 +459,11 @@ data:
         },
         {
           "id": 14,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/brx/west/+",
+          "subscribers": 1,
+          "topicFilter": "usa/TmwVe/14/+",
           "expectedPublisherGroups": [
-            14],
+            14
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -338,10 +471,11 @@ data:
         },
         {
           "id": 15,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/brx/north/+",
+          "subscribers": 1,
+          "topicFilter": "usa/feYHp/15/+",
           "expectedPublisherGroups": [
-            15],
+            15
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -349,8 +483,8 @@ data:
         },
         {
           "id": 16,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/brx/south/+",
+          "subscribers": 1,
+          "topicFilter": "usa/ziwoQ/16/+",
           "expectedPublisherGroups": [
             16
           ],
@@ -361,8 +495,8 @@ data:
         },
         {
           "id": 17,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/si/east/+",
+          "subscribers": 1,
+          "topicFilter": "usa/fVxFv/17/+",
           "expectedPublisherGroups": [
             17
           ],
@@ -373,10 +507,11 @@ data:
         },
         {
           "id": 18,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/si/west/+",
+          "subscribers": 1,
+          "topicFilter": "usa/zAabt/18/+",
           "expectedPublisherGroups": [
-            18],
+            18
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -384,10 +519,11 @@ data:
         },
         {
           "id": 19,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/si/north/+",
+          "subscribers": 1,
+          "topicFilter": "usa/EhimP/19/+",
           "expectedPublisherGroups": [
-            19],
+            19
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
@@ -395,19 +531,260 @@ data:
         },
         {
           "id": 20,
-          "subscribers": 0,
-          "topicFilter": "usa/ny/si/south/+",
+          "subscribers": 1,
+          "topicFilter": "usa/hPWMS/20/+",
           "expectedPublisherGroups": [
-            20],
+            20
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 21,
+          "subscribers": 1,
+          "topicFilter": "usa/POtWQ/21/+",
+          "expectedPublisherGroups": [
+            21
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 22,
+          "subscribers": 1,
+          "topicFilter": "usa/OLfQK/22/+",
+          "expectedPublisherGroups": [
+            22
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 23,
+          "subscribers": 1,
+          "topicFilter": "usa/tsvZZ/23/+",
+          "expectedPublisherGroups": [
+            23
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 24,
+          "subscribers": 1,
+          "topicFilter": "usa/NeTWa/24/+",
+          "expectedPublisherGroups": [
+            24
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 25,
+          "subscribers": 1,
+          "topicFilter": "usa/YouyA/25/+",
+          "expectedPublisherGroups": [
+            25
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 26,
+          "subscribers": 1,
+          "topicFilter": "usa/mcuAs/26/+",
+          "expectedPublisherGroups": [
+            26
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 27,
+          "subscribers": 1,
+          "topicFilter": "usa/kWoAt/27/+",
+          "expectedPublisherGroups": [
+            27
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 28,
+          "subscribers": 1,
+          "topicFilter": "usa/rvQxa/28/+",
+          "expectedPublisherGroups": [
+            28
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 29,
+          "subscribers": 1,
+          "topicFilter": "usa/ZOFZW/29/+",
+          "expectedPublisherGroups": [
+            29
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 30,
+          "subscribers": 1,
+          "topicFilter": "usa/lxNnN/30/+",
+          "expectedPublisherGroups": [
+            30
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 31,
+          "subscribers": 1,
+          "topicFilter": "usa/ZtCTX/31/+",
+          "expectedPublisherGroups": [
+            31
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 32,
+          "subscribers": 1,
+          "topicFilter": "usa/OYlfk/32/+",
+          "expectedPublisherGroups": [
+            32
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 33,
+          "subscribers": 1,
+          "topicFilter": "usa/YtiIT/33/+",
+          "expectedPublisherGroups": [
+            33
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 34,
+          "subscribers": 1,
+          "topicFilter": "usa/FBsYR/34/+",
+          "expectedPublisherGroups": [
+            34
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 35,
+          "subscribers": 1,
+          "topicFilter": "usa/YcMkx/35/+",
+          "expectedPublisherGroups": [
+            35
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 36,
+          "subscribers": 1,
+          "topicFilter": "usa/ffpUz/36/+",
+          "expectedPublisherGroups": [
+            36
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 37,
+          "subscribers": 1,
+          "topicFilter": "usa/xGyaZ/37/+",
+          "expectedPublisherGroups": [
+            37
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 38,
+          "subscribers": 1,
+          "topicFilter": "usa/LEyNJ/38/+",
+          "expectedPublisherGroups": [
+            38
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 39,
+          "subscribers": 1,
+          "topicFilter": "usa/JBmsl/39/+",
+          "expectedPublisherGroups": [
+            39
+          ],
+          "persistentSessionInfo": {
+            "clientType": "APPLICATION"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 40,
+          "subscribers": 1,
+          "topicFilter": "usa/DCYvj/40/+",
+          "expectedPublisherGroups": [
+            40
+          ],
           "persistentSessionInfo": {
             "clientType": "APPLICATION"
           },
           "clientIdPrefix": null
         }
       ],
-      "dummyClients": 4000000,
-      "secondsToRun": 360,
-      "additionalSecondsToWait": 0,
+      "dummyClients": 0,
+      "secondsToRun": 300,
+      "additionalSecondsToWait": 5,
       "maxMsgsPerPublisherPerSecond": 1,
       "publisherQosValue": 1,
       "subscriberQosValue": 1,

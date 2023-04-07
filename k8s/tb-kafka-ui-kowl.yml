@@ -33,7 +33,7 @@ spec:
       imagePullSecrets:
         - name: regcred
       nodeSelector:
-        role: tb-perf-test
+        role: tb-kafka-ui
       containers:
         - name: server
           imagePullPolicy: Always
