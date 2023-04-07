@@ -139,7 +139,7 @@ public class PublisherServiceImpl implements PublisherService {
                                     }),
                             testRunConfiguration.getPublisherQoS());
                     int currentCounter = counter.incrementAndGet();
-                    if (currentCounter == maxTotalClientsPerIteration) {
+                    if (maxTotalClientsPerIteration > 0 && currentCounter == maxTotalClientsPerIteration) {
                         log.info("Reached {} counter of warmup! Sleeping for 2s", maxTotalClientsPerIteration);
                         Thread.sleep(2000);
                         counter.set(0);
@@ -169,7 +169,7 @@ public class PublisherServiceImpl implements PublisherService {
         int publishPeriodMs = 1000 / testRunConfiguration.getMaxMessagesPerPublisherPerSecond();
         AtomicLong lastPublishTickTime = new AtomicLong(System.currentTimeMillis());
 
-        int delay = publishPeriodMs / 100; // 10
+        int shortenedPublishPeriodMs = publishPeriodMs / 100;
 
         int chunkSize;
         if (maxTotalClientsPerIteration > 0) {
@@ -190,28 +190,10 @@ public class PublisherServiceImpl implements PublisherService {
                     log.debug("Pause between ticks is bigger than expected, expected pause - {} ms, actual pause - {} ms", publishPeriodMs, actualPublishTickPause);
                 }
             }
-            if (maxTotalClientsPerIteration > 0) {
-
-
-                for (int i = 0; i < chunkSize; i++) {
-                    process(publishSentLatencyStats, publishAcknowledgedStats, publisherInfoIterator.next());
-                }
-
-
-//                for (int i = 0; i < maxTotalClientsPerIteration; i++) {
-//                    process(publishSentLatencyStats, publishAcknowledgedStats, publisherInfoIterator.next());
-//                }
-            } else {
-
-                for (int i = 0; i < chunkSize; i++) {
-                    process(publishSentLatencyStats, publishAcknowledgedStats, publisherInfoIterator.next());
-                }
-
-//                for (PublisherInfo publisherInfo : publisherInfos.values()) {
-//                    process(publishSentLatencyStats, publishAcknowledgedStats, publisherInfo);
-//                }
+            for (int i = 0; i < chunkSize; i++) {
+                process(publishSentLatencyStats, publishAcknowledgedStats, publisherInfoIterator.next());
             }
-        }, 0, delay, TimeUnit.MILLISECONDS);
+        }, 0, shortenedPublishPeriodMs, TimeUnit.MILLISECONDS);
         return new PublishStats(publishSentLatencyStats, publishAcknowledgedStats);
     }
 
