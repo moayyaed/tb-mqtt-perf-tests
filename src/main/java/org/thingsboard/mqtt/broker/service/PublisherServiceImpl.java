@@ -75,10 +75,6 @@ public class PublisherServiceImpl implements PublisherService {
     private int publisherWarmUpCount;
     @Value("${test-run.publisher-warmup-wait-time}")
     private int warmupWaitTime;
-    @Value("${test-run.publisher_clients_persistent:false}")
-    private boolean publisherClientsPersistent;
-    @Value("${test-run.clear-persisted-sessions-wait-time}")
-    private int waitTime;
     @Value("${stats.enabled:true}")
     private boolean statsEnabled;
     @Value("${test-run.max_total_clients_per_iteration:0}")
@@ -100,7 +96,7 @@ public class PublisherServiceImpl implements PublisherService {
             int publisherIndex = preConnectedPublisherInfo.getPublisherIndex();
             String clientId = clientIdService.createPublisherClientId(publisherGroup, publisherIndex);
             String topic = publisherGroup.getTopicPrefix() + publisherIndex;
-            MqttClient pubClient = clientInitializer.createClient(clientId, MqttPerformanceTest.DEFAULT_USER_NAME, !publisherClientsPersistent);
+            MqttClient pubClient = clientInitializer.createClient(clientId, MqttPerformanceTest.DEFAULT_USER_NAME);
             clientInitializer.connectClient(CallbackUtil.createConnectCallback(
                             connectResult -> {
                                 publisherInfos.put(clientId, new PublisherInfo(pubClient, clientId, topic,
@@ -245,36 +241,6 @@ public class PublisherServiceImpl implements PublisherService {
             } catch (Exception e) {
                 log.error("[{}] Failed to disconnect publisher", publisherInfo.getClientId());
             }
-        }
-    }
-
-    @Override
-    public void clearPersistedSessions() throws InterruptedException {
-        if (publisherClientsPersistent) {
-            log.info("Start clear publishers persisted Sessions.");
-            StopWatch stopWatch = new StopWatch();
-            stopWatch.start();
-
-            CountDownLatch countDownLatch = new CountDownLatch(publisherInfos.size());
-            for (PublisherInfo publisherInfo : publisherInfos.values()) {
-                publisherInfo.getPublisher().getClientConfig().setCleanSession(true);
-                clientInitializer.connectClient(CallbackUtil.createConnectCallback(
-                                connectResult -> {
-                                    publisherInfo.getPublisher().disconnect();
-                                    countDownLatch.countDown();
-                                }, t -> {
-                                    log.warn("[{}] Failed to clear publisher persisted session", publisherInfo.getPublisher().getClientConfig().getClientId());
-                                    publisherInfo.getPublisher().disconnect();
-                                    countDownLatch.countDown();
-                                }
-                        ),
-                        publisherInfo.getPublisher());
-            }
-
-            var result = countDownLatch.await(waitTime, TimeUnit.SECONDS);
-            log.info("The result of await processing for publisher clients clear persisted sessions is: {}", result);
-            stopWatch.stop();
-            log.info("Clearing {} publisher persisted sessions took {} ms", publisherInfos.size(), stopWatch.getTime());
         }
     }
 

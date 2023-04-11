@@ -128,8 +128,6 @@ public class MqttPerformanceTest {
         Thread.sleep(waitTimeAfterDisconnectsMs);
 
         persistedMqttClientService.clearPersistedSessions();
-        dummyClientService.clearPersistedSessions();
-        publisherService.clearPersistedSessions();
 
         SubscriberAnalysisResult analysisResult = subscriberService.analyzeReceivedMessages();
         DescriptiveStatistics acknowledgedStats = publishStats.getPublishAcknowledgedStats();

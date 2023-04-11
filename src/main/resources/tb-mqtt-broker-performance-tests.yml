@@ -67,7 +67,6 @@ test-run:
   clear-persisted-sessions-wait-time: "${TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS:60}"
   wait-time-after-clients-disconnect-ms: "${TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT:5000}"
   wait-time-clients-closed-ms: "${TEST_RUN_WAIT_TIME_MS_CLIENTS_CLOSED:5000}"
-  publisher_clients_persistent: "${TEST_RUN_PUBLISHER_CLIENTS_PERSISTENT:false}"
   max_total_clients_per_iteration: "${TEST_RUN_MAX_TOTAL_CLIENTS_PER_ITERATION:0}" # 0 means no limit
   logs:
     msg-processing-queue-period: "${TEST_RUN_LOGS_MSG_PROCESSING_QUEUE_PERIOD:15000}"

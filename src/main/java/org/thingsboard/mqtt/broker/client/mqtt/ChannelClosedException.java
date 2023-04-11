@@ -15,9 +15,6 @@
  */
 package org.thingsboard.mqtt.broker.client.mqtt;
 
-/**
- * Created by Valerii Sosliuk on 12/26/2017.
- */
 public class ChannelClosedException extends RuntimeException {
 
     private static final long serialVersionUID = 6266638352424706909L;
