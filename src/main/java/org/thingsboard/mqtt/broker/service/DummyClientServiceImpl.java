@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -34,24 +33,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
 public class DummyClientServiceImpl implements DummyClientService {
+
     private final ClientInitializer clientInitializer;
     private final TestRunConfiguration testRunConfiguration;
     private final ClientIdService clientIdService;
     private final TestRunClusterConfig testRunClusterConfig;
     private final ClusterProcessService clusterProcessService;
-
-    @Value("${test-run.dummy_clients_persistent:false}")
-    private boolean dummyClientsPersistent;
-    @Value("${test-run.clear-persisted-sessions-wait-time}")
-    private int waitTime;
 
     private Map<String, MqttClient> dummyClients;
 
@@ -73,7 +66,7 @@ public class DummyClientServiceImpl implements DummyClientService {
 
         clusterProcessService.process("DUMMIES_CONNECT", preConnectedDummyIndexes, (latch, dummyId) -> {
             String clientId = clientIdService.createDummyClientId(dummyId);
-            MqttClient dummyClient = clientInitializer.createClient(clientId, MqttPerformanceTest.DEFAULT_USER_NAME, !dummyClientsPersistent);
+            MqttClient dummyClient = clientInitializer.createClient(clientId, MqttPerformanceTest.DEFAULT_USER_NAME);
             long connectionStart = System.currentTimeMillis();
             clientInitializer.connectClient(CallbackUtil.createConnectCallback(connectResult -> {
                         dummyClients.put(clientId, dummyClient);
@@ -107,40 +100,7 @@ public class DummyClientServiceImpl implements DummyClientService {
             }
             clientIndex++;
         }
-        if (!dummyClientsPersistent) {
-            dummyClients = null;
-        }
-    }
-
-    @Override
-    public void clearPersistedSessions() throws InterruptedException {
-        if (dummyClientsPersistent) {
-            log.info("Start clear dummy persisted Sessions.");
-            StopWatch stopWatch = new StopWatch();
-            stopWatch.start();
-
-            CountDownLatch countDownLatch = new CountDownLatch(dummyClients.size());
-            for (MqttClient mqttClient : dummyClients.values()) {
-                mqttClient.getClientConfig().setCleanSession(true);
-                clientInitializer.connectClient(CallbackUtil.createConnectCallback(
-                                connectResult -> {
-                                    mqttClient.disconnect();
-                                    countDownLatch.countDown();
-                                }, t -> {
-                                    log.warn("[{}] Failed to clear dummy persisted session", mqttClient.getClientConfig().getClientId());
-                                    mqttClient.disconnect();
-                                    countDownLatch.countDown();
-                                }
-                        ),
-                        mqttClient);
-            }
-
-            var result = countDownLatch.await(waitTime, TimeUnit.SECONDS);
-            log.info("The result of await processing for dummy clients clear persisted sessions is: {}", result);
-            stopWatch.stop();
-            log.info("Clearing {} dummy persisted sessions took {} ms", dummyClients.size(), stopWatch.getTime());
-            dummyClients = null;
-        }
+        dummyClients = null;
     }
 
     @PreDestroy
