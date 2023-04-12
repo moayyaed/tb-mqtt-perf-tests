@@ -17,9 +17,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mqtt-broker-orchestrator-config
+  name: broker-tests-orchestrator-config
   labels:
-    name: mqtt-broker-orchestrator-config
+    name: broker-tests-orchestrator-config
 data:
   tb-mqtt-broker-orchestrator-tests.conf: |
     export JAVA_OPTS="$JAVA_OPTS -Xmx512M -Xms512M"

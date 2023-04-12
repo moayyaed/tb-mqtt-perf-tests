@@ -19,8 +19,12 @@ set -e
 
 kubectl config set-context $(kubectl config current-context) --namespace=thingsboard-mqtt-broker
 
-kubectl delete -f mqtt-broker-test-run-config.yml
-kubectl delete -f mqtt-broker-orch-config.yml
+kubectl delete -f broker-tests-publishers-config.yml
+kubectl delete -f broker-tests-subscribers-config.yml
+kubectl delete -f broker-tests-orch-config.yml
 
-kubectl delete -f broker-tests.yml
+kubectl delete -f broker-tests-publishers.yml
+kubectl delete -f broker-tests-subscribers.yml
+kubectl delete -f broker-tests-orch.yml
+
 kubectl delete -f tb-kafka-ui-kowl.yml

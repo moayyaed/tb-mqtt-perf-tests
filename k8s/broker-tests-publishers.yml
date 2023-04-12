@@ -17,28 +17,28 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: broker-tests
+  name: broker-tests-publishers
 spec:
-  serviceName: broker-tests
+  serviceName: broker-tests-publishers
   #  replicas: 40
   replicas: 80
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
-      app: broker-tests
+      app: broker-tests-publishers
   template:
     metadata:
       labels:
-        app: broker-tests
+        app: broker-tests-publishers
     spec:
       securityContext:
         sysctls:
           - name: net.ipv4.ip_local_port_range
             value: "15534 65535"
       volumes:
-        - name: mqtt-broker-test-run-config
+        - name: broker-tests-publishers-config
           configMap:
-            name: mqtt-broker-test-run-config
+            name: broker-tests-publishers-config
             items:
               - key: test_run_config.json
                 path: test_run_config.json
@@ -47,7 +47,7 @@ spec:
               - key: tb-mqtt-broker-performance-tests.conf
                 path: tb-mqtt-broker-performance-tests.conf
       nodeSelector:
-        role: tb-perf-test
+        role: tb-perf-test-publishers
       containers:
         - name: server
           imagePullPolicy: Always
@@ -109,92 +109,18 @@ spec:
               value: "3"
           volumeMounts:
             - mountPath: /config
-              name: mqtt-broker-test-run-config
+              name: broker-tests-publishers-config
           command: [ 'sh', '-c', 'while [ ! -f /tmp/test-finished ]; do sleep 2; done;' ]
       restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: broker-tests
+  name: broker-tests-publishers
 spec:
   type: ClusterIP
   selector:
-    app: broker-tests
-  ports:
-    - port: 8088
-      name: http
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: broker-tests-orchestrator
-spec:
-  serviceName: broker-tests-orchestrator
-  replicas: 1
-  selector:
-    matchLabels:
-      app: broker-tests-orchestrator
-  template:
-    metadata:
-      labels:
-        app: broker-tests-orchestrator
-    spec:
-      volumes:
-        - name: mqtt-broker-orchestrator-config
-          configMap:
-            name: mqtt-broker-orchestrator-config
-            items:
-              - key: logback.xml
-                path: logback.xml
-              - key: tb-mqtt-broker-orchestrator-tests.conf
-                path: tb-mqtt-broker-performance-tests.conf
-      nodeSelector:
-        role: tb-kafka-ui
-      containers:
-        - name: server
-          imagePullPolicy: Always
-          image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.49
-          resources:
-            limits:
-              cpu: 1
-              memory: 1Gi
-            requests:
-              cpu: 1
-              memory: 1Gi
-          ports:
-            - containerPort: 8088
-              name: http
-          env:
-            - name: ORCHESTRATION_NODE
-              value: "true"
-            - name: HTTP_BIND_PORT
-              value: "8088"
-          volumeMounts:
-            - mountPath: /config
-              name: mqtt-broker-orchestrator-config
-      #            - mountPath: /var/log/tb-mqtt-broker-performance-tests/
-      #              name: logs
-      #              readOnly: false
-      restartPolicy: Always
-#  volumeClaimTemplates:
-#    - metadata:
-#        name: logs
-#      spec:
-#        accessModes:
-#          - ReadWriteOnce
-#        resources:
-#          requests:
-#            storage: 100Mi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: broker-tests-orchestrator
-spec:
-  type: ClusterIP
-  selector:
-    app: broker-tests-orchestrator
+    app: broker-tests-publishers
   ports:
     - port: 8088
       name: http
