@@ -76,7 +76,7 @@ public class OrchestratorController {
                     try {
                         testRestService.notifyClusterIsReady(nodeUrl);
                     } catch (Exception e) {
-                        log.warn("Failed to notify {} node", nodeUrl);
+                        log.warn("Failed to notify {} node", nodeUrl, e);
                     }
                 }
                 nodeUrls.clear();

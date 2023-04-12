@@ -61,241 +61,241 @@ data:
       "publisherGroups": [
         {
           "id": 1,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/laCCg/1/",
           "clientIdPrefix": null
         },
         {
           "id": 2,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/MCNgL/2/",
           "clientIdPrefix": null
         },
         {
           "id": 3,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/wLAmt/3/",
           "clientIdPrefix": null
         },
         {
           "id": 4,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/mHQcb/4/",
           "clientIdPrefix": null
         },
         {
           "id": 5,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/YfLLh/5/",
           "clientIdPrefix": null
         },
         {
           "id": 6,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/AMlns/6/",
           "clientIdPrefix": null
         },
         {
           "id": 7,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/ZHtjJ/7/",
           "clientIdPrefix": null
         },
         {
           "id": 8,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/tSSjj/8/",
           "clientIdPrefix": null
         },
         {
           "id": 9,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/djEHI/9/",
           "clientIdPrefix": null
         },
         {
           "id": 10,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/JAerQ/10/",
           "clientIdPrefix": null
         },
         {
           "id": 11,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/SVSDO/11/",
           "clientIdPrefix": null
         },
         {
           "id": 12,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/iIzSw/12/",
           "clientIdPrefix": null
         },
         {
           "id": 13,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/jhKoL/13/",
           "clientIdPrefix": null
         },
         {
           "id": 14,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/TmwVe/14/",
           "clientIdPrefix": null
         },
         {
           "id": 15,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/feYHp/15/",
           "clientIdPrefix": null
         },
         {
           "id": 16,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/ziwoQ/16/",
           "clientIdPrefix": null
         },
         {
           "id": 17,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/fVxFv/17/",
           "clientIdPrefix": null
         },
         {
           "id": 18,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/zAabt/18/",
           "clientIdPrefix": null
         },
         {
           "id": 19,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/EhimP/19/",
           "clientIdPrefix": null
         },
         {
           "id": 20,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/hPWMS/20/",
           "clientIdPrefix": null
         },
         {
           "id": 21,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/POtWQ/21/",
           "clientIdPrefix": null
         },
         {
           "id": 22,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/OLfQK/22/",
           "clientIdPrefix": null
         },
         {
           "id": 23,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/tsvZZ/23/",
           "clientIdPrefix": null
         },
         {
           "id": 24,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/NeTWa/24/",
           "clientIdPrefix": null
         },
         {
           "id": 25,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/YouyA/25/",
           "clientIdPrefix": null
         },
         {
           "id": 26,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/mcuAs/26/",
           "clientIdPrefix": null
         },
         {
           "id": 27,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/kWoAt/27/",
           "clientIdPrefix": null
         },
         {
           "id": 28,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/rvQxa/28/",
           "clientIdPrefix": null
         },
         {
           "id": 29,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/ZOFZW/29/",
           "clientIdPrefix": null
         },
         {
           "id": 30,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/lxNnN/30/",
           "clientIdPrefix": null
         },
         {
           "id": 31,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/ZtCTX/31/",
           "clientIdPrefix": null
         },
         {
           "id": 32,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/OYlfk/32/",
           "clientIdPrefix": null
         },
         {
           "id": 33,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/YtiIT/33/",
           "clientIdPrefix": null
         },
         {
           "id": 34,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/FBsYR/34/",
           "clientIdPrefix": null
         },
         {
           "id": 35,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/YcMkx/35/",
           "clientIdPrefix": null
         },
         {
           "id": 36,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/ffpUz/36/",
           "clientIdPrefix": null
         },
         {
           "id": 37,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/xGyaZ/37/",
           "clientIdPrefix": null
         },
         {
           "id": 38,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/LEyNJ/38/",
           "clientIdPrefix": null
         },
         {
           "id": 39,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/JBmsl/39/",
           "clientIdPrefix": null
         },
         {
           "id": 40,
-          "publishers": 50000,
+          "publishers": 100000,
           "topicPrefix": "usa/DCYvj/40/",
           "clientIdPrefix": null
         }
@@ -303,7 +303,7 @@ data:
       "subscriberGroups": [],
       "dummyClients": 0,
       "secondsToRun": 300,
-      "additionalSecondsToWait": 5,
+      "additionalSecondsToWait": 0,
       "maxMsgsPerPublisherPerSecond": 1,
       "publisherQosValue": 1,
       "subscriberQosValue": 1,
