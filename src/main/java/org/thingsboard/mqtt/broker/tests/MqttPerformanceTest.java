@@ -106,14 +106,15 @@ public class MqttPerformanceTest {
         dummyClientService.connectDummyClients();
 
         publisherService.connectPublishers();
-        boolean orchestratorNotified = testRestService.notifyNodeIsReady();
-        if (orchestratorNotified) {
-            clusterSynchronizer.awaitClusterReady();
-        }
 
         Thread.sleep(2000);
         publisherService.warmUpPublishers();
         Thread.sleep(publisherWarmUpSleepMs);
+
+        boolean orchestratorNotified = testRestService.notifyNodeIsReady();
+        if (orchestratorNotified) {
+            clusterSynchronizer.awaitClusterReady();
+        }
 
         log.info("Start msg publishing.");
         PublishStats publishStats = publisherService.startPublishing();

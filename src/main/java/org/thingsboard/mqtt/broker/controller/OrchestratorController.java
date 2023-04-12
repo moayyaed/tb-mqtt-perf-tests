@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.thingsboard.mqtt.broker.data.NodeInfo;
 import org.thingsboard.mqtt.broker.service.orchestration.TestRestService;
 
+import javax.annotation.PostConstruct;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -43,10 +44,17 @@ public class OrchestratorController {
 
     @Value("${test-run.max-cluster-wait-time}")
     private int waitTime;
+    @Value("${test-run.total-tests-count}")
+    private int totalTestsCount;
 
     private final Set<String> nodeUrls;
     private final AtomicLong lastNodeReady = new AtomicLong(0);
     private final ReentrantLock lock = new ReentrantLock();
+
+    @PostConstruct
+    public void init() {
+        log.info("totalTestsCount: {}", totalTestsCount);
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
@@ -60,7 +68,9 @@ public class OrchestratorController {
                 nodeUrls.clear();
             }
             nodeUrls.add(nodeInfo.getNodeUrl());
-            if (nodeUrls.size() == nodeInfo.getNodesInCluster()) {
+            int nodesInCluster = totalTestsCount > 0 ? totalTestsCount : nodeInfo.getNodesInCluster();
+            if (nodeUrls.size() == nodesInCluster) {
+                log.info("Got {} ready nodes", nodeUrls.size());
                 for (String nodeUrl : nodeUrls) {
                     log.info("Notifying {} node.", nodeUrl);
                     try {

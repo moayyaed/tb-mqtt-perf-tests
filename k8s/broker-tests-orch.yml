@@ -59,6 +59,8 @@ spec:
               value: "true"
             - name: HTTP_BIND_PORT
               value: "8088"
+            - name: TEST_RUN_TOTAL_TESTS_COUNT
+              value: "0"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-orchestrator-config
