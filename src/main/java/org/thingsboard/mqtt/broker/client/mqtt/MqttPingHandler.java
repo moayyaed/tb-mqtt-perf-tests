@@ -26,9 +26,11 @@ import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.ScheduledFuture;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 final class MqttPingHandler extends ChannelInboundHandlerAdapter {
 
     private final int keepaliveSeconds;
@@ -71,11 +73,13 @@ final class MqttPingHandler extends ChannelInboundHandlerAdapter {
     }
 
     private void sendPingReq(Channel channel) {
+        log.info("Sending ping request!");
         MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PINGREQ, false, MqttQoS.AT_MOST_ONCE, false, 0);
         channel.writeAndFlush(new MqttMessage(fixedHeader));
 
         if (this.pingRespTimeout == null) {
             this.pingRespTimeout = channel.eventLoop().schedule(() -> {
+                log.info("Sending disconnect due to inactivity!");
                 MqttFixedHeader fixedHeader2 = new MqttFixedHeader(MqttMessageType.DISCONNECT, false, MqttQoS.AT_MOST_ONCE, false, 0);
                 channel.writeAndFlush(new MqttMessage(fixedHeader2)).addListener(ChannelFutureListener.CLOSE);
                 //TODO: what do when the connection is closed ?
