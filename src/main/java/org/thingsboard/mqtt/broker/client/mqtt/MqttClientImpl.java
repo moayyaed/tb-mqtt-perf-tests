@@ -45,6 +45,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultPromise;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.Promise;
+import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.mqtt.broker.util.BasicCallback;
 
 import java.util.Collections;
@@ -62,6 +63,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Represents an MqttClientImpl connected to a single MQTT server. Will try to keep the connection going at all times
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
+@Slf4j
 final class MqttClientImpl implements MqttClient {
 
     private final Set<String> serverSubscriptions = new HashSet<>();
@@ -191,7 +193,10 @@ final class MqttClientImpl implements MqttClient {
             if (reconnect) {
                 this.reconnect = true;
             }
-            eventLoop.schedule(() -> connect(connectCallback, host, port, reconnect), clientConfig.getReconnectDelay(), TimeUnit.SECONDS);
+            eventLoop.schedule(() -> {
+                log.info("[{}] Client is reconnecting...", clientConfig.getClientId());
+                connect(connectCallback, host, port, reconnect);
+            }, clientConfig.getReconnectDelay(), TimeUnit.SECONDS);
         }
     }
 
