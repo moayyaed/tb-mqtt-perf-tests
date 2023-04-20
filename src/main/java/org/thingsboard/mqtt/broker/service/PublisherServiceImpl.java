@@ -73,6 +73,8 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Value("${test-run.publisher-warmup-count:0}")
     private int publisherWarmUpCount;
+    @Value("${test-run.publisher-warmup-iteration-sleep:0}")
+    private int publisherWarmUpIterationSleep;
     @Value("${test-run.publisher-warmup-wait-time}")
     private int warmupWaitTime;
     @Value("${stats.enabled:true}")
@@ -136,8 +138,8 @@ public class PublisherServiceImpl implements PublisherService {
                             testRunConfiguration.getPublisherQoS());
                     int currentCounter = counter.incrementAndGet();
                     if (maxTotalClientsPerIteration > 0 && currentCounter == maxTotalClientsPerIteration) {
-                        log.info("Reached {} counter of warmup! Sleeping for 2s", maxTotalClientsPerIteration);
-                        Thread.sleep(2000);
+                        log.info("Reached {} counter of warmup! Sleeping for {}ms", maxTotalClientsPerIteration, publisherWarmUpIterationSleep);
+                        Thread.sleep(publisherWarmUpIterationSleep);
                         counter.set(0);
                     }
                 } catch (Exception e) {

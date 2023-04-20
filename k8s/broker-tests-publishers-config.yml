@@ -22,8 +22,8 @@ metadata:
     name: broker-tests-publishers-config
 data:
   tb-mqtt-broker-performance-tests.conf: |
-    # Memory for 10Gi pod
-    export JAVA_OPTS="$JAVA_OPTS -Xmx4g -Xms4g -Xss320k -XX:+AlwaysPreTouch"
+    # Memory for 5Gi pod
+    export JAVA_OPTS="$JAVA_OPTS -Xmx2g -Xms2g -Xss320k -XX:+AlwaysPreTouch"
     export JAVA_OPTS="$JAVA_OPTS -Dplatform=deb"
     export JAVA_OPTS="$JAVA_OPTS -XX:+IgnoreUnrecognizedVMOptions -XX:+HeapDumpOnOutOfMemoryError"
     export JAVA_OPTS="$JAVA_OPTS -XX:-UseBiasedLocking -XX:+UseTLAB -XX:+ResizeTLAB -XX:+PerfDisableSharedMem -XX:+UseCondCardMark"
@@ -61,249 +61,249 @@ data:
       "publisherGroups": [
         {
           "id": 1,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/laCCg/1/",
           "clientIdPrefix": null
         },
         {
           "id": 2,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/MCNgL/2/",
           "clientIdPrefix": null
         },
         {
           "id": 3,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/wLAmt/3/",
           "clientIdPrefix": null
         },
         {
           "id": 4,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/mHQcb/4/",
           "clientIdPrefix": null
         },
         {
           "id": 5,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/YfLLh/5/",
           "clientIdPrefix": null
         },
         {
           "id": 6,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/AMlns/6/",
           "clientIdPrefix": null
         },
         {
           "id": 7,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/ZHtjJ/7/",
           "clientIdPrefix": null
         },
         {
           "id": 8,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/tSSjj/8/",
           "clientIdPrefix": null
         },
         {
           "id": 9,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/djEHI/9/",
           "clientIdPrefix": null
         },
         {
           "id": 10,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/JAerQ/10/",
           "clientIdPrefix": null
         },
         {
           "id": 11,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/SVSDO/11/",
           "clientIdPrefix": null
         },
         {
           "id": 12,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/iIzSw/12/",
           "clientIdPrefix": null
         },
         {
           "id": 13,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/jhKoL/13/",
           "clientIdPrefix": null
         },
         {
           "id": 14,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/TmwVe/14/",
           "clientIdPrefix": null
         },
         {
           "id": 15,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/feYHp/15/",
           "clientIdPrefix": null
         },
         {
           "id": 16,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/ziwoQ/16/",
           "clientIdPrefix": null
         },
         {
           "id": 17,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/fVxFv/17/",
           "clientIdPrefix": null
         },
         {
           "id": 18,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/zAabt/18/",
           "clientIdPrefix": null
         },
         {
           "id": 19,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/EhimP/19/",
           "clientIdPrefix": null
         },
         {
           "id": 20,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/hPWMS/20/",
           "clientIdPrefix": null
         },
         {
           "id": 21,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/POtWQ/21/",
           "clientIdPrefix": null
         },
         {
           "id": 22,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/OLfQK/22/",
           "clientIdPrefix": null
         },
         {
           "id": 23,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/tsvZZ/23/",
           "clientIdPrefix": null
         },
         {
           "id": 24,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/NeTWa/24/",
           "clientIdPrefix": null
         },
         {
           "id": 25,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/YouyA/25/",
           "clientIdPrefix": null
         },
         {
           "id": 26,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/mcuAs/26/",
           "clientIdPrefix": null
         },
         {
           "id": 27,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/kWoAt/27/",
           "clientIdPrefix": null
         },
         {
           "id": 28,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/rvQxa/28/",
           "clientIdPrefix": null
         },
         {
           "id": 29,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/ZOFZW/29/",
           "clientIdPrefix": null
         },
         {
           "id": 30,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/lxNnN/30/",
           "clientIdPrefix": null
         },
         {
           "id": 31,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/ZtCTX/31/",
           "clientIdPrefix": null
         },
         {
           "id": 32,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/OYlfk/32/",
           "clientIdPrefix": null
         },
         {
           "id": 33,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/YtiIT/33/",
           "clientIdPrefix": null
         },
         {
           "id": 34,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/FBsYR/34/",
           "clientIdPrefix": null
         },
         {
           "id": 35,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/YcMkx/35/",
           "clientIdPrefix": null
         },
         {
           "id": 36,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/ffpUz/36/",
           "clientIdPrefix": null
         },
         {
           "id": 37,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/xGyaZ/37/",
           "clientIdPrefix": null
         },
         {
           "id": 38,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/LEyNJ/38/",
           "clientIdPrefix": null
         },
         {
           "id": 39,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/JBmsl/39/",
           "clientIdPrefix": null
         },
         {
           "id": 40,
-          "publishers": 100000,
+          "publishers": 75000,
           "topicPrefix": "usa/DCYvj/40/",
           "clientIdPrefix": null
         }
       ],
       "subscriberGroups": [],
       "dummyClients": 0,
-      "secondsToRun": 300,
-      "additionalSecondsToWait": 0,
+      "secondsToRun": 180,
+      "additionalSecondsToWait": 10,
       "maxMsgsPerPublisherPerSecond": 1,
       "publisherQosValue": 1,
       "subscriberQosValue": 1,

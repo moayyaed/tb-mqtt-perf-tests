@@ -50,5 +50,5 @@ spec:
               name: http8080
           env:
             - name: KAFKA_BROKERS
-              value: ""
+              value: "kafka-headless:9092"
       restartPolicy: Always

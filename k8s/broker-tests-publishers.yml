@@ -20,8 +20,7 @@ metadata:
   name: broker-tests-publishers
 spec:
   serviceName: broker-tests-publishers
-#  replicas: 40
-  replicas: 80
+  replicas: 60
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -34,7 +33,7 @@ spec:
       securityContext:
         sysctls:
           - name: net.ipv4.ip_local_port_range
-            value: "15534 65535"
+            value: "5000 65535"
       volumes:
         - name: broker-tests-publishers-config
           configMap:
@@ -54,11 +53,11 @@ spec:
           image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.49
           resources:
             limits:
-              cpu: 6
-              memory: 10Gi
+              cpu: 4.2
+              memory: 5Gi
             requests:
-              cpu: 6
-              memory: 10Gi
+              cpu: 4.2
+              memory: 5Gi
           ports:
             - containerPort: 8088
               name: http
@@ -94,12 +93,13 @@ spec:
             - name: STATS_ENABLED
               value: "true"
             - name: TEST_RUN_MAX_TOTAL_CLIENTS_PER_ITERATION
-              #              value: "5000"
-              value: "2500"
+              value: "3334"
             - name: TEST_RUN_PUBLISHER_WARMUP_SLEEP_MS
               value: "15000"
             - name: TEST_RUN_PUBLISHER_WARMUP_COUNT
               value: "3"
+            - name: TEST_RUN_PUBLISHER_WARMUP_ITERATION_SLEEP_MS
+              value: "2000"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-publishers-config
