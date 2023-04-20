@@ -14,12 +14,12 @@
 # limitations under the License.
 #
 
+server:
+  port: "${HTTP_BIND_PORT:8088}"
 
 mqtt:
   host: "${MQTT_HOST:localhost}"
-#  ports: "${MQTT_PORT:1883,1882}"
   ports: "${MQTT_PORT:1883}"
-#  ports: "${MQTT_PORT:1885}"
   ssl:
     enabled: "${MQTT_SSL_ENABLED:false}"
     protocol: "${MQTT_SSL_PROTOCOL:TLSv1.2}"
@@ -43,7 +43,6 @@ mqtt:
     worker_group_thread_count: "${MQTT_NETTY_WORKER_GROUP_THREADS:12}"
 broker:
   type: "${BROKER_TYPE:THINGSBOARD}"
-#  type: "${BROKER_TYPE:OTHER}"
 
 tb-broker:
   uri: "${TB_URI:http://localhost:8083}"
@@ -51,30 +50,34 @@ tb-broker:
     username: "${TB_ADMIN_USERNAME:sysadmin@thingsboard.org}"
     password: "${TB_ADMIN_PASSWORD:sysadmin}"
 
-
 test-run:
   # Could be ORCHESTRATOR or RUNNER
   orchestrator-url: "${TEST_RUN_TEST_ORCHESTRATOR_URL:}"
   node-url: "${TEST_RUN_TEST_NODE_URL:}"
+
   max-cluster-wait-time: "${TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS:60}"
+  cluster-process-wait-time: "${TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS:60}"
+  clear-persisted-sessions-wait-time: "${TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS:60}"
+
   configuration-file: "${TEST_RUN_CONFIGURATION_FILE:}"
+
   sequential-number: "${TEST_RUN_SEQUENTIAL_NUMBER:0}"
   parallel-tests-count: "${TEST_RUN_PARALLEL_TESTS_COUNT:1}"
   total-tests-count: "${TEST_RUN_TOTAL_TESTS_COUNT:0}" # sum of tests when subscribers and publishers are separated
+
   publisher-warmup-count: "${TEST_RUN_PUBLISHER_WARMUP_COUNT:10}"
   publisher-warmup-wait-time: "${TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS:30}"
   publisher-warmup-sleep: "${TEST_RUN_PUBLISHER_WARMUP_SLEEP_MS:5000}"
   publisher-warmup-iteration-sleep: "${TEST_RUN_PUBLISHER_WARMUP_ITERATION_SLEEP_MS:500}"
-  cluster-process-wait-time: "${TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS:60}"
-  clear-persisted-sessions-wait-time: "${TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS:60}"
+
   wait-time-after-clients-disconnect-ms: "${TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT:5000}"
   wait-time-clients-closed-ms: "${TEST_RUN_WAIT_TIME_MS_CLIENTS_CLOSED:5000}"
+
   max_total_clients_per_iteration: "${TEST_RUN_MAX_TOTAL_CLIENTS_PER_ITERATION:0}" # 0 means no limit
+  max_publish_topic_group_idx: "${TEST_RUN_MAX_PUBLISH_TOPIC_GROUP_IDX:25000}"
+
   logs:
     msg-processing-queue-period: "${TEST_RUN_LOGS_MSG_PROCESSING_QUEUE_PERIOD:15000}"
 
 stats:
   enabled: "${STATS_ENABLED:true}"
-
-server:
-  port: "${HTTP_BIND_PORT:8088}"

@@ -81,6 +81,8 @@ public class PublisherServiceImpl implements PublisherService {
     private boolean statsEnabled;
     @Value("${test-run.max_total_clients_per_iteration:0}")
     private int maxTotalClientsPerIteration;
+    @Value("${test-run.max_publish_topic_group_idx}")
+    private int maxPublishTopicGroupIdx;
 
     @Override
     public void connectPublishers() {
@@ -97,6 +99,9 @@ public class PublisherServiceImpl implements PublisherService {
             PublisherGroup publisherGroup = preConnectedPublisherInfo.getPublisherGroup();
             int publisherIndex = preConnectedPublisherInfo.getPublisherIndex();
             String clientId = clientIdService.createPublisherClientId(publisherGroup, publisherIndex);
+            if (maxPublishTopicGroupIdx > 0) {
+                publisherIndex = getRandomNumber(0, maxPublishTopicGroupIdx + 1);
+            }
             String topic = publisherGroup.getTopicPrefix() + publisherIndex;
             MqttClient pubClient = clientInitializer.createClient(clientId, MqttPerformanceTest.DEFAULT_USER_NAME);
             clientInitializer.connectClient(CallbackUtil.createConnectCallback(
@@ -112,6 +117,10 @@ public class PublisherServiceImpl implements PublisherService {
                     ),
                     pubClient);
         });
+    }
+
+    public int getRandomNumber(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
     }
 
     @Override
