@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-publishers
 spec:
   serviceName: broker-tests-publishers
-  replicas: 60
+  replicas: 120
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -54,10 +54,10 @@ spec:
           resources:
             limits:
               cpu: 4.2
-              memory: 5Gi
+              memory: 7Gi
             requests:
               cpu: 4.2
-              memory: 5Gi
+              memory: 7Gi
           ports:
             - containerPort: 8088
               name: http
@@ -100,6 +100,8 @@ spec:
               value: "3"
             - name: TEST_RUN_PUBLISHER_WARMUP_ITERATION_SLEEP_MS
               value: "2000"
+            - name: TEST_RUN_MAX_PUBLISH_TOPIC_GROUP_IDX
+              value: "20000"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-publishers-config

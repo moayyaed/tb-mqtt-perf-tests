@@ -60,7 +60,7 @@ spec:
             - name: HTTP_BIND_PORT
               value: "8088"
             - name: TEST_RUN_TOTAL_TESTS_COUNT
-              value: "100"
+              value: "160"
             - name: TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS
               value: "900"
             - name: TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS
