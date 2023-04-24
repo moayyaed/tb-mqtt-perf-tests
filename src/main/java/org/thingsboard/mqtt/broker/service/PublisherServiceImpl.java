@@ -89,20 +89,22 @@ public class PublisherServiceImpl implements PublisherService {
         List<PreConnectedPublisherInfo> preConnectedPublisherInfos = new ArrayList<>();
         int currentPublisherId = 0;
         for (PublisherGroup publisherGroup : testRunConfiguration.getPublishersConfig()) {
+            int publisherTopicSuffixIdx = 0;
             for (int i = 0; i < publisherGroup.getPublishers(); i++) {
-                if (currentPublisherId++ % testRunClusterConfig.getParallelTestsCount() == testRunClusterConfig.getSequentialNumber()) {
-                    preConnectedPublisherInfos.add(new PreConnectedPublisherInfo(publisherGroup, i));
+                if (publisherTopicSuffixIdx == maxPublishTopicGroupIdx) {
+                    publisherTopicSuffixIdx = 0;
                 }
+                if (currentPublisherId++ % testRunClusterConfig.getParallelTestsCount() == testRunClusterConfig.getSequentialNumber()) {
+                    preConnectedPublisherInfos.add(new PreConnectedPublisherInfo(publisherGroup, i, publisherTopicSuffixIdx));
+                }
+                publisherTopicSuffixIdx++;
             }
         }
         clusterProcessService.process("PUBLISHERS_CONNECT", preConnectedPublisherInfos, (latch, preConnectedPublisherInfo) -> {
             PublisherGroup publisherGroup = preConnectedPublisherInfo.getPublisherGroup();
             int publisherIndex = preConnectedPublisherInfo.getPublisherIndex();
             String clientId = clientIdService.createPublisherClientId(publisherGroup, publisherIndex);
-            if (maxPublishTopicGroupIdx > 0) {
-                publisherIndex = getRandomNumber(0, maxPublishTopicGroupIdx + 1);
-            }
-            String topic = publisherGroup.getTopicPrefix() + publisherIndex;
+            String topic = publisherGroup.getTopicPrefix() + preConnectedPublisherInfo.getPublisherTopicSuffix();
             MqttClient pubClient = clientInitializer.createClient(clientId, MqttPerformanceTest.DEFAULT_USER_NAME);
             clientInitializer.connectClient(CallbackUtil.createConnectCallback(
                             connectResult -> {
@@ -117,10 +119,6 @@ public class PublisherServiceImpl implements PublisherService {
                     ),
                     pubClient);
         });
-    }
-
-    public int getRandomNumber(int min, int max) {
-        return (int) ((Math.random() * (max - min)) + min);
     }
 
     @Override
@@ -275,5 +273,6 @@ public class PublisherServiceImpl implements PublisherService {
     private static class PreConnectedPublisherInfo {
         private final PublisherGroup publisherGroup;
         private final int publisherIndex;
+        private final int publisherTopicSuffix;
     }
 }
