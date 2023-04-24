@@ -40,11 +40,15 @@ import org.thingsboard.mqtt.broker.service.SubscriberService;
 import org.thingsboard.mqtt.broker.service.TbBrokerRestService;
 import org.thingsboard.mqtt.broker.service.orchestration.ClusterSynchronizer;
 import org.thingsboard.mqtt.broker.service.orchestration.TestRestService;
+import org.thingsboard.mqtt.broker.util.ThingsBoardThreadFactory;
 import org.thingsboard.mqtt.broker.util.ValidationUtil;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -67,6 +71,8 @@ public class MqttPerformanceTest {
     @Autowired(required = false)
     private TbBrokerRestService tbBrokerRestService;
 
+    private ScheduledExecutorService latencyScheduler;
+
     @Value("${test-run.wait-time-after-clients-disconnect-ms}")
     private int waitTimeAfterDisconnectsMs;
     @Value("${test-run.wait-time-clients-closed-ms}")
@@ -75,11 +81,15 @@ public class MqttPerformanceTest {
     private long publisherWarmUpSleepMs;
     @Value("${test-run.max_total_clients_per_iteration:0}")
     private int maxTotalClientsPerIteration;
+    @Value("${stats.period:60}")
+    private int period;
 
     @PostConstruct
     public void init() throws Exception {
         ValidationUtil.validateSubscriberGroups(testRunConfiguration.getSubscribersConfig());
         ValidationUtil.validatePublisherGroups(testRunConfiguration.getPublishersConfig());
+
+        latencyScheduler = Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName("latency-scheduler"));
     }
 
     public void runTest() throws Exception {
@@ -118,6 +128,13 @@ public class MqttPerformanceTest {
 
         log.info("Start msg publishing.");
         PublishStats publishStats = publisherService.startPublishing();
+        DescriptiveStatistics acknowledgedStats = publishStats.getPublishAcknowledgedStats();
+        DescriptiveStatistics sentStats = publishStats.getPublishSentLatencyStats();
+
+        latencyScheduler.scheduleAtFixedRate(() -> {
+            printLatencyStats(generalLatencyStats, msgProcessingLatencyStats, acknowledgedStats, sentStats);
+            clearStats(generalLatencyStats, msgProcessingLatencyStats, acknowledgedStats, sentStats);
+        }, period, period, TimeUnit.SECONDS);
 
         Thread.sleep(TimeUnit.SECONDS.toMillis(testRunConfiguration.getSecondsToRun() + testRunConfiguration.getAdditionalSecondsToWait()));
 
@@ -131,22 +148,10 @@ public class MqttPerformanceTest {
         persistedMqttClientService.clearPersistedSessions();
 
         SubscriberAnalysisResult analysisResult = subscriberService.analyzeReceivedMessages();
-        DescriptiveStatistics acknowledgedStats = publishStats.getPublishAcknowledgedStats();
-        DescriptiveStatistics sentStats = publishStats.getPublishSentLatencyStats();
-
-        log.info("Latency stats: median - {}, avg - {}, max - {}, min - {}, 95th - {}, lost messages - {}, duplicated messages - {}, total received messages - {}, " +
-                        "publish sent messages - {}, publish sent latency avg - {}, publish sent latency max - {}, " +
-                        "publish acknowledged messages - {}, publish acknowledged latency median - {}, publish acknowledged latency avg - {}, publish acknowledged latency max - {}, " +
-                        "publish acknowledged latency 95th - {}, msg processing latency max - {}.",
-                generalLatencyStats.getPercentile(50),
-                generalLatencyStats.getMean(), generalLatencyStats.getMax(),
-                generalLatencyStats.getMin(), generalLatencyStats.getPercentile(95),
-                analysisResult.getLostMessages(), analysisResult.getDuplicatedMessages(),
-                generalLatencyStats.getN(),
-                sentStats.getN(), sentStats.getMean(), sentStats.getMax(),
-                acknowledgedStats.getN(), acknowledgedStats.getPercentile(50), acknowledgedStats.getMean(), acknowledgedStats.getMax(),
-                acknowledgedStats.getPercentile(95), msgProcessingLatencyStats.getMax()
+        log.info("Messages stats: lost messages - {}, duplicated messages - {}.",
+                analysisResult.getLostMessages(), analysisResult.getDuplicatedMessages()
         );
+        printLatencyStats(generalLatencyStats, msgProcessingLatencyStats, acknowledgedStats, sentStats);
 
         publisherService.printDebugPublishersStats();
         subscriberService.printDebugSubscribersStats();
@@ -158,6 +163,30 @@ public class MqttPerformanceTest {
         removeDefaultCredentials(defaultCredentialsId);
 
         log.info("Performance test finished.");
+    }
+
+    private void printLatencyStats(DescriptiveStatistics generalLatencyStats, DescriptiveStatistics msgProcessingLatencyStats,
+                                   DescriptiveStatistics acknowledgedStats, DescriptiveStatistics sentStats) {
+        log.info("Latency stats: median - {}, avg - {}, max - {}, min - {}, 95th - {}, total received messages - {}, " +
+                        "publish sent messages - {}, publish sent latency avg - {}, publish sent latency max - {}, " +
+                        "publish acknowledged messages - {}, publish acknowledged latency median - {}, publish acknowledged latency avg - {}, publish acknowledged latency max - {}, " +
+                        "publish acknowledged latency 95th - {}, msg processing latency max - {}.",
+                generalLatencyStats.getPercentile(50),
+                generalLatencyStats.getMean(), generalLatencyStats.getMax(),
+                generalLatencyStats.getMin(), generalLatencyStats.getPercentile(95),
+                generalLatencyStats.getN(),
+                sentStats.getN(), sentStats.getMean(), sentStats.getMax(),
+                acknowledgedStats.getN(), acknowledgedStats.getPercentile(50), acknowledgedStats.getMean(), acknowledgedStats.getMax(),
+                acknowledgedStats.getPercentile(95), msgProcessingLatencyStats.getMax()
+        );
+    }
+
+    private void clearStats(DescriptiveStatistics generalLatencyStats, DescriptiveStatistics msgProcessingLatencyStats,
+                            DescriptiveStatistics acknowledgedStats, DescriptiveStatistics sentStats) {
+        generalLatencyStats.clear();
+        sentStats.clear();
+        acknowledgedStats.clear();
+        msgProcessingLatencyStats.clear();
     }
 
     private UUID createDefaultMqttCredentials() {
@@ -215,5 +244,12 @@ public class MqttPerformanceTest {
                 testRunConfiguration.getPublisherQoS(), testRunConfiguration.getSubscriberQoS(), testRunConfiguration.getMaxMessagesPerPublisherPerSecond(),
                 testRunConfiguration.getSecondsToRun(), totalPublishedMessages, totalExpectedReceivedMessages,
                 mapper.writeValueAsBytes(randomMsg).length);
+    }
+
+    @PreDestroy
+    public void destroy() {
+        if (latencyScheduler != null) {
+            latencyScheduler.shutdownNow();
+        }
     }
 }
