@@ -37,8 +37,13 @@ public class PayloadGeneratorImpl implements PayloadGenerator {
             return generateRandomPayload(testRunConfiguration.getMinPayloadSize());
         }
         StringBuilder payloadBuilder = new StringBuilder();
+        int i = 0;
         for (String key : telemetryKeys) {
-            payloadBuilder.append(key).append(":").append(ThreadLocalRandom.current().nextInt(100)).append(",");
+            payloadBuilder.append(key).append(":").append(ThreadLocalRandom.current().nextInt(100));
+            i++;
+            if (i < telemetryKeys.size()) {
+                payloadBuilder.append(",");
+            }
         }
         byte[] telemetryBytes = payloadBuilder.toString().getBytes();
         if (telemetryBytes.length > testRunConfiguration.getMinPayloadSize()) {
