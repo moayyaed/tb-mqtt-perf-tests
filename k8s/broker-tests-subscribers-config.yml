@@ -543,7 +543,7 @@ data:
       ],
       "dummyClients": 0,
       "secondsToRun": 180,
-      "additionalSecondsToWait": 30,
+      "additionalSecondsToWait": 35,
       "maxMsgsPerPublisherPerSecond": 1,
       "publisherQosValue": 1,
       "subscriberQosValue": 1,

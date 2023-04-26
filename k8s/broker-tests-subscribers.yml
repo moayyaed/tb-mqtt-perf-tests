@@ -94,6 +94,8 @@ spec:
               value: "15000"
             - name: TEST_RUN_PUBLISHER_WARMUP_COUNT
               value: "3"
+            - name: STATS_PERIOD_SECS
+              value: "30"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-subscribers-config

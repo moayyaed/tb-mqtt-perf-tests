@@ -303,7 +303,7 @@ data:
       "subscriberGroups": [],
       "dummyClients": 0,
       "secondsToRun": 180,
-      "additionalSecondsToWait": 10,
+      "additionalSecondsToWait": 15,
       "maxMsgsPerPublisherPerSecond": 1,
       "publisherQosValue": 1,
       "subscriberQosValue": 1,
