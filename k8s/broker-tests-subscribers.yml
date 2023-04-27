@@ -96,6 +96,8 @@ spec:
               value: "3"
             - name: STATS_PERIOD_SECS
               value: "30"
+            - name: CLIENT_KEEP_ALIVE_SECONDS
+              value: "2400"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-subscribers-config
