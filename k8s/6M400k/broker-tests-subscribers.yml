@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-subscribers
 spec:
   serviceName: broker-tests-subscribers
-  replicas: 80
+  replicas: 40
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -49,10 +49,10 @@ spec:
           image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.49
           resources:
             limits:
-              cpu: 1.575
+              cpu: 1.5
               memory: 2Gi
             requests:
-              cpu: 1.575
+              cpu: 1.5
               memory: 2Gi
           ports:
             - containerPort: 8088
@@ -75,15 +75,15 @@ spec:
             - name: HTTP_BIND_PORT
               value: "8088"
             - name: TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "900"
             - name: TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "900"
             - name: TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "900"
             - name: TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "900"
             - name: TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT
-              value: "30000"
+              value: "15000"
             - name: TEST_RUN_WAIT_TIME_MS_CLIENTS_CLOSED
               value: "5000"
             - name: STATS_ENABLED

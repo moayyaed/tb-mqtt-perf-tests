@@ -17,23 +17,27 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: broker-tests-subscribers
+  name: broker-tests-publishers
 spec:
-  serviceName: broker-tests-subscribers
-  replicas: 80
+  serviceName: broker-tests-publishers
+  replicas: 120
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
-      app: broker-tests-subscribers
+      app: broker-tests-publishers
   template:
     metadata:
       labels:
-        app: broker-tests-subscribers
+        app: broker-tests-publishers
     spec:
+      securityContext:
+        sysctls:
+          - name: net.ipv4.ip_local_port_range
+            value: "5000 65535"
       volumes:
-        - name: broker-tests-subscribers-config
+        - name: broker-tests-publishers-config
           configMap:
-            name: broker-tests-subscribers-config
+            name: broker-tests-publishers-config
             items:
               - key: test_run_config.json
                 path: test_run_config.json
@@ -42,18 +46,18 @@ spec:
               - key: tb-mqtt-broker-performance-tests.conf
                 path: tb-mqtt-broker-performance-tests.conf
       nodeSelector:
-        role: tb-perf-test-subscribers
+        role: tb-perf-test-publishers
       containers:
         - name: server
           imagePullPolicy: Always
           image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.49
           resources:
             limits:
-              cpu: 1.575
-              memory: 2Gi
+              cpu: 4.2
+              memory: 7Gi
             requests:
-              cpu: 1.575
-              memory: 2Gi
+              cpu: 4.2
+              memory: 7Gi
           ports:
             - containerPort: 8088
               name: http
@@ -75,41 +79,45 @@ spec:
             - name: HTTP_BIND_PORT
               value: "8088"
             - name: TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "900"
             - name: TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "900"
             - name: TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "900"
             - name: TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "900"
             - name: TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT
-              value: "30000"
+              value: "15000"
             - name: TEST_RUN_WAIT_TIME_MS_CLIENTS_CLOSED
               value: "5000"
             - name: STATS_ENABLED
               value: "true"
             - name: TEST_RUN_MAX_TOTAL_CLIENTS_PER_ITERATION
-              value: "0"
+              value: "3334"
             - name: TEST_RUN_PUBLISHER_WARMUP_SLEEP_MS
               value: "15000"
             - name: TEST_RUN_PUBLISHER_WARMUP_COUNT
-              value: "3"
+              value: "10"
+            - name: TEST_RUN_PUBLISHER_WARMUP_ITERATION_SLEEP_MS
+              value: "2000"
+            - name: TEST_RUN_MAX_PUBLISH_TOPIC_GROUP_IDX
+              value: "25000"
             - name: STATS_PERIOD_SECS
               value: "30"
           volumeMounts:
             - mountPath: /config
-              name: broker-tests-subscribers-config
+              name: broker-tests-publishers-config
           command: [ 'sh', '-c', 'while [ ! -f /tmp/test-finished ]; do sleep 2; done;' ]
       restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: broker-tests-subscribers
+  name: broker-tests-publishers
 spec:
   type: ClusterIP
   selector:
-    app: broker-tests-subscribers
+    app: broker-tests-publishers
   ports:
     - port: 8088
       name: http
