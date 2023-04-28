@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-publishers
 spec:
   serviceName: broker-tests-publishers
-  replicas: 240
+  replicas: 500 # on 24 nodes
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -53,11 +53,11 @@ spec:
           image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.49
           resources:
             limits:
-              cpu: 4.2
-              memory: 7Gi
+              cpu: 3
+              memory: 5Gi
             requests:
-              cpu: 4.2
-              memory: 7Gi
+              cpu: 3
+              memory: 5Gi
           ports:
             - containerPort: 8088
               name: http
@@ -87,13 +87,13 @@ spec:
             - name: TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS
               value: "1200"
             - name: TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT
-              value: "30000"
+              value: "45000"
             - name: TEST_RUN_WAIT_TIME_MS_CLIENTS_CLOSED
               value: "5000"
             - name: STATS_ENABLED
               value: "true"
             - name: TEST_RUN_MAX_TOTAL_CLIENTS_PER_ITERATION
-              value: "3334"
+              value: "3200"
             - name: TEST_RUN_PUBLISHER_WARMUP_SLEEP_MS
               value: "15000"
             - name: TEST_RUN_PUBLISHER_WARMUP_COUNT

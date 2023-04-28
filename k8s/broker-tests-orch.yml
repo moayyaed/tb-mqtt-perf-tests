@@ -60,11 +60,11 @@ spec:
             - name: HTTP_BIND_PORT
               value: "8088"
             - name: TEST_RUN_TOTAL_TESTS_COUNT
-              value: "320"
+              value: "700"
             - name: TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "2400"
             - name: TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "2400"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-orchestrator-config

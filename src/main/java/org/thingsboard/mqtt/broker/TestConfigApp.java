@@ -22,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This simple class is used to generate configuration test file
@@ -63,8 +65,11 @@ public class TestConfigApp {
 
         ArrayNode subscriberGroups = mapper.createArrayNode();
         ArrayNode publisherGroups = mapper.createArrayNode();
-        for (int i = 1; i <= 40; i++) {
-            String random = RandomStringUtils.randomAlphabetic(5);
+
+        Set<String> uniqueRandomsSet = new HashSet<>();
+        for (int i = 1; i <= 200; i++) {
+            String random = RandomStringUtils.randomAlphabetic(5).toLowerCase();
+            uniqueRandomsSet.add(random);
 
             ObjectNode subscriberGroup = mapper.createObjectNode();
 
@@ -84,12 +89,13 @@ public class TestConfigApp {
             ObjectNode publisherGroup = mapper.createObjectNode();
 
             publisherGroup.put("id", i);
-            publisherGroup.put("publishers", 50000);
+            publisherGroup.put("publishers", 120000);
             publisherGroup.put("topicPrefix", "usa/" + random + "/" + i + "/");
             publisherGroup.set("clientIdPrefix", null);
 
             publisherGroups.add(publisherGroup);
         }
+        System.out.println("Set size: " + uniqueRandomsSet.size());
         result.set("publisherGroups", publisherGroups);
         result.set("subscriberGroups", subscriberGroups);
         return result;
