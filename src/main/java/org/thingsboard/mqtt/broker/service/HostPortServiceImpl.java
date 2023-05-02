@@ -16,11 +16,14 @@
 package org.thingsboard.mqtt.broker.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.thingsboard.mqtt.broker.data.dto.HostPortDto;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
@@ -32,17 +35,38 @@ public class HostPortServiceImpl implements HostPortService {
     @Value("${mqtt.ports}")
     private int[] mqttPorts;
 
-    private final ThreadLocalRandom random = ThreadLocalRandom.current();
+    private String targetMqttHost;
 
     @PostConstruct
     public void init() {
         if (mqttPorts == null || mqttPorts.length == 0) {
             throw new RuntimeException("Not valid MQTT ports value");
         }
+        try {
+            String brokerIpAddresses = System.getenv("MQTT_BROKER_IP_ADDRESSES");
+            if (StringUtils.isNotEmpty(brokerIpAddresses)) {
+                List<String> brokerIpAddrList = Arrays.asList(brokerIpAddresses.split(","));
+                log.info("Broker IP addresses: {}", brokerIpAddrList);
+
+                String serviceId = System.getenv("TB_SERVICE_ID");
+                int id = Integer.parseInt(serviceId.replaceAll("[^0-9]", ""));
+                log.info("Service ID: {}; ID: {}", serviceId, id);
+
+                int idx = id % brokerIpAddrList.size();
+                targetMqttHost = brokerIpAddrList.get(idx);
+                log.info("Index: {}. Target MQTT host: {}", idx, targetMqttHost);
+            }
+        } catch (Exception e) {
+            log.error("Error occurred during getting target MQTT host!", e);
+        }
     }
 
     @Override
     public HostPortDto getHostPort() {
-        return new HostPortDto(mqttHost, mqttPorts[ThreadLocalRandom.current().nextInt(mqttPorts.length)]);
+        return new HostPortDto(getTargetHost(), mqttPorts[ThreadLocalRandom.current().nextInt(mqttPorts.length)]);
+    }
+
+    private String getTargetHost() {
+        return targetMqttHost == null ? mqttHost : targetMqttHost;
     }
 }
