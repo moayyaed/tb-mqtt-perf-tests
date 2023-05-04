@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-subscribers
 spec:
   serviceName: broker-tests-subscribers
-  replicas: 200 # on 3 nodes
+  replicas: 160 # on 4 nodes
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -49,17 +49,21 @@ spec:
           image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.49
           resources:
             limits:
-              cpu: 0.94
-              memory: 1700Mi
+              cpu: 0.775
+              memory: 1500Mi
             requests:
-              cpu: 0.94
-              memory: 1700Mi
+              cpu: 0.775
+              memory: 1500Mi
           ports:
             - containerPort: 8088
               name: http
             - containerPort: 9199 # DO NOT expose Java Management Extensions (JMX) port to any service.
               name: jmx           # The main purpose is port-forwarding from the command line
           env:
+            - name: TB_SERVICE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             - name: TEST_RUN_CONFIGURATION_FILE
               value: "/config/test_run_config.json"
             - name: BROKER_TYPE
@@ -75,13 +79,13 @@ spec:
             - name: HTTP_BIND_PORT
               value: "8088"
             - name: TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "6000"
             - name: TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "6000"
             - name: TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "6000"
             - name: TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS
-              value: "1200"
+              value: "6000"
             - name: TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT
               value: "30000"
             - name: TEST_RUN_WAIT_TIME_MS_CLIENTS_CLOSED
@@ -97,7 +101,9 @@ spec:
             - name: STATS_PERIOD_SECS
               value: "30"
             - name: CLIENT_KEEP_ALIVE_SECONDS
-              value: "2400"
+              value: "3600"
+            - name: MQTT_NETTY_WORKER_GROUP_THREADS
+              value: "2"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-subscribers-config

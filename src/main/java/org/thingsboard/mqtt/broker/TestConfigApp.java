@@ -67,7 +67,7 @@ public class TestConfigApp {
         ArrayNode publisherGroups = mapper.createArrayNode();
 
         Set<String> uniqueRandomsSet = new HashSet<>();
-        for (int i = 1; i <= 200; i++) {
+        for (int i = 1; i <= 160; i++) {
             String random = RandomStringUtils.randomAlphabetic(5).toLowerCase();
             uniqueRandomsSet.add(random);
 
@@ -89,7 +89,7 @@ public class TestConfigApp {
             ObjectNode publisherGroup = mapper.createObjectNode();
 
             publisherGroup.put("id", i);
-            publisherGroup.put("publishers", 120000);
+            publisherGroup.put("publishers", 150000);
             publisherGroup.put("topicPrefix", "usa/" + random + "/" + i + "/");
             publisherGroup.set("clientIdPrefix", null);
 
