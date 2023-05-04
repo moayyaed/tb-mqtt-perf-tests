@@ -227,13 +227,12 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
     }
 
     private void handlePuback(MqttPubAckMessage message) {
-        MqttPendingPublish pendingPublish = this.client.getPendingPublishes().get(message.variableHeader().messageId());
+        MqttPendingPublish pendingPublish = this.client.getPendingPublishes().remove(message.variableHeader().messageId());
         if (pendingPublish == null) {
             return;
         }
         pendingPublish.getCallback().onSuccess();
         pendingPublish.onPubackReceived();
-        this.client.getPendingPublishes().remove(message.variableHeader().messageId());
     }
 
     private void handlePubrec(Channel channel, MqttMessage message) {

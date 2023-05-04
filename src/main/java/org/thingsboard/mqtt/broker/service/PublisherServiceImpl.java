@@ -204,7 +204,8 @@ public class PublisherServiceImpl implements PublisherService {
 
     private void process(DescriptiveStatistics publishSentLatencyStats, DescriptiveStatistics publishAcknowledgedStats, PublisherInfo publisherInfo) {
         try {
-            Message message = new Message(System.currentTimeMillis(), false, payloadGenerator.generatePayload());
+            byte[] payload = payloadGenerator.generatePayload();
+            Message message = new Message(System.currentTimeMillis(), false, payload);
             byte[] messageBytes = mapper.writeValueAsBytes(message);
             ChannelFuture publishSentFuture = publisherInfo.getPublisher().publish(publisherInfo.getTopic(), toByteBuf(messageBytes),
                     CallbackUtil.createCallback(
