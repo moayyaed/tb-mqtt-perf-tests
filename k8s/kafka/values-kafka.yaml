@@ -161,7 +161,7 @@ log4j: ""
 existingLog4jConfigMap: ""
 ## @param heapOpts Kafka Java Heap size
 ##
-heapOpts: -Xmx4096m -Xms4096m
+heapOpts: -Xmx12288m -Xms12288m
 ## @param deleteTopicEnable Switch to enable topic deletion or not
 ##
 deleteTopicEnable: false
@@ -540,11 +540,11 @@ lifecycleHooks: { }
 ##
 resources:
   limits:
-    cpu: 3
-    memory: 12Gi
+    cpu: 7
+    memory: 24Gi
   requests:
-    cpu: 3
-    memory: 12Gi
+    cpu: 7
+    memory: 24Gi
 ## Kafka pods' Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ## @param podSecurityContext.enabled Enable security context for the pods
@@ -973,14 +973,14 @@ persistence:
   ## If undefined (the default) or set to null, no storageClassName spec is
   ## set, choosing the default provisioner.
   ##
-  storageClass: ""
+  storageClass: "kafka-gp3"
   ## @param persistence.accessModes Persistent Volume Access Modes
   ##
   accessModes:
     - ReadWriteOnce
   ## @param persistence.size PVC Storage Request for Kafka data volume
   ##
-  size: 100Gi
+  size: 200Gi
   ## @param persistence.annotations Annotations for the PVC
   ##
   annotations: { }
