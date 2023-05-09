@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-publishers
 spec:
   serviceName: broker-tests-publishers
-  replicas: 500 # on 25 nodes
+  replicas: 1000 # on 50 nodes
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -83,13 +83,13 @@ spec:
             - name: HTTP_BIND_PORT
               value: "8088"
             - name: TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS
-              value: "6000"
+              value: "9000"
             - name: TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS
-              value: "6000"
+              value: "9000"
             - name: TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS
-              value: "6000"
+              value: "9000"
             - name: TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS
-              value: "6000"
+              value: "9000"
             - name: TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT
               value: "45000"
             - name: TEST_RUN_WAIT_TIME_MS_CLIENTS_CLOSED
@@ -105,11 +105,11 @@ spec:
             - name: TEST_RUN_PUBLISHER_WARMUP_ITERATION_SLEEP_MS
               value: "2000"
             - name: TEST_RUN_MAX_PUBLISH_TOPIC_GROUP_IDX
-              value: "12500"
+              value: "6250"
             - name: STATS_PERIOD_SECS
               value: "30"
             - name: CLIENT_KEEP_ALIVE_SECONDS
-              value: "3600"
+              value: "5400"
             - name: MQTT_NETTY_WORKER_GROUP_THREADS
               value: "4"
           volumeMounts:
