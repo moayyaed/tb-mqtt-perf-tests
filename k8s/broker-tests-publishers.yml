@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-publishers
 spec:
   serviceName: broker-tests-publishers
-  replicas: 1000 # on 50 nodes
+  replicas: 1280 # on 64 nodes
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -97,7 +97,7 @@ spec:
             - name: STATS_ENABLED
               value: "true"
             - name: TEST_RUN_MAX_TOTAL_CLIENTS_PER_ITERATION
-              value: "3200"
+              value: "2500"
             - name: TEST_RUN_PUBLISHER_WARMUP_SLEEP_MS
               value: "30000"
             - name: TEST_RUN_PUBLISHER_WARMUP_COUNT
