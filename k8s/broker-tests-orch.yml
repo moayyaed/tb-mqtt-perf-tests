@@ -62,9 +62,9 @@ spec:
             - name: TEST_RUN_TOTAL_TESTS_COUNT
               value: "1600"
             - name: TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS
-              value: "9000"
+              value: "90000"
             - name: TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS
-              value: "9000"
+              value: "90000"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-orchestrator-config

@@ -83,13 +83,13 @@ spec:
             - name: HTTP_BIND_PORT
               value: "8088"
             - name: TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS
-              value: "9000"
+              value: "90000"
             - name: TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS
-              value: "9000"
+              value: "90000"
             - name: TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS
-              value: "9000"
+              value: "90000"
             - name: TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS
-              value: "9000"
+              value: "90000"
             - name: TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT
               value: "45000"
             - name: TEST_RUN_WAIT_TIME_MS_CLIENTS_CLOSED
@@ -112,10 +112,16 @@ spec:
               value: "5400"
             - name: MQTT_NETTY_WORKER_GROUP_THREADS
               value: "4"
+            - name: MQTT_BROKER_IP_ADDRESSES
+              value: "{{MQTT_BROKER_IP_ADDRESSES}}"
+            - name: TEST_RUN_PARALLEL_TESTS_COUNT
+              value: "1280"
+            - name: TEST_RUN_TEST_ORCHESTRATOR_URL
+              value: "http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-publishers-config
-          command: [ 'sh', '-c', 'while [ ! -f /tmp/test-finished ]; do sleep 2; done;' ]
+      #          command: [ 'sh', '-c', 'while [ ! -f /tmp/test-finished ]; do sleep 2; done;' ]
       restartPolicy: Always
 ---
 apiVersion: v1
