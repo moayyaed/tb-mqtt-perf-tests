@@ -61,7 +61,7 @@ test-run:
 
   configuration-file: "${TEST_RUN_CONFIGURATION_FILE:}"
 
-  sequential-number: "${TEST_RUN_SEQUENTIAL_NUMBER:0}"
+  sequential-number: "${TEST_RUN_SEQUENTIAL_NUMBER:}"
   parallel-tests-count: "${TEST_RUN_PARALLEL_TESTS_COUNT:1}"
   total-tests-count: "${TEST_RUN_TOTAL_TESTS_COUNT:0}" # sum of tests when subscribers and publishers are separated
 

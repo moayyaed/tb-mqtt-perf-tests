@@ -15,16 +15,30 @@
  */
 package org.thingsboard.mqtt.broker.config;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.thingsboard.mqtt.broker.service.ServiceHelper;
+
+import javax.annotation.PostConstruct;
 
 @Component
+@Data
 public class TestRunClusterConfigImpl implements TestRunClusterConfig {
 
+    private final ServiceHelper serviceHelper;
+
     @Value("${test-run.sequential-number:}")
-    private int testRunSequentialNumber;
+    private Integer testRunSequentialNumber;
     @Value("${test-run.parallel-tests-count:}")
     private int parallelTestsCount;
+
+    @PostConstruct
+    public void init() {
+        if (testRunSequentialNumber == null) {
+            testRunSequentialNumber = serviceHelper.getId();
+        }
+    }
 
     @Override
     public int getSequentialNumber() {

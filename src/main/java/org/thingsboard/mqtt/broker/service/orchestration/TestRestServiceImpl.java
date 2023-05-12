@@ -26,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.controller.ClusterConst;
 import org.thingsboard.mqtt.broker.data.NodeInfo;
+import org.thingsboard.mqtt.broker.service.ServiceHelper;
 
 import javax.annotation.PostConstruct;
 
@@ -36,6 +37,7 @@ public class TestRestServiceImpl implements TestRestService {
 
     private final TestRunClusterConfig testRunClusterConfig;
     private final RestTemplateBuilder restTemplateBuilder;
+    private final ServiceHelper serviceHelper;
 
     @Value("${test-run.orchestrator-url}")
     private String orchestratorUrl;
@@ -43,10 +45,23 @@ public class TestRestServiceImpl implements TestRestService {
     private String nodeUrl;
 
     private RestTemplate restTemplate;
+    String targetNodeUrl;
 
     @PostConstruct
     public void init() {
         this.restTemplate = restTemplateBuilder.build();
+
+        if (StringUtils.isEmpty(nodeUrl)) {
+            log.info("nodeUrl is not set!");
+            int id = serviceHelper.getId();
+            ServiceHelper.TestType serviceHelperTestType = serviceHelper.getTestType();
+            if (serviceHelperTestType == null) {
+                return;
+            }
+            String testType = serviceHelperTestType.getPrintName();
+            targetNodeUrl = "http://broker-tests-" + testType + "-" + id + ".broker-tests-" + testType + ".thingsboard-mqtt-broker.svc.cluster.local:8088";
+        }
+        log.info("Node URL: {}", targetNodeUrl);
     }
 
     @Override
@@ -56,13 +71,13 @@ public class TestRestServiceImpl implements TestRestService {
 
     @Override
     public boolean notifyNodeIsReady() {
-        if (StringUtils.isEmpty(orchestratorUrl) || StringUtils.isEmpty(nodeUrl)) {
+        if (StringUtils.isEmpty(orchestratorUrl) || StringUtils.isEmpty(targetNodeUrl)) {
             return false;
         }
         log.info("Notifying orchestrator about node readiness");
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(orchestratorUrl + ClusterConst.ORCHESTRATOR_PATH,
-                    new NodeInfo(nodeUrl + ClusterConst.NODE_PATH, testRunClusterConfig.getParallelTestsCount()), String.class);
+                    new NodeInfo(targetNodeUrl + ClusterConst.NODE_PATH, testRunClusterConfig.getParallelTestsCount()), String.class);
             return "OK".equals(response.getBody());
         } catch (Exception e) {
             log.error("Error notifying orchestrator", e);
