@@ -16,6 +16,7 @@
 package org.thingsboard.mqtt.broker.config;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.mqtt.broker.service.ServiceHelper;
@@ -26,7 +27,8 @@ import javax.annotation.PostConstruct;
 @Data
 public class TestRunClusterConfigImpl implements TestRunClusterConfig {
 
-    private final ServiceHelper serviceHelper;
+    @Autowired(required = false)
+    private ServiceHelper serviceHelper;
 
     @Value("${test-run.sequential-number:}")
     private Integer testRunSequentialNumber;
@@ -35,7 +37,7 @@ public class TestRunClusterConfigImpl implements TestRunClusterConfig {
 
     @PostConstruct
     public void init() {
-        if (testRunSequentialNumber == null) {
+        if (testRunSequentialNumber == null && serviceHelper != null) {
             testRunSequentialNumber = serviceHelper.getId();
         }
     }

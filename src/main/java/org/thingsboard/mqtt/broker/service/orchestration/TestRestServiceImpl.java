@@ -17,6 +17,7 @@ package org.thingsboard.mqtt.broker.service.orchestration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 import org.thingsboard.mqtt.broker.config.TestRunClusterConfig;
 import org.thingsboard.mqtt.broker.controller.ClusterConst;
 import org.thingsboard.mqtt.broker.data.NodeInfo;
+import org.thingsboard.mqtt.broker.data.TestType;
 import org.thingsboard.mqtt.broker.service.ServiceHelper;
 
 import javax.annotation.PostConstruct;
@@ -37,7 +39,8 @@ public class TestRestServiceImpl implements TestRestService {
 
     private final TestRunClusterConfig testRunClusterConfig;
     private final RestTemplateBuilder restTemplateBuilder;
-    private final ServiceHelper serviceHelper;
+    @Autowired(required = false)
+    private ServiceHelper serviceHelper;
 
     @Value("${test-run.orchestrator-url}")
     private String orchestratorUrl;
@@ -51,10 +54,10 @@ public class TestRestServiceImpl implements TestRestService {
     public void init() {
         this.restTemplate = restTemplateBuilder.build();
 
-        if (StringUtils.isEmpty(nodeUrl)) {
+        if (StringUtils.isEmpty(nodeUrl) && serviceHelper != null) {
             log.info("nodeUrl is not set!");
             int id = serviceHelper.getId();
-            ServiceHelper.TestType serviceHelperTestType = serviceHelper.getTestType();
+            TestType serviceHelperTestType = serviceHelper.getTestType();
             if (serviceHelperTestType == null) {
                 return;
             }

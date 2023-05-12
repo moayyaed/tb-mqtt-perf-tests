@@ -13,14 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingsboard.mqtt.broker.service;
+package org.thingsboard.mqtt.broker.data;
 
-import org.thingsboard.mqtt.broker.data.TestType;
+public enum TestType {
+    PUBLISHERS("publishers"),
+    SUBSCRIBERS("subscribers"),
+    ;
 
-public interface ServiceHelper {
+    private final String printName;
 
-    int getId();
+    TestType(String printName) {
+        this.printName = printName;
+    }
 
-    TestType getTestType();
-
+    public String getPrintName() {
+        return printName;
+    }
 }

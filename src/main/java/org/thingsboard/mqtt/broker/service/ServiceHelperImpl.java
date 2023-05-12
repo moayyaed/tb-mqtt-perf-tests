@@ -15,12 +15,30 @@
  */
 package org.thingsboard.mqtt.broker.service;
 
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.thingsboard.mqtt.broker.data.TestType;
 
-public interface ServiceHelper {
+import javax.annotation.PostConstruct;
 
-    int getId();
+@Slf4j
+@Service
+@Data
+public class ServiceHelperImpl implements ServiceHelper {
 
-    TestType getTestType();
+    private int id;
+    private TestType testType;
+
+    @PostConstruct
+    public void init() {
+        String serviceId = System.getenv("TB_SERVICE_ID");
+        if (StringUtils.isEmpty(serviceId)) {
+            return;
+        }
+        id = Integer.parseInt(serviceId.replaceAll("[^0-9]", ""));
+        testType = serviceId.contains("publishers") ? TestType.PUBLISHERS : TestType.SUBSCRIBERS;
+    }
 
 }
