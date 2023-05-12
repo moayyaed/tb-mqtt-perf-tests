@@ -1987,7 +1987,7 @@ data:
       "publisherQosValue": 1,
       "subscriberQosValue": 1,
       "minPayloadSize": 1,
-      "maxConcurrentOperations": 3000,
+      "maxConcurrentOperations": 6000,
       "telemetryKeys": [
         "lat",
         "long",
