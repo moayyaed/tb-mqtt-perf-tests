@@ -1981,7 +1981,7 @@ data:
       ],
       "subscriberGroups": [],
       "dummyClients": 0,
-      "secondsToRun": 360,
+      "secondsToRun": 10800,
       "additionalSecondsToWait": 120,
       "maxMsgsPerPublisherPerSecond": 1,
       "publisherQosValue": 1,

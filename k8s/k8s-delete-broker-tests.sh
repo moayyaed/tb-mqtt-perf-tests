@@ -21,10 +21,10 @@ kubectl config set-context $(kubectl config current-context) --namespace=thingsb
 
 kubectl delete -f broker-tests-publishers-config.yml
 kubectl delete -f broker-tests-subscribers-config.yml
-kubectl delete -f broker-tests-orch-config.yml
+#kubectl delete -f broker-tests-orch-config.yml
 
 kubectl delete -f broker-tests-publishers.yml
 kubectl delete -f broker-tests-subscribers.yml
-kubectl delete -f broker-tests-orch.yml
+#kubectl delete -f broker-tests-orch.yml
 
-kubectl delete -f tb-kafka-ui-kowl.yml
+#kubectl delete -f tb-kafka-ui-kowl.yml
