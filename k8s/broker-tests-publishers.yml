@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-publishers
 spec:
   serviceName: broker-tests-publishers
-  replicas: 1280 # on 64 nodes
+  replicas: 1680 # on 84 nodes
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -105,17 +105,17 @@ spec:
             - name: TEST_RUN_PUBLISHER_WARMUP_ITERATION_SLEEP_MS
               value: "2000"
             - name: TEST_RUN_MAX_PUBLISH_TOPIC_GROUP_IDX
-              value: "12500"
+              value: "15000"
             - name: STATS_PERIOD_SECS
               value: "30"
             - name: CLIENT_KEEP_ALIVE_SECONDS
-              value: "5400"
+              value: "9000"
             - name: MQTT_NETTY_WORKER_GROUP_THREADS
               value: "4"
             - name: MQTT_BROKER_IP_ADDRESSES
               value: "{{MQTT_BROKER_IP_ADDRESSES}}"
             - name: TEST_RUN_PARALLEL_TESTS_COUNT
-              value: "1280"
+              value: "1680"
             - name: TEST_RUN_TEST_ORCHESTRATOR_URL
               value: "http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088"
           volumeMounts:

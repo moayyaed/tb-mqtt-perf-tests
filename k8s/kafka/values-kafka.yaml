@@ -198,10 +198,10 @@ maxMessageBytes: _1000012
 defaultReplicationFactor: 2
 ## @param offsetsTopicReplicationFactor The replication factor for the offsets topic
 ##
-offsetsTopicReplicationFactor: 6
+offsetsTopicReplicationFactor: 9
 ## @param transactionStateLogReplicationFactor The replication factor for the transaction topic
 ##
-transactionStateLogReplicationFactor: 6
+transactionStateLogReplicationFactor: 9
 ## @param transactionStateLogMinIsr Overridden min.insync.replicas config for the transaction topic
 ##
 transactionStateLogMinIsr: 1
@@ -457,7 +457,7 @@ extraEnvVarsSecret: ""
 
 ## @param replicaCount Number of Kafka nodes
 ##
-replicaCount: 6
+replicaCount: 9
 ## @param minBrokerId Minimal broker.id value, nodes increment their `broker.id` respectively
 ## Brokers increment their ID starting at this minimal value.
 ## E.g., with `minBrokerId=100` and 3 nodes, IDs will be 100, 101, 102 for brokers 0, 1, and 2, respectively.
@@ -980,7 +980,7 @@ persistence:
     - ReadWriteOnce
   ## @param persistence.size PVC Storage Request for Kafka data volume
   ##
-  size: 200Gi
+  size: 300Gi
   ## @param persistence.annotations Annotations for the PVC
   ##
   annotations: { }

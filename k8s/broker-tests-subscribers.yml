@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-subscribers
 spec:
   serviceName: broker-tests-subscribers
-  replicas: 320 # on 8 nodes
+  replicas: 420 # on 11 nodes
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -101,13 +101,13 @@ spec:
             - name: STATS_PERIOD_SECS
               value: "30"
             - name: CLIENT_KEEP_ALIVE_SECONDS
-              value: "5400"
+              value: "9000"
             - name: MQTT_NETTY_WORKER_GROUP_THREADS
               value: "2"
             - name: MQTT_BROKER_IP_ADDRESSES
               value: "{{MQTT_BROKER_IP_ADDRESSES}}"
             - name: TEST_RUN_PARALLEL_TESTS_COUNT
-              value: "320"
+              value: "420"
             - name: TEST_RUN_TEST_ORCHESTRATOR_URL
               value: "http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088"
           volumeMounts:
