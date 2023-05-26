@@ -81,4 +81,4 @@ test-run:
 
 stats:
   enabled: "${STATS_ENABLED:true}"
-  period: "${STATS_PERIOD_SECS:60}" # interval in seconds for printing stats
+  period: "${STATS_PERIOD_SECS:10}" # interval in seconds for printing stats
