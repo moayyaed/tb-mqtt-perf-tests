@@ -67,7 +67,7 @@ public class TestConfigApp {
         ArrayNode publisherGroups = mapper.createArrayNode();
 
         Set<String> uniqueRandomsSet = new HashSet<>();
-        for (int i = 1; i <= 420; i++) {
+        for (int i = 1; i <= 500; i++) {
             String random = RandomStringUtils.randomAlphabetic(5).toLowerCase();
             uniqueRandomsSet.add(random);
 
