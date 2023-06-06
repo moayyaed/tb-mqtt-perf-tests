@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-subscribers
 spec:
   serviceName: broker-tests-subscribers
-  replicas: 500 # on 13 nodes
+  replicas: 5
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -41,18 +41,16 @@ spec:
                 path: logback.xml
               - key: tb-mqtt-broker-performance-tests.conf
                 path: tb-mqtt-broker-performance-tests.conf
-      nodeSelector:
-        role: tb-perf-test-subscribers
       containers:
         - name: server
           imagePullPolicy: Always
           image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.49
           resources:
             limits:
-              cpu: 0.775
+              cpu: 1
               memory: 1500Mi
             requests:
-              cpu: 0.775
+              cpu: 1
               memory: 1500Mi
           ports:
             - containerPort: 8088
@@ -92,28 +90,16 @@ spec:
               value: "5000"
             - name: STATS_ENABLED
               value: "true"
-            - name: TEST_RUN_MAX_TOTAL_CLIENTS_PER_ITERATION
-              value: "0"
-            - name: TEST_RUN_PUBLISHER_WARMUP_SLEEP_MS
-              value: "15000"
-            - name: TEST_RUN_PUBLISHER_WARMUP_COUNT
-              value: "3"
             - name: STATS_PERIOD_SECS
               value: "30"
             - name: CLIENT_KEEP_ALIVE_SECONDS
               value: "10800"
             - name: MQTT_NETTY_WORKER_GROUP_THREADS
               value: "2"
-            - name: MQTT_BROKER_IP_ADDRESSES
-              value: "{{MQTT_BROKER_IP_ADDRESSES}}"
-            - name: TEST_RUN_PARALLEL_TESTS_COUNT
-              value: "500"
-            - name: TEST_RUN_TEST_ORCHESTRATOR_URL
-              value: "http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-subscribers-config
-      #          command: [ 'sh', '-c', 'while [ ! -f /tmp/test-finished ]; do sleep 2; done;' ]
+          command: [ 'sh', '-c', 'while [ ! -f /tmp/test-finished ]; do sleep 2; done;' ]
       restartPolicy: Always
 ---
 apiVersion: v1

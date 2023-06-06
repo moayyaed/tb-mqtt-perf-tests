@@ -23,20 +23,6 @@ kubectl config set-context $(kubectl config current-context) --namespace=thingsb
 kubectl apply -f broker-tests-orch-config.yml
 kubectl apply -f broker-tests-orch.yml
 
-# get the IP addresses of all pods in the statefulset
-broker_ips=($(kubectl get pods -l app=tb-broker -o jsonpath='{.items[*].status.podIP}'))
-
-# construct a comma-separated string from the IP addresses
-broker_ip_addresses=$(IFS=, ; echo "${broker_ips[*]}")
-echo 'Broker IP addresses comma-separated string:'
-echo $broker_ip_addresses
-
-cp broker-tests-publishers.yml broker-tests-publishers.yml.backup
-cp broker-tests-subscribers.yml broker-tests-subscribers.yml.backup
-
-sed -i "s/{{MQTT_BROKER_IP_ADDRESSES}}/$broker_ip_addresses/g" broker-tests-publishers.yml
-sed -i "s/{{MQTT_BROKER_IP_ADDRESSES}}/$broker_ip_addresses/g" broker-tests-subscribers.yml
-
 kubectl apply -f broker-tests-publishers-config.yml
 kubectl apply -f broker-tests-subscribers-config.yml
 
@@ -44,6 +30,3 @@ kubectl apply -f broker-tests-publishers.yml
 kubectl apply -f broker-tests-subscribers.yml
 
 kubectl apply -f tb-kafka-ui-kowl.yml
-
-mv broker-tests-publishers.yml.backup broker-tests-publishers.yml
-mv broker-tests-subscribers.yml.backup broker-tests-subscribers.yml

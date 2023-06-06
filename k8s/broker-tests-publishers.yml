@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-publishers
 spec:
   serviceName: broker-tests-publishers
-  replicas: 2000 # on 100 nodes
+  replicas: 5
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -30,10 +30,6 @@ spec:
       labels:
         app: broker-tests-publishers
     spec:
-      securityContext:
-        sysctls:
-          - name: net.ipv4.ip_local_port_range
-            value: "5000 65535"
       volumes:
         - name: broker-tests-publishers-config
           configMap:
@@ -45,19 +41,17 @@ spec:
                 path: logback.xml
               - key: tb-mqtt-broker-performance-tests.conf
                 path: tb-mqtt-broker-performance-tests.conf
-      nodeSelector:
-        role: tb-perf-test-publishers
       containers:
         - name: server
           imagePullPolicy: Always
           image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.49
           resources:
             limits:
-              cpu: 2.3
-              memory: 4Gi
+              cpu: 1
+              memory: 2Gi
             requests:
-              cpu: 2.3
-              memory: 4Gi
+              cpu: 1
+              memory: 2Gi
           ports:
             - containerPort: 8088
               name: http
@@ -96,32 +90,22 @@ spec:
               value: "5000"
             - name: STATS_ENABLED
               value: "true"
-            - name: TEST_RUN_MAX_TOTAL_CLIENTS_PER_ITERATION
-              value: "1500"
             - name: TEST_RUN_PUBLISHER_WARMUP_SLEEP_MS
               value: "30000"
             - name: TEST_RUN_PUBLISHER_WARMUP_COUNT
               value: "6"
             - name: TEST_RUN_PUBLISHER_WARMUP_ITERATION_SLEEP_MS
               value: "2000"
-            - name: TEST_RUN_MAX_PUBLISH_TOPIC_GROUP_IDX
-              value: "200000"
             - name: STATS_PERIOD_SECS
               value: "30"
             - name: CLIENT_KEEP_ALIVE_SECONDS
               value: "10800"
             - name: MQTT_NETTY_WORKER_GROUP_THREADS
               value: "4"
-            - name: MQTT_BROKER_IP_ADDRESSES
-              value: "{{MQTT_BROKER_IP_ADDRESSES}}"
-            - name: TEST_RUN_PARALLEL_TESTS_COUNT
-              value: "2000"
-            - name: TEST_RUN_TEST_ORCHESTRATOR_URL
-              value: "http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-publishers-config
-      #          command: [ 'sh', '-c', 'while [ ! -f /tmp/test-finished ]; do sleep 2; done;' ]
+          command: [ 'sh', '-c', 'while [ ! -f /tmp/test-finished ]; do sleep 2; done;' ]
       restartPolicy: Always
 ---
 apiVersion: v1
