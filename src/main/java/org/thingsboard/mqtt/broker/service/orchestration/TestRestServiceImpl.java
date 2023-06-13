@@ -63,6 +63,8 @@ public class TestRestServiceImpl implements TestRestService {
             }
             String testType = serviceHelperTestType.getPrintName();
             targetNodeUrl = "http://broker-tests-" + testType + "-" + id + ".broker-tests-" + testType + ".thingsboard-mqtt-broker.svc.cluster.local:8088";
+        } else {
+            targetNodeUrl = nodeUrl;
         }
         log.info("Node URL: {}", targetNodeUrl);
     }
