@@ -43,7 +43,7 @@ spec:
       containers:
         - name: server
           imagePullPolicy: Always
-          image: dlandiak2110/tb-mqtt-broker-performance-tests:1.0.50
+          image: thingsboard/tbmq-performance-tests:1.0.50
           resources:
             limits:
               cpu: 1.5
