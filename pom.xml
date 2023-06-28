@@ -48,7 +48,7 @@
         <pkg.installFolder>/usr/share/${pkg.name}</pkg.installFolder>
         <docker.repo>thingsboard</docker.repo>
         <dockerfile.skip>true</dockerfile.skip>
-        <docker.name>tb-mqtt-broker-performance-tests</docker.name>
+        <docker.name>tbmq-performance-tests</docker.name>
         <pkg.implementationTitle>ThingsBoard MQTT Broker Performance Tests</pkg.implementationTitle>
         <pkg.mainClass>org.thingsboard.mqtt.broker.tools.PerformanceTestsApplication</pkg.mainClass>
         <docker.push-arm-amd-image.phase>pre-integration-test</docker.push-arm-amd-image.phase>
