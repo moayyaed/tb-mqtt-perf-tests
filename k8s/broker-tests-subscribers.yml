@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-subscribers
 spec:
   serviceName: broker-tests-subscribers
-  replicas: 5
+  replicas: 6
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -30,6 +30,16 @@ spec:
       labels:
         app: broker-tests-subscribers
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                      - broker-tests-subscribers
+              topologyKey: "kubernetes.io/hostname"
       volumes:
         - name: broker-tests-subscribers-config
           configMap:
@@ -41,17 +51,19 @@ spec:
                 path: logback.xml
               - key: tb-mqtt-broker-performance-tests.conf
                 path: tb-mqtt-broker-performance-tests.conf
+      nodeSelector:
+        role: tb-perf-test-subscribers
       containers:
         - name: server
           imagePullPolicy: Always
           image: thingsboard/tbmq-performance-tests:2.0.0
           resources:
             limits:
-              cpu: 1
-              memory: 1500Mi
+              cpu: 3.5
+              memory: 13Gi
             requests:
-              cpu: 1
-              memory: 1500Mi
+              cpu: 3.5
+              memory: 13Gi
           ports:
             - containerPort: 8088
               name: http
@@ -82,20 +94,18 @@ spec:
               value: "90000"
             - name: TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS
               value: "90000"
-            - name: TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS
-              value: "90000"
             - name: TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT
-              value: "30000"
+              value: "10000"
             - name: TEST_RUN_WAIT_TIME_MS_CLIENTS_CLOSED
-              value: "5000"
+              value: "3000"
             - name: STATS_ENABLED
               value: "true"
             - name: STATS_PERIOD_SECS
-              value: "30"
+              value: "10"
             - name: CLIENT_KEEP_ALIVE_SECONDS
               value: "10800"
             - name: MQTT_NETTY_WORKER_GROUP_THREADS
-              value: "2"
+              value: "0"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-subscribers-config

@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-publishers
 spec:
   serviceName: broker-tests-publishers
-  replicas: 5
+  replicas: 1
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -41,17 +41,19 @@ spec:
                 path: logback.xml
               - key: tb-mqtt-broker-performance-tests.conf
                 path: tb-mqtt-broker-performance-tests.conf
+      nodeSelector:
+        role: tb-perf-test-publishers
       containers:
         - name: server
           imagePullPolicy: Always
           image: thingsboard/tbmq-performance-tests:2.0.0
           resources:
             limits:
-              cpu: 1
-              memory: 2Gi
+              cpu: 1.5
+              memory: 6Gi
             requests:
-              cpu: 1
-              memory: 2Gi
+              cpu: 1.5
+              memory: 6Gi
           ports:
             - containerPort: 8088
               name: http
@@ -85,23 +87,23 @@ spec:
             - name: TEST_RUN_PUBLISHER_WARMUP_WAIT_TIME_SECONDS
               value: "90000"
             - name: TEST_RUN_WAIT_TIME_MS_AFTER_CLIENTS_DISCONNECT
-              value: "45000"
-            - name: TEST_RUN_WAIT_TIME_MS_CLIENTS_CLOSED
               value: "5000"
-            - name: STATS_ENABLED
-              value: "true"
+            - name: TEST_RUN_WAIT_TIME_MS_CLIENTS_CLOSED
+              value: "3000"
             - name: TEST_RUN_PUBLISHER_WARMUP_SLEEP_MS
-              value: "30000"
+              value: "10000"
             - name: TEST_RUN_PUBLISHER_WARMUP_COUNT
-              value: "6"
+              value: "30"
             - name: TEST_RUN_PUBLISHER_WARMUP_ITERATION_SLEEP_MS
               value: "2000"
+            - name: STATS_ENABLED
+              value: "true"
             - name: STATS_PERIOD_SECS
-              value: "30"
+              value: "10"
             - name: CLIENT_KEEP_ALIVE_SECONDS
               value: "10800"
             - name: MQTT_NETTY_WORKER_GROUP_THREADS
-              value: "4"
+              value: "0"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-publishers-config

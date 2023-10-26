@@ -22,7 +22,7 @@ metadata:
     name: broker-tests-publishers-config
 data:
   tb-mqtt-broker-performance-tests.conf: |
-    export JAVA_OPTS="$JAVA_OPTS -Xmx1g -Xms1g -Xss320k -XX:+AlwaysPreTouch"
+    export JAVA_OPTS="$JAVA_OPTS -Xmx4g -Xms4g -Xss320k -XX:+AlwaysPreTouch"
     export JAVA_OPTS="$JAVA_OPTS -Dplatform=deb"
     export JAVA_OPTS="$JAVA_OPTS -XX:+IgnoreUnrecognizedVMOptions -XX:+HeapDumpOnOutOfMemoryError"
     export JAVA_OPTS="$JAVA_OPTS -XX:+UseTLAB -XX:+ResizeTLAB -XX:+PerfDisableSharedMem -XX:+UseCondCardMark"
@@ -60,49 +60,21 @@ data:
       "publisherGroups": [
         {
           "id": 1,
-          "publishers": 20,
-          "topicPrefix": "usa/ydwvv/1/",
-          "clientIdPrefix": null
-        },
-        {
-          "id": 2,
-          "publishers": 20,
-          "topicPrefix": "usa/iibxr/2/",
-          "clientIdPrefix": null
-        },
-        {
-          "id": 3,
-          "publishers": 20,
-          "topicPrefix": "usa/zltjr/3/",
-          "clientIdPrefix": null
-        },
-        {
-          "id": 4,
-          "publishers": 20,
-          "topicPrefix": "usa/nnknx/4/",
-          "clientIdPrefix": null
-        },
-        {
-          "id": 5,
-          "publishers": 20,
-          "topicPrefix": "usa/gjelz/5/",
+          "publishers": 100,
+          "topicPrefix": "ua/kyiv/",
           "clientIdPrefix": null
         }
       ],
       "subscriberGroups": [],
       "dummyClients": 0,
-      "secondsToRun": 3600,
-      "additionalSecondsToWait": 300,
-      "maxMsgsPerPublisherPerSecond": 1,
-      "publisherQosValue": 1,
-      "subscriberQosValue": 1,
+      "secondsToRun": 120,
+      "additionalSecondsToWait": 10,
+      "maxMsgsPerPublisherPerSecond": 10,
+      "publisherQosValue": 0,
+      "subscriberQosValue": 0,
       "minPayloadSize": 1,
       "maxConcurrentOperations": 10000,
       "telemetryKeys": [
-        "lat",
-        "long",
-        "speed",
-        "fuel",
-        "batLvl"
+        "g"
       ]
     }
