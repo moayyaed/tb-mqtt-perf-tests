@@ -113,7 +113,7 @@ public class PublisherServiceImpl implements PublisherService {
                                 latch.countDown();
                             }, t -> {
                                 log.warn("[{}] Failed to connect publisher", clientId);
-                                pubClient.disconnect();
+                                pubClient.disconnectAndClose();
                                 latch.countDown();
                             }
                     ),
@@ -247,7 +247,7 @@ public class PublisherServiceImpl implements PublisherService {
         publishScheduler.shutdownNow();
         for (PublisherInfo publisherInfo : publisherInfos.values()) {
             try {
-                publisherInfo.getPublisher().disconnect();
+                publisherInfo.getPublisher().disconnectAndClose();
             } catch (Exception e) {
                 log.error("[{}] Failed to disconnect publisher", publisherInfo.getClientId());
             }

@@ -95,7 +95,7 @@ public class SubscriberServiceImpl implements SubscriberService {
                                 latch.countDown();
                             }, t -> {
                                 log.warn("[{}] Failed to connect subscriber", clientId);
-                                subClient.disconnect();
+                                subClient.disconnectAndClose();
                                 latch.countDown();
                             }
                     ),

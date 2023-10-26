@@ -74,7 +74,7 @@ public class DummyClientServiceImpl implements DummyClientService {
                         latch.countDown();
                     }, t -> {
                         log.warn("Failed to connect dummy client {}", clientId);
-                        dummyClient.disconnect();
+                        dummyClient.disconnectAndClose();
                         latch.countDown();
                     }),
                     dummyClient);
@@ -94,7 +94,7 @@ public class DummyClientServiceImpl implements DummyClientService {
         int clientIndex = 0;
         for (MqttClient dummyClient : dummyClients.values()) {
             try {
-                dummyClient.disconnect();
+                dummyClient.disconnectAndClose();
             } catch (Exception e) {
                 log.error("[{}] Failed to disconnect dummy client", clientIndex);
             }

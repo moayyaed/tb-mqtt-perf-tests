@@ -190,10 +190,16 @@ public interface MqttClient {
     }
 
     /**
-     * Send disconnect and close channel
+     * Send disconnect
      *
      */
     void disconnect();
+
+    /**
+     * Send disconnect and close channel
+     *
+     */
+    void disconnectAndClose();
 
     /**
      * Sets the {@see #MqttClientCallback} object for this MqttClient

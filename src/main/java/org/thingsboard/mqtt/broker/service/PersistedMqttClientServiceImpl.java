@@ -103,7 +103,7 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
         List<PreConnectedSubscriberInfo> nodeSubscribers = TestClusterUtil.getTestNodeSubscribers(testRunConfiguration, testRunClusterConfig);
         List<PreConnectedSubscriberInfo> persistedNodeSubscribers = nodeSubscribers.stream()
                 .filter(preConnectedSubscriberInfo -> preConnectedSubscriberInfo.getSubscriberGroup().getPersistentSessionInfo() != null)
-                .collect(Collectors.toList());
+                .toList();
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -114,11 +114,11 @@ public class PersistedMqttClientServiceImpl implements PersistedMqttClientServic
             MqttClient mqttClient = clientInitializer.createClient(clientId, MqttPerformanceTest.DEFAULT_USER_NAME, true);
             clientInitializer.connectClient(CallbackUtil.createConnectCallback(
                             connectResult -> {
-                                mqttClient.disconnect();
+                                mqttClient.disconnectAndClose();
                                 countDownLatch.countDown();
                             }, t -> {
                                 log.warn("[{}] Failed to clear persisted session", clientId);
-                                mqttClient.disconnect();
+                                mqttClient.disconnectAndClose();
                                 countDownLatch.countDown();
                             }
                     ),
