@@ -71,7 +71,7 @@ data:
         }
       ],
       "dummyClients": 0,
-      "secondsToRun": 120,
+      "secondsToRun": 1800,
       "additionalSecondsToWait": 10,
       "maxMsgsPerPublisherPerSecond": 1,
       "publisherQosValue": 0,

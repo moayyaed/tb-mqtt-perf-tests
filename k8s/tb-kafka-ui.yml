@@ -17,18 +17,18 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: tb-kafka-ui-kowl
+  name: tb-kafka-ui
 spec:
-  serviceName: tb-kafka-ui-kowl
+  serviceName: tb-kafka-ui
   replicas: 1
   podManagementPolicy: Parallel
   selector:
     matchLabels:
-      app: tb-kafka-ui-kowl
+      app: tb-kafka-ui
   template:
     metadata:
       labels:
-        app: tb-kafka-ui-kowl
+        app: tb-kafka-ui
     spec:
       imagePullSecrets:
         - name: regcred
@@ -37,7 +37,7 @@ spec:
       containers:
         - name: server
           imagePullPolicy: Always
-          image: quay.io/cloudhut/kowl:master
+          image: docker.redpanda.com/redpandadata/console:latest
           resources:
             requests:
               cpu: 200m

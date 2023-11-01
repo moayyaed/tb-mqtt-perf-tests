@@ -67,7 +67,7 @@ data:
       ],
       "subscriberGroups": [],
       "dummyClients": 0,
-      "secondsToRun": 120,
+      "secondsToRun": 1800,
       "additionalSecondsToWait": 10,
       "maxMsgsPerPublisherPerSecond": 10,
       "publisherQosValue": 0,

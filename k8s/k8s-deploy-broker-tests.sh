@@ -29,4 +29,4 @@ kubectl apply -f broker-tests-subscribers-config.yml
 kubectl apply -f broker-tests-publishers.yml
 kubectl apply -f broker-tests-subscribers.yml
 
-kubectl apply -f tb-kafka-ui-kowl.yml
+kubectl apply -f tb-kafka-ui.yml
