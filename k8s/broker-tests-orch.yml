@@ -41,7 +41,7 @@ spec:
       containers:
         - name: server
           imagePullPolicy: Always
-          image: thingsboard/tbmq-performance-tests:2.0.1
+          image: thingsboard/tbmq-performance-tests:2.0.2
           resources:
             limits:
               cpu: 0.5
