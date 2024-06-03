@@ -54,6 +54,11 @@ public class TestRestServiceImpl implements TestRestService {
     public void init() {
         this.restTemplate = restTemplateBuilder.build();
 
+        String namespace = System.getenv("POD_NAMESPACE");
+        if (!StringUtils.hasLength(namespace)) {
+            namespace = "thingsboard-mqtt-broker";
+        }
+
         if (StringUtils.isEmpty(nodeUrl) && serviceHelper != null) {
             log.info("nodeUrl is not set!");
             int id = serviceHelper.getId();
@@ -62,7 +67,7 @@ public class TestRestServiceImpl implements TestRestService {
                 return;
             }
             String testType = serviceHelperTestType.getPrintName();
-            targetNodeUrl = "http://broker-tests-" + testType + "-" + id + ".broker-tests-" + testType + ".thingsboard-mqtt-broker.svc.cluster.local:8088";
+            targetNodeUrl = "http://broker-tests-" + testType + "-" + id + ".broker-tests-" + testType + "." + namespace + ".svc.cluster.local:8088";
         } else {
             targetNodeUrl = nodeUrl;
         }
