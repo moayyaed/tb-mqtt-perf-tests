@@ -83,6 +83,8 @@ public class PublisherServiceImpl implements PublisherService {
     private int maxTotalClientsPerIteration;
     @Value("${test-run.max_publish_topic_group_idx}")
     private int maxPublishTopicGroupIdx;
+    @Value("${test-run.publish-chunk-size-divider:1}")
+    private int chunkSizeDivider;
 
     @Override
     public void connectPublishers() {
@@ -174,18 +176,18 @@ public class PublisherServiceImpl implements PublisherService {
         int publishPeriodMs = 1000 / testRunConfiguration.getMaxMessagesPerPublisherPerSecond();
         AtomicLong lastPublishTickTime = new AtomicLong(System.currentTimeMillis());
 
-        int shortenedPublishPeriodMs = publishPeriodMs / 100;
+        int shortenedPublishPeriodMs = publishPeriodMs / chunkSizeDivider;
 
         int chunkSize;
         if (maxTotalClientsPerIteration > 0) {
-            chunkSize = maxTotalClientsPerIteration / 100;
+            chunkSize = maxTotalClientsPerIteration / chunkSizeDivider;
         } else {
-            chunkSize = publisherInfos.values().size() / 100;
+            chunkSize = publisherInfos.values().size() / chunkSizeDivider;
         }
         log.info("Chunk size is {}", chunkSize);
 
         publishScheduler.scheduleAtFixedRate(() -> {
-            if (publishedMessagesPerPublisher.getAndIncrement() / 100 >= testRunConfiguration.getTotalPublisherMessagesCount()) {
+            if (publishedMessagesPerPublisher.getAndIncrement() / chunkSizeDivider >= testRunConfiguration.getTotalPublisherMessagesCount()) {
                 return;
             }
             long now = System.currentTimeMillis();
