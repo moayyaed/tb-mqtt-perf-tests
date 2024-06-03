@@ -22,7 +22,7 @@
 
     <groupId>org.thingsboard.mqtt-broker</groupId>
     <artifactId>performance-tests</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <packaging>jar</packaging>
 
     <name>ThingsBoard MQTT Broker Performance Tests</name>
