@@ -83,7 +83,7 @@ public class ClientInitializerImpl implements ClientInitializer {
         config.setClientId(clientId);
         config.setUsername(userName);
         config.setCleanSession(cleanSession);
-        config.setProtocolVersion(MqttVersion.MQTT_3_1_1);
+        config.setProtocolVersion(MqttVersion.MQTT_5);
         config.setTimeoutSeconds(keepAliveSeconds);
         MqttClient client = MqttClient.create(config, defaultHandler, receivedMsgProcessor, ipAddrIterator);
         client.setEventLoop(eventLoopGroup);

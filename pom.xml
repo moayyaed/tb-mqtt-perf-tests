@@ -22,7 +22,7 @@
 
     <groupId>org.thingsboard.mqtt-broker</groupId>
     <artifactId>performance-tests</artifactId>
-    <version>2.0.2</version>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
 
     <name>ThingsBoard MQTT Broker Performance Tests</name>
@@ -37,7 +37,7 @@
         <lombok.version>1.18.26</lombok.version>
         <spring.version>5.3.26</spring.version>
         <jackson.version>2.13.4</jackson.version>
-        <netty.version>4.1.94.Final</netty.version>
+        <netty.version>4.1.109.Final</netty.version>
         <guava.version>31.1-jre</guava.version>
         <dockerfile-maven.version>1.4.13</dockerfile-maven.version>
 

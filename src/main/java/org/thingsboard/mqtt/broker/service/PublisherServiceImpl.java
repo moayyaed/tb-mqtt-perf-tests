@@ -40,6 +40,7 @@ import org.thingsboard.mqtt.broker.tests.MqttPerformanceTest;
 import org.thingsboard.mqtt.broker.util.CallbackUtil;
 import org.thingsboard.mqtt.broker.util.ThingsBoardThreadFactory;
 
+import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -85,6 +86,8 @@ public class PublisherServiceImpl implements PublisherService {
     private int maxPublishTopicGroupIdx;
     @Value("${test-run.publish-chunk-size-divider:1}")
     private int chunkSizeDivider;
+
+    private boolean stopped = false;
 
     @Override
     public void connectPublishers() {
@@ -221,7 +224,7 @@ public class PublisherServiceImpl implements PublisherService {
                                     log.debug("[{}] Acknowledged msg with time {}", publisherInfo.getClientId(), message.getCreateTime());
                                 }
                             },
-                            t -> log.debug("[{}] Failed to send msg.", publisherInfo.getClientId(), t)
+                            t -> log.error("[{}] Failed to send msg.", publisherInfo.getClientId(), t)
                     ),
                     testRunConfiguration.getPublisherQoS());
             publishSentFuture
@@ -254,6 +257,7 @@ public class PublisherServiceImpl implements PublisherService {
                 log.error("[{}] Failed to disconnect publisher", publisherInfo.getClientId());
             }
         }
+        stopped = true;
     }
 
     @Override
@@ -278,4 +282,13 @@ public class PublisherServiceImpl implements PublisherService {
         private final int publisherIndex;
         private final int publisherTopicSuffix;
     }
+
+    @PreDestroy
+    public void destroy() {
+        if (!stopped) {
+            log.info("Disconnecting publisher clients on destroy!");
+            disconnectPublishers();
+        }
+    }
+
 }

@@ -29,8 +29,10 @@ import io.netty.handler.codec.mqtt.MqttMessage;
 import io.netty.handler.codec.mqtt.MqttMessageIdVariableHeader;
 import io.netty.handler.codec.mqtt.MqttMessageType;
 import io.netty.handler.codec.mqtt.MqttPubAckMessage;
+import io.netty.handler.codec.mqtt.MqttPubReplyMessageVariableHeader;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import io.netty.handler.codec.mqtt.MqttQoS;
+import io.netty.handler.codec.mqtt.MqttReasonCodes;
 import io.netty.handler.codec.mqtt.MqttSubAckMessage;
 import io.netty.handler.codec.mqtt.MqttUnsubAckMessage;
 import io.netty.util.CharsetUtil;
@@ -236,11 +238,18 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
     }
 
     private void handlePubrec(Channel channel, MqttMessage message) {
-        MqttPendingPublish pendingPublish = this.client.getPendingPublishes().get(((MqttMessageIdVariableHeader) message.variableHeader()).messageId());
+        MqttPubReplyMessageVariableHeader variableHeader = (MqttPubReplyMessageVariableHeader) message.variableHeader();
+        int messageId = variableHeader.messageId();
+        MqttPendingPublish pendingPublish = this.client.getPendingPublishes().get(messageId);
         pendingPublish.onPubackReceived();
 
+        if (variableHeader.reasonCode() == MqttReasonCodes.PubRec.QUOTA_EXCEEDED.byteValue()) {
+            pendingPublish.getCallback().onFailure(new RuntimeException("rate limits detected"));
+            this.client.getPendingPublishes().remove(messageId);
+            return;
+        }
+
         MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PUBREL, false, MqttQoS.AT_LEAST_ONCE, false, 0);
-        MqttMessageIdVariableHeader variableHeader = (MqttMessageIdVariableHeader) message.variableHeader();
         MqttMessage pubrelMessage = new MqttMessage(fixedHeader, variableHeader);
         channel.writeAndFlush(pubrelMessage);
 
