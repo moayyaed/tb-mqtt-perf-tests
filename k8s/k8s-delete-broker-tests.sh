@@ -27,4 +27,3 @@ kubectl delete -f broker-tests-publishers.yml
 kubectl delete -f broker-tests-subscribers.yml
 kubectl delete -f broker-tests-orch.yml
 
-kubectl delete -f tb-kafka-ui-kowl.yml
