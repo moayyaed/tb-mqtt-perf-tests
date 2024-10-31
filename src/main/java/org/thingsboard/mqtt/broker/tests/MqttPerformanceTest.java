@@ -16,6 +16,7 @@
 package org.thingsboard.mqtt.broker.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.netty.util.ResourceLeakDetector;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -73,6 +74,8 @@ public class MqttPerformanceTest {
 
     private ScheduledExecutorService latencyScheduler;
 
+    @Value("${mqtt.netty.leak_detector_level}")
+    private String leakDetectorLevel;
     @Value("${test-run.wait-time-after-clients-disconnect-ms}")
     private int waitTimeAfterDisconnectsMs;
     @Value("${test-run.wait-time-clients-closed-ms}")
@@ -90,6 +93,9 @@ public class MqttPerformanceTest {
         ValidationUtil.validatePublisherGroups(testRunConfiguration.getPublishersConfig());
 
         latencyScheduler = Executors.newSingleThreadScheduledExecutor(ThingsBoardThreadFactory.forName("latency-scheduler"));
+
+        log.info("Setting resource leak detector level to {}", leakDetectorLevel);
+        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.valueOf(leakDetectorLevel.toUpperCase()));
     }
 
     public void runTest() throws Exception {
