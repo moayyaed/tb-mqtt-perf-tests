@@ -209,6 +209,11 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
                     MqttMessage pubrecMessage = new MqttMessage(fixedHeader, variableHeader);
 
                     MqttIncomingQos2Publish incomingQos2Publish = new MqttIncomingQos2Publish(message);
+
+                    if (this.client.getQos2PendingIncomingPublishes().containsKey(message.variableHeader().packetId())) {
+                        log.error("Duplicate PUBREC detected for packet ID {}. The packet is already in the QoS 2 pending incoming publishes map.", message.variableHeader().packetId());
+                    }
+
                     this.client.getQos2PendingIncomingPublishes().put(message.variableHeader().packetId(), incomingQos2Publish);
 
                     channel.writeAndFlush(pubrecMessage);
