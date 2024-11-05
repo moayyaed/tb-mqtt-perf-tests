@@ -39,6 +39,9 @@ import java.util.Set;
 public class DefaultTestRunConfiguration implements TestRunConfiguration {
     private static final String CONFIGURATION_NAME = "Default Configuration";
 
+    @Value("${test-run.default.worker-type:DEFAULT}")
+    private String workerTypeStr;
+
     @Value("${test-run.default.pub-sub-groups-count:100}")
     private int pubSubGroupsCount;
 
@@ -70,7 +73,8 @@ public class DefaultTestRunConfiguration implements TestRunConfiguration {
 
     @PostConstruct
     public void init() {
-        p2pPubSubConfig = createPubSubConfig();
+        WorkerType workerType = WorkerType.valueOf(workerTypeStr);
+        p2pPubSubConfig = createPubSubConfig(workerType);
     }
 
     @Override
@@ -138,16 +142,33 @@ public class DefaultTestRunConfiguration implements TestRunConfiguration {
         return maxConcurrentOperations;
     }
 
-    private Pair<List<PublisherGroup>, List<SubscriberGroup>> createPubSubConfig() {
-        var persistentSessionInfo = new PersistentSessionInfo(PersistentClientType.DEVICE);
-        List<PublisherGroup> publisherGroups = new ArrayList<>();
-        List<SubscriberGroup> subscriberGroups = new ArrayList<>();
+    private Pair<List<PublisherGroup>, List<SubscriberGroup>> createPubSubConfig(WorkerType workerType) {
+        if (workerType == WorkerType.DEFAULT) {
+            var persistentSessionInfo = new PersistentSessionInfo(PersistentClientType.DEVICE);
+            List<PublisherGroup> publisherGroups = new ArrayList<>();
+            List<SubscriberGroup> subscriberGroups = new ArrayList<>();
 
-        for (int groupIndex = 1; groupIndex <= pubSubGroupsCount; groupIndex++) {
-            publisherGroups.add(createP2PPublisherGroup(groupIndex));
-            subscriberGroups.add(createP2PSubscribeGroup(groupIndex, persistentSessionInfo));
+            for (int groupIndex = 1; groupIndex <= pubSubGroupsCount; groupIndex++) {
+                publisherGroups.add(createP2PPublisherGroup(groupIndex));
+                subscriberGroups.add(createP2PSubscribeGroup(groupIndex, persistentSessionInfo));
+            }
+            return new ImmutablePair<>(publisherGroups, subscriberGroups);
+        } else if (workerType == WorkerType.PUBLISHER) {
+            List<PublisherGroup> publisherGroups = new ArrayList<>();
+
+            for (int groupIndex = 1; groupIndex <= pubSubGroupsCount; groupIndex++) {
+                publisherGroups.add(createP2PPublisherGroup(groupIndex));
+            }
+            return new ImmutablePair<>(publisherGroups, Collections.emptyList());
+        } else {
+            var persistentSessionInfo = new PersistentSessionInfo(PersistentClientType.DEVICE);
+            List<SubscriberGroup> subscriberGroups = new ArrayList<>();
+
+            for (int groupIndex = 1; groupIndex <= pubSubGroupsCount; groupIndex++) {
+                subscriberGroups.add(createP2PSubscribeGroup(groupIndex, persistentSessionInfo));
+            }
+            return new ImmutablePair<>(Collections.emptyList(), subscriberGroups);
         }
-        return new ImmutablePair<>(publisherGroups, subscriberGroups);
     }
 
     private SubscriberGroup createP2PSubscribeGroup(int groupIndex, PersistentSessionInfo persistentSessionInfo) {
