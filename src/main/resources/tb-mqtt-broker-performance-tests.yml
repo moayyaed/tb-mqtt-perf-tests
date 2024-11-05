@@ -55,6 +55,7 @@ tb-broker:
 
 test-run:
   default:
+    worker-type: "${TEST_RUN_DEFAULT_WORKER_TYPE:DEFAULT}" # DEFAULT, PUBLISHER, SUBSCRIBER
     pub-sub-groups-count: "${TEST_RUN_DEFAULT_PUB_SUB_GROUPS_COUNT:100}"
     seconds-to-run: "${TEST_RUN_DEFAULT_SECONDS_TO_RUN:30}"
     additional-seconds-to-wait: "${TEST_RUN_DEFAULT_ADDITIONAL_SECONDS_TO_WAIT:10}"
