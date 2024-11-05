@@ -54,6 +54,22 @@ tb-broker:
     password: "${TB_ADMIN_PASSWORD:sysadmin}"
 
 test-run:
+  default:
+    pub-sub-groups-count: "${TEST_RUN_DEFAULT_PUB_SUB_GROUPS_COUNT:100}"
+    seconds-to-run: "${TEST_RUN_DEFAULT_SECONDS_TO_RUN:30}"
+    additional-seconds-to-wait: "${TEST_RUN_DEFAULT_ADDITIONAL_SECONDS_TO_WAIT:10}"
+    dummy-clients: "${TEST_RUN_DEFAULT_DUMMY_CLIENTS:0}"
+    max-msgs-per-publisher-per-second: "${TEST_RUN_DEFAULT_MAX_MSGS_PER_PUBLISHER_PER_SECOND:1}"
+    publisher-qos: "${TEST_RUN_DEFAULT_PUBLISHER_QOS:0}"
+    subscriber-qos: "${TEST_RUN_DEFAULT_SUBSCRIBER_QOS:0}"
+    min-payload-size: "${TEST_RUN_DEFAULT_MIN_PAYLOAD_SIZE:256}"
+    max-concurrent-operations: "${TEST_RUN_DEFAULT_MAX_CONCURRENT_OPERATIONS:1000}"
+
+  # If the configuration file is not set, the default configuration (p2p) will be used.
+  # "p2p" or "point-to-point" refers to a 1 publisher to 1 subscriber configuration.
+  # Use TEST_RUN_DEFAULT_PUB_SUB_GROUPS_COUNT to define the number of p2p groups.
+  configuration-file: "${TEST_RUN_CONFIGURATION_FILE:}"
+
   # Could be ORCHESTRATOR or RUNNER
   orchestrator-url: "${TEST_RUN_TEST_ORCHESTRATOR_URL:}"
   node-url: "${TEST_RUN_TEST_NODE_URL:}"
@@ -61,8 +77,6 @@ test-run:
   max-cluster-wait-time: "${TEST_RUN_MAX_CLUSTER_WAIT_TIME_SECONDS:60}"
   cluster-process-wait-time: "${TEST_RUN_CLUSTER_PROCESS_WAIT_TIME_SECONDS:60}"
   clear-persisted-sessions-wait-time: "${TEST_RUN_CLEAR_PERSISTED_SESSIONS_WAIT_TIME_SECONDS:60}"
-
-  configuration-file: "${TEST_RUN_CONFIGURATION_FILE:}"
 
   sequential-number: "${TEST_RUN_SEQUENTIAL_NUMBER:}"
   parallel-tests-count: "${TEST_RUN_PARALLEL_TESTS_COUNT:1}"

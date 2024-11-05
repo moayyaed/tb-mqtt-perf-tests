@@ -17,6 +17,9 @@ package org.thingsboard.mqtt.broker.config;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 import org.thingsboard.mqtt.broker.data.PersistentClientType;
@@ -24,11 +27,11 @@ import org.thingsboard.mqtt.broker.data.PersistentSessionInfo;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 
-import java.util.Arrays;
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -36,39 +39,39 @@ import java.util.stream.Collectors;
 public class DefaultTestRunConfiguration implements TestRunConfiguration {
     private static final String CONFIGURATION_NAME = "Default Configuration";
 
-    private static final List<PublisherGroup> publisherGroupsConfiguration = Arrays.asList(
-            new PublisherGroup(1, 200, "europe/ua/kyiv/tb/"),
-            new PublisherGroup(2, 50, "europe/ua/kyiv/"),
-            new PublisherGroup(3, 150, "asia/")
-//            new PublisherGroup(4, 1, "perf/test/topic/", "perf_test_publisher_")
-    );
+    @Value("${test-run.default.pub-sub-groups-count:100}")
+    private int pubSubGroupsCount;
 
-    private static final Set<Integer> ALL_PUBLISHER_IDS = publisherGroupsConfiguration.stream().map(PublisherGroup::getId).collect(Collectors.toSet());
+    @Value("${test-run.default.seconds-to-run:30}")
+    private int secondsToRun;
 
-    private static final List<SubscriberGroup> subscriberGroupsConfiguration = Arrays.asList(
-            new SubscriberGroup(1, 150, "europe/ua/kyiv/tb/+", Set.of(1), null),
-//            new SubscriberGroup(2, 50, "europe/ua/kyiv/#", Set.of(1, 2), null),
-            new SubscriberGroup(3, 20, "#", ALL_PUBLISHER_IDS, new PersistentSessionInfo(PersistentClientType.APPLICATION)),
-            new SubscriberGroup(4, 20, "europe/ua/kyiv/tb/#", Set.of(1), new PersistentSessionInfo(PersistentClientType.DEVICE)),
-            new SubscriberGroup(5, 10, "europe/ua/kyiv/#", Set.of(1, 2), new PersistentSessionInfo(PersistentClientType.DEVICE))
-//            new SubscriberGroup(6, 1, "europe/ua/kyiv/#", Set.of(1, 2), new PersistentSessionInfo(PersistentClientType.APPLICATION))
-//            new SubscriberGroup(7, 1, "perf/test/topic/+", Set.of(4), null, "perf_test_basic_")
-//            new SubscriberGroup(8, 1, "perf/test/topic/+", Set.of(4), new PersistentSessionInfo(PersistentClientType.DEVICE), "perf_test_device_")
-//            new SubscriberGroup(9, 1, "perf/test/topic/+", Set.of(4), new PersistentSessionInfo(PersistentClientType.APPLICATION), "perf_test_application_")
-    );
+    @Value("${test-run.default.additional-seconds-to-wait:10}")
+    private int additionalSecondsToWait;
 
-    private static final int SECONDS_TO_RUN = 30;
-    private static final int ADDITIONAL_SECONDS_TO_WAIT = 30;
+    @Value("${test-run.default.dummy-clients:0}")
+    private int dummyClients;
 
-    private static final int DUMMY_CLIENTS = 10_000;
-    private static final int MAX_MSGS_PER_PUBLISHER_PER_SECOND = 1;
+    @Value("${test-run.default.max-msgs-per-publisher-per-second:1}")
+    private int maxMsgsPerPublisherPerSecond;
 
-    private static final MqttQoS PUBLISHER_QOS = MqttQoS.AT_LEAST_ONCE;
-    private static final MqttQoS SUBSCRIBER_QOS = MqttQoS.AT_LEAST_ONCE;
+    @Value("${test-run.default.publisher-qos:0}")
+    private int publisherQos;
 
-    private static final int PAYLOAD_SIZE = 256;
+    @Value("${test-run.default.subscriber-qos:0}")
+    private int subscriberQos;
 
-    private static final int TOTAL_PUBLISHER_MESSAGES = SECONDS_TO_RUN * MAX_MSGS_PER_PUBLISHER_PER_SECOND;
+    @Value("${test-run.default.min-payload-size:256}")
+    private int minPayloadSize;
+
+    @Value("${test-run.default.max-concurrent-operations:1000}")
+    private int maxConcurrentOperations;
+
+    private Pair<List<PublisherGroup>, List<SubscriberGroup>> p2pPubSubConfig;
+
+    @PostConstruct
+    public void init() {
+        p2pPubSubConfig = createPubSubConfig();
+    }
 
     @Override
     public String getConfigurationName() {
@@ -77,52 +80,52 @@ public class DefaultTestRunConfiguration implements TestRunConfiguration {
 
     @Override
     public List<SubscriberGroup> getSubscribersConfig() {
-        return subscriberGroupsConfiguration;
+        return p2pPubSubConfig.getRight();
     }
 
     @Override
     public List<PublisherGroup> getPublishersConfig() {
-        return publisherGroupsConfiguration;
+        return p2pPubSubConfig.getLeft();
     }
 
     @Override
     public int getMaxMessagesPerPublisherPerSecond() {
-        return MAX_MSGS_PER_PUBLISHER_PER_SECOND;
+        return maxMsgsPerPublisherPerSecond;
     }
 
     @Override
     public int getSecondsToRun() {
-        return SECONDS_TO_RUN;
+        return secondsToRun;
     }
 
     @Override
     public int getAdditionalSecondsToWait() {
-        return ADDITIONAL_SECONDS_TO_WAIT;
+        return additionalSecondsToWait;
     }
 
     @Override
     public int getTotalPublisherMessagesCount() {
-        return TOTAL_PUBLISHER_MESSAGES;
+        return secondsToRun * maxMsgsPerPublisherPerSecond;
     }
 
     @Override
     public int getNumberOfDummyClients() {
-        return DUMMY_CLIENTS;
+        return dummyClients;
     }
 
     @Override
     public MqttQoS getPublisherQoS() {
-        return PUBLISHER_QOS;
+        return MqttQoS.valueOf(publisherQos);
     }
 
     @Override
     public MqttQoS getSubscriberQoS() {
-        return SUBSCRIBER_QOS;
+        return MqttQoS.valueOf(subscriberQos);
     }
 
     @Override
     public int getMinPayloadSize() {
-        return PAYLOAD_SIZE;
+        return minPayloadSize;
     }
 
     @Override
@@ -132,6 +135,26 @@ public class DefaultTestRunConfiguration implements TestRunConfiguration {
 
     @Override
     public int getMaxConcurrentOperations() {
-        return 10000;
+        return maxConcurrentOperations;
+    }
+
+    private Pair<List<PublisherGroup>, List<SubscriberGroup>> createPubSubConfig() {
+        var persistentSessionInfo = new PersistentSessionInfo(PersistentClientType.DEVICE);
+        List<PublisherGroup> publisherGroups = new ArrayList<>();
+        List<SubscriberGroup> subscriberGroups = new ArrayList<>();
+
+        for (int groupIndex = 1; groupIndex <= pubSubGroupsCount; groupIndex++) {
+            publisherGroups.add(createP2PPublisherGroup(groupIndex));
+            subscriberGroups.add(createP2PSubscribeGroup(groupIndex, persistentSessionInfo));
+        }
+        return new ImmutablePair<>(publisherGroups, subscriberGroups);
+    }
+
+    private SubscriberGroup createP2PSubscribeGroup(int groupIndex, PersistentSessionInfo persistentSessionInfo) {
+        return new SubscriberGroup(groupIndex, 1, "europe/ua/kyiv/" + groupIndex + "/+", Set.of(groupIndex), persistentSessionInfo);
+    }
+
+    private PublisherGroup createP2PPublisherGroup(int groupIndex) {
+        return new PublisherGroup(groupIndex, 1, "europe/ua/kyiv/" + groupIndex + "/");
     }
 }
