@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-subscribers
 spec:
   serviceName: broker-tests-subscribers
-  replicas: 5
+  replicas: 1
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -41,10 +41,12 @@ spec:
                 path: logback.xml
               - key: tb-mqtt-broker-performance-tests.conf
                 path: tb-mqtt-broker-performance-tests.conf
+      nodeSelector:
+        role: tb-perf-test-subscribers
       containers:
         - name: server
           imagePullPolicy: Always
-          image: thingsboard/tbmq-performance-tests:2.0.2
+          image: thingsboard/tbmq-performance-tests:3.0.1
           ports:
             - containerPort: 8088
               name: http
@@ -56,7 +58,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: TEST_RUN_CONFIGURATION_FILE
-              value: "/config/test_run_config.json"
+              value: ""
             - name: BROKER_TYPE
               value: "THINGSBOARD"
             - name: MQTT_HOST
@@ -84,11 +86,25 @@ spec:
             - name: STATS_ENABLED
               value: "true"
             - name: STATS_PERIOD_SECS
-              value: "30"
+              value: "10"
             - name: CLIENT_KEEP_ALIVE_SECONDS
               value: "10800"
             - name: MQTT_NETTY_WORKER_GROUP_THREADS
-              value: "2"
+              value: "0"
+            - name: TEST_RUN_DEFAULT_WORKER_TYPE
+              value: "SUBSCRIBER"
+            - name: TEST_RUN_DEFAULT_PUB_SUB_GROUPS_COUNT
+              value: "15000"
+            - name: TEST_RUN_DEFAULT_SECONDS_TO_RUN
+              value: "300"
+            - name: TEST_RUN_DEFAULT_ADDITIONAL_SECONDS_TO_WAIT
+              value: "10"
+            - name: TEST_RUN_DEFAULT_SUBSCRIBER_QOS
+              value: "1"
+            - name: TEST_RUN_DEFAULT_MIN_PAYLOAD_SIZE
+              value: "1"
+            - name: TEST_RUN_DEFAULT_MAX_CONCURRENT_OPERATIONS
+              value: "5000"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-subscribers-config

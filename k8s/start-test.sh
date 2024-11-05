@@ -15,12 +15,23 @@
 # limitations under the License.
 #
 
-for i in {0..4}
-do
-   kubectl exec broker-tests-subscribers-$i -- sh -c "export TEST_RUN_TEST_NODE_URL=http://broker-tests-subscribers-$i.broker-tests-subscribers.thingsboard-mqtt-broker.svc.cluster.local:8088;export TEST_RUN_SEQUENTIAL_NUMBER=$i;export TEST_RUN_PARALLEL_TESTS_COUNT=5;export TEST_RUN_TEST_ORCHESTRATOR_URL=http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088;start-tb-mqtt-broker-performance-tests.sh;" > broker-tests-subscribers-$i.log 2>&1 &
-done
+NUM_ITERATIONS=0
+PARALLEL_TESTS_COUNT=$((NUM_ITERATIONS + 1))
 
-for i in {0..4}
-do
-  kubectl exec broker-tests-publishers-$i -- sh -c "export TEST_RUN_TEST_NODE_URL=http://broker-tests-publishers-$i.broker-tests-publishers.thingsboard-mqtt-broker.svc.cluster.local:8088;export TEST_RUN_SEQUENTIAL_NUMBER=$i;export TEST_RUN_PARALLEL_TESTS_COUNT=5;export TEST_RUN_TEST_ORCHESTRATOR_URL=http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088;start-tb-mqtt-broker-performance-tests.sh;" > broker-tests-publishers-$i.log 2>&1 &
+for i in $(seq 0 $NUM_ITERATIONS); do
+   kubectl exec broker-tests-publishers-$i -- sh -c "
+      export TEST_RUN_TEST_NODE_URL=http://broker-tests-publishers-$i.broker-tests-publishers.thingsboard-mqtt-broker.svc.cluster.local:8088;
+      export TEST_RUN_SEQUENTIAL_NUMBER=$i;
+      export TEST_RUN_PARALLEL_TESTS_COUNT=${PARALLEL_TESTS_COUNT};
+      export TEST_RUN_TEST_ORCHESTRATOR_URL=http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088;
+      start-tb-mqtt-broker-performance-tests.sh;
+   " > broker-tests-publishers-$i.log 2>&1 &
+
+   kubectl exec broker-tests-subscribers-$i -- sh -c "
+      export TEST_RUN_TEST_NODE_URL=http://broker-tests-subscribers-$i.broker-tests-subscribers.thingsboard-mqtt-broker.svc.cluster.local:8088;
+      export TEST_RUN_SEQUENTIAL_NUMBER=$i;
+      export TEST_RUN_PARALLEL_TESTS_COUNT=${PARALLEL_TESTS_COUNT};
+      export TEST_RUN_TEST_ORCHESTRATOR_URL=http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088;
+      start-tb-mqtt-broker-performance-tests.sh;
+   " > broker-tests-subscribers-$i.log 2>&1 &
 done
