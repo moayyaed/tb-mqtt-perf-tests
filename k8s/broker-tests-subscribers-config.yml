@@ -22,7 +22,7 @@ metadata:
     name: broker-tests-subscribers-config
 data:
   tb-mqtt-broker-performance-tests.conf: |
-    export JAVA_OPTS="$JAVA_OPTS -Xmx1g -Xms1g -Xss320k -XX:+AlwaysPreTouch"
+    export JAVA_OPTS="$JAVA_OPTS -Xmx2g -Xms2g -Xss320k -XX:+AlwaysPreTouch"
     export JAVA_OPTS="$JAVA_OPTS -Dplatform=deb"
     export JAVA_OPTS="$JAVA_OPTS -XX:+IgnoreUnrecognizedVMOptions -XX:+HeapDumpOnOutOfMemoryError"
     export JAVA_OPTS="$JAVA_OPTS -XX:+UseTLAB -XX:+ResizeTLAB -XX:+PerfDisableSharedMem -XX:+UseCondCardMark"
@@ -62,72 +62,6012 @@ data:
         {
           "id": 1,
           "subscribers": 1,
-          "topicFilter": "usa/ydwvv/1/+",
+          "topicFilter": "usa/dhfoy/1/+",
           "expectedPublisherGroups": [
             1
           ],
           "persistentSessionInfo": {
-            "clientType": "APPLICATION"
+            "clientType": "DEVICE"
           },
           "clientIdPrefix": null
         },
         {
           "id": 2,
           "subscribers": 1,
-          "topicFilter": "usa/iibxr/2/+",
+          "topicFilter": "usa/abvgl/2/+",
           "expectedPublisherGroups": [
             2
           ],
           "persistentSessionInfo": {
-            "clientType": "APPLICATION"
+            "clientType": "DEVICE"
           },
           "clientIdPrefix": null
         },
         {
           "id": 3,
           "subscribers": 1,
-          "topicFilter": "usa/zltjr/3/+",
+          "topicFilter": "usa/mjifu/3/+",
           "expectedPublisherGroups": [
             3
           ],
           "persistentSessionInfo": {
-            "clientType": "APPLICATION"
+            "clientType": "DEVICE"
           },
           "clientIdPrefix": null
         },
         {
           "id": 4,
           "subscribers": 1,
-          "topicFilter": "usa/nnknx/4/+",
+          "topicFilter": "usa/klwse/4/+",
           "expectedPublisherGroups": [
             4
           ],
           "persistentSessionInfo": {
-            "clientType": "APPLICATION"
+            "clientType": "DEVICE"
           },
           "clientIdPrefix": null
         },
         {
           "id": 5,
           "subscribers": 1,
-          "topicFilter": "usa/gjelz/5/+",
+          "topicFilter": "usa/irlzq/5/+",
           "expectedPublisherGroups": [
             5
           ],
           "persistentSessionInfo": {
-            "clientType": "APPLICATION"
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 6,
+          "subscribers": 1,
+          "topicFilter": "usa/damgu/6/+",
+          "expectedPublisherGroups": [
+            6
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 7,
+          "subscribers": 1,
+          "topicFilter": "usa/isglc/7/+",
+          "expectedPublisherGroups": [
+            7
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 8,
+          "subscribers": 1,
+          "topicFilter": "usa/tskdn/8/+",
+          "expectedPublisherGroups": [
+            8
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 9,
+          "subscribers": 1,
+          "topicFilter": "usa/nflch/9/+",
+          "expectedPublisherGroups": [
+            9
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 10,
+          "subscribers": 1,
+          "topicFilter": "usa/gfudk/10/+",
+          "expectedPublisherGroups": [
+            10
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 11,
+          "subscribers": 1,
+          "topicFilter": "usa/uzbpx/11/+",
+          "expectedPublisherGroups": [
+            11
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 12,
+          "subscribers": 1,
+          "topicFilter": "usa/qktzu/12/+",
+          "expectedPublisherGroups": [
+            12
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 13,
+          "subscribers": 1,
+          "topicFilter": "usa/ardvl/13/+",
+          "expectedPublisherGroups": [
+            13
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 14,
+          "subscribers": 1,
+          "topicFilter": "usa/zkccm/14/+",
+          "expectedPublisherGroups": [
+            14
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 15,
+          "subscribers": 1,
+          "topicFilter": "usa/sngow/15/+",
+          "expectedPublisherGroups": [
+            15
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 16,
+          "subscribers": 1,
+          "topicFilter": "usa/wkvie/16/+",
+          "expectedPublisherGroups": [
+            16
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 17,
+          "subscribers": 1,
+          "topicFilter": "usa/vextw/17/+",
+          "expectedPublisherGroups": [
+            17
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 18,
+          "subscribers": 1,
+          "topicFilter": "usa/qbcrg/18/+",
+          "expectedPublisherGroups": [
+            18
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 19,
+          "subscribers": 1,
+          "topicFilter": "usa/oxibn/19/+",
+          "expectedPublisherGroups": [
+            19
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 20,
+          "subscribers": 1,
+          "topicFilter": "usa/ekbls/20/+",
+          "expectedPublisherGroups": [
+            20
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 21,
+          "subscribers": 1,
+          "topicFilter": "usa/prrih/21/+",
+          "expectedPublisherGroups": [
+            21
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 22,
+          "subscribers": 1,
+          "topicFilter": "usa/xcvmt/22/+",
+          "expectedPublisherGroups": [
+            22
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 23,
+          "subscribers": 1,
+          "topicFilter": "usa/gnaaz/23/+",
+          "expectedPublisherGroups": [
+            23
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 24,
+          "subscribers": 1,
+          "topicFilter": "usa/ghdzo/24/+",
+          "expectedPublisherGroups": [
+            24
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 25,
+          "subscribers": 1,
+          "topicFilter": "usa/nlghw/25/+",
+          "expectedPublisherGroups": [
+            25
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 26,
+          "subscribers": 1,
+          "topicFilter": "usa/kopam/26/+",
+          "expectedPublisherGroups": [
+            26
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 27,
+          "subscribers": 1,
+          "topicFilter": "usa/qrizy/27/+",
+          "expectedPublisherGroups": [
+            27
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 28,
+          "subscribers": 1,
+          "topicFilter": "usa/pbdhn/28/+",
+          "expectedPublisherGroups": [
+            28
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 29,
+          "subscribers": 1,
+          "topicFilter": "usa/onzjb/29/+",
+          "expectedPublisherGroups": [
+            29
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 30,
+          "subscribers": 1,
+          "topicFilter": "usa/zrsvz/30/+",
+          "expectedPublisherGroups": [
+            30
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 31,
+          "subscribers": 1,
+          "topicFilter": "usa/qdttp/31/+",
+          "expectedPublisherGroups": [
+            31
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 32,
+          "subscribers": 1,
+          "topicFilter": "usa/ykeli/32/+",
+          "expectedPublisherGroups": [
+            32
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 33,
+          "subscribers": 1,
+          "topicFilter": "usa/gxgqw/33/+",
+          "expectedPublisherGroups": [
+            33
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 34,
+          "subscribers": 1,
+          "topicFilter": "usa/eavfb/34/+",
+          "expectedPublisherGroups": [
+            34
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 35,
+          "subscribers": 1,
+          "topicFilter": "usa/twple/35/+",
+          "expectedPublisherGroups": [
+            35
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 36,
+          "subscribers": 1,
+          "topicFilter": "usa/izjsy/36/+",
+          "expectedPublisherGroups": [
+            36
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 37,
+          "subscribers": 1,
+          "topicFilter": "usa/veuuh/37/+",
+          "expectedPublisherGroups": [
+            37
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 38,
+          "subscribers": 1,
+          "topicFilter": "usa/ixxvg/38/+",
+          "expectedPublisherGroups": [
+            38
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 39,
+          "subscribers": 1,
+          "topicFilter": "usa/acuqh/39/+",
+          "expectedPublisherGroups": [
+            39
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 40,
+          "subscribers": 1,
+          "topicFilter": "usa/qvuyc/40/+",
+          "expectedPublisherGroups": [
+            40
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 41,
+          "subscribers": 1,
+          "topicFilter": "usa/ofktd/41/+",
+          "expectedPublisherGroups": [
+            41
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 42,
+          "subscribers": 1,
+          "topicFilter": "usa/crrnk/42/+",
+          "expectedPublisherGroups": [
+            42
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 43,
+          "subscribers": 1,
+          "topicFilter": "usa/qfcje/43/+",
+          "expectedPublisherGroups": [
+            43
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 44,
+          "subscribers": 1,
+          "topicFilter": "usa/estlv/44/+",
+          "expectedPublisherGroups": [
+            44
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 45,
+          "subscribers": 1,
+          "topicFilter": "usa/yjjle/45/+",
+          "expectedPublisherGroups": [
+            45
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 46,
+          "subscribers": 1,
+          "topicFilter": "usa/ijfvn/46/+",
+          "expectedPublisherGroups": [
+            46
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 47,
+          "subscribers": 1,
+          "topicFilter": "usa/giafp/47/+",
+          "expectedPublisherGroups": [
+            47
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 48,
+          "subscribers": 1,
+          "topicFilter": "usa/jdkxx/48/+",
+          "expectedPublisherGroups": [
+            48
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 49,
+          "subscribers": 1,
+          "topicFilter": "usa/ejjdp/49/+",
+          "expectedPublisherGroups": [
+            49
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 50,
+          "subscribers": 1,
+          "topicFilter": "usa/utjpo/50/+",
+          "expectedPublisherGroups": [
+            50
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 51,
+          "subscribers": 1,
+          "topicFilter": "usa/dglxl/51/+",
+          "expectedPublisherGroups": [
+            51
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 52,
+          "subscribers": 1,
+          "topicFilter": "usa/jelsu/52/+",
+          "expectedPublisherGroups": [
+            52
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 53,
+          "subscribers": 1,
+          "topicFilter": "usa/rxefp/53/+",
+          "expectedPublisherGroups": [
+            53
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 54,
+          "subscribers": 1,
+          "topicFilter": "usa/lsyaf/54/+",
+          "expectedPublisherGroups": [
+            54
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 55,
+          "subscribers": 1,
+          "topicFilter": "usa/gjelj/55/+",
+          "expectedPublisherGroups": [
+            55
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 56,
+          "subscribers": 1,
+          "topicFilter": "usa/jdqaz/56/+",
+          "expectedPublisherGroups": [
+            56
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 57,
+          "subscribers": 1,
+          "topicFilter": "usa/fwxlj/57/+",
+          "expectedPublisherGroups": [
+            57
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 58,
+          "subscribers": 1,
+          "topicFilter": "usa/xlgrh/58/+",
+          "expectedPublisherGroups": [
+            58
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 59,
+          "subscribers": 1,
+          "topicFilter": "usa/ketai/59/+",
+          "expectedPublisherGroups": [
+            59
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 60,
+          "subscribers": 1,
+          "topicFilter": "usa/xivgj/60/+",
+          "expectedPublisherGroups": [
+            60
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 61,
+          "subscribers": 1,
+          "topicFilter": "usa/izrbr/61/+",
+          "expectedPublisherGroups": [
+            61
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 62,
+          "subscribers": 1,
+          "topicFilter": "usa/afhkl/62/+",
+          "expectedPublisherGroups": [
+            62
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 63,
+          "subscribers": 1,
+          "topicFilter": "usa/mxyin/63/+",
+          "expectedPublisherGroups": [
+            63
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 64,
+          "subscribers": 1,
+          "topicFilter": "usa/cuhwa/64/+",
+          "expectedPublisherGroups": [
+            64
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 65,
+          "subscribers": 1,
+          "topicFilter": "usa/xxaqe/65/+",
+          "expectedPublisherGroups": [
+            65
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 66,
+          "subscribers": 1,
+          "topicFilter": "usa/xbakv/66/+",
+          "expectedPublisherGroups": [
+            66
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 67,
+          "subscribers": 1,
+          "topicFilter": "usa/ngvsr/67/+",
+          "expectedPublisherGroups": [
+            67
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 68,
+          "subscribers": 1,
+          "topicFilter": "usa/ryorz/68/+",
+          "expectedPublisherGroups": [
+            68
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 69,
+          "subscribers": 1,
+          "topicFilter": "usa/jaxun/69/+",
+          "expectedPublisherGroups": [
+            69
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 70,
+          "subscribers": 1,
+          "topicFilter": "usa/cqxfa/70/+",
+          "expectedPublisherGroups": [
+            70
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 71,
+          "subscribers": 1,
+          "topicFilter": "usa/gdzhs/71/+",
+          "expectedPublisherGroups": [
+            71
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 72,
+          "subscribers": 1,
+          "topicFilter": "usa/oemnu/72/+",
+          "expectedPublisherGroups": [
+            72
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 73,
+          "subscribers": 1,
+          "topicFilter": "usa/iywlq/73/+",
+          "expectedPublisherGroups": [
+            73
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 74,
+          "subscribers": 1,
+          "topicFilter": "usa/uiunt/74/+",
+          "expectedPublisherGroups": [
+            74
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 75,
+          "subscribers": 1,
+          "topicFilter": "usa/swvwf/75/+",
+          "expectedPublisherGroups": [
+            75
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 76,
+          "subscribers": 1,
+          "topicFilter": "usa/pynen/76/+",
+          "expectedPublisherGroups": [
+            76
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 77,
+          "subscribers": 1,
+          "topicFilter": "usa/isvtv/77/+",
+          "expectedPublisherGroups": [
+            77
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 78,
+          "subscribers": 1,
+          "topicFilter": "usa/dagrv/78/+",
+          "expectedPublisherGroups": [
+            78
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 79,
+          "subscribers": 1,
+          "topicFilter": "usa/rxnnc/79/+",
+          "expectedPublisherGroups": [
+            79
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 80,
+          "subscribers": 1,
+          "topicFilter": "usa/vqufm/80/+",
+          "expectedPublisherGroups": [
+            80
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 81,
+          "subscribers": 1,
+          "topicFilter": "usa/snbgd/81/+",
+          "expectedPublisherGroups": [
+            81
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 82,
+          "subscribers": 1,
+          "topicFilter": "usa/uorlx/82/+",
+          "expectedPublisherGroups": [
+            82
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 83,
+          "subscribers": 1,
+          "topicFilter": "usa/emyfi/83/+",
+          "expectedPublisherGroups": [
+            83
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 84,
+          "subscribers": 1,
+          "topicFilter": "usa/rhttx/84/+",
+          "expectedPublisherGroups": [
+            84
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 85,
+          "subscribers": 1,
+          "topicFilter": "usa/owurb/85/+",
+          "expectedPublisherGroups": [
+            85
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 86,
+          "subscribers": 1,
+          "topicFilter": "usa/jrupu/86/+",
+          "expectedPublisherGroups": [
+            86
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 87,
+          "subscribers": 1,
+          "topicFilter": "usa/nbbhr/87/+",
+          "expectedPublisherGroups": [
+            87
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 88,
+          "subscribers": 1,
+          "topicFilter": "usa/hcfme/88/+",
+          "expectedPublisherGroups": [
+            88
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 89,
+          "subscribers": 1,
+          "topicFilter": "usa/jjuke/89/+",
+          "expectedPublisherGroups": [
+            89
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 90,
+          "subscribers": 1,
+          "topicFilter": "usa/durwr/90/+",
+          "expectedPublisherGroups": [
+            90
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 91,
+          "subscribers": 1,
+          "topicFilter": "usa/ibqdg/91/+",
+          "expectedPublisherGroups": [
+            91
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 92,
+          "subscribers": 1,
+          "topicFilter": "usa/irvmz/92/+",
+          "expectedPublisherGroups": [
+            92
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 93,
+          "subscribers": 1,
+          "topicFilter": "usa/gwzkz/93/+",
+          "expectedPublisherGroups": [
+            93
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 94,
+          "subscribers": 1,
+          "topicFilter": "usa/betjk/94/+",
+          "expectedPublisherGroups": [
+            94
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 95,
+          "subscribers": 1,
+          "topicFilter": "usa/ypcww/95/+",
+          "expectedPublisherGroups": [
+            95
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 96,
+          "subscribers": 1,
+          "topicFilter": "usa/yruez/96/+",
+          "expectedPublisherGroups": [
+            96
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 97,
+          "subscribers": 1,
+          "topicFilter": "usa/eeqnw/97/+",
+          "expectedPublisherGroups": [
+            97
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 98,
+          "subscribers": 1,
+          "topicFilter": "usa/mswek/98/+",
+          "expectedPublisherGroups": [
+            98
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 99,
+          "subscribers": 1,
+          "topicFilter": "usa/lxazf/99/+",
+          "expectedPublisherGroups": [
+            99
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 100,
+          "subscribers": 1,
+          "topicFilter": "usa/obtqn/100/+",
+          "expectedPublisherGroups": [
+            100
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 101,
+          "subscribers": 1,
+          "topicFilter": "usa/mkgje/101/+",
+          "expectedPublisherGroups": [
+            101
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 102,
+          "subscribers": 1,
+          "topicFilter": "usa/vzdzk/102/+",
+          "expectedPublisherGroups": [
+            102
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 103,
+          "subscribers": 1,
+          "topicFilter": "usa/xqagl/103/+",
+          "expectedPublisherGroups": [
+            103
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 104,
+          "subscribers": 1,
+          "topicFilter": "usa/cisti/104/+",
+          "expectedPublisherGroups": [
+            104
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 105,
+          "subscribers": 1,
+          "topicFilter": "usa/akbyf/105/+",
+          "expectedPublisherGroups": [
+            105
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 106,
+          "subscribers": 1,
+          "topicFilter": "usa/wupbb/106/+",
+          "expectedPublisherGroups": [
+            106
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 107,
+          "subscribers": 1,
+          "topicFilter": "usa/wpznc/107/+",
+          "expectedPublisherGroups": [
+            107
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 108,
+          "subscribers": 1,
+          "topicFilter": "usa/fqaoj/108/+",
+          "expectedPublisherGroups": [
+            108
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 109,
+          "subscribers": 1,
+          "topicFilter": "usa/dpjot/109/+",
+          "expectedPublisherGroups": [
+            109
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 110,
+          "subscribers": 1,
+          "topicFilter": "usa/kpyuo/110/+",
+          "expectedPublisherGroups": [
+            110
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 111,
+          "subscribers": 1,
+          "topicFilter": "usa/vpjzs/111/+",
+          "expectedPublisherGroups": [
+            111
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 112,
+          "subscribers": 1,
+          "topicFilter": "usa/yzxop/112/+",
+          "expectedPublisherGroups": [
+            112
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 113,
+          "subscribers": 1,
+          "topicFilter": "usa/eywef/113/+",
+          "expectedPublisherGroups": [
+            113
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 114,
+          "subscribers": 1,
+          "topicFilter": "usa/czgqe/114/+",
+          "expectedPublisherGroups": [
+            114
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 115,
+          "subscribers": 1,
+          "topicFilter": "usa/qxuhs/115/+",
+          "expectedPublisherGroups": [
+            115
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 116,
+          "subscribers": 1,
+          "topicFilter": "usa/vhbcw/116/+",
+          "expectedPublisherGroups": [
+            116
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 117,
+          "subscribers": 1,
+          "topicFilter": "usa/vngac/117/+",
+          "expectedPublisherGroups": [
+            117
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 118,
+          "subscribers": 1,
+          "topicFilter": "usa/svpzz/118/+",
+          "expectedPublisherGroups": [
+            118
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 119,
+          "subscribers": 1,
+          "topicFilter": "usa/rjcvk/119/+",
+          "expectedPublisherGroups": [
+            119
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 120,
+          "subscribers": 1,
+          "topicFilter": "usa/kpyek/120/+",
+          "expectedPublisherGroups": [
+            120
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 121,
+          "subscribers": 1,
+          "topicFilter": "usa/qbbmv/121/+",
+          "expectedPublisherGroups": [
+            121
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 122,
+          "subscribers": 1,
+          "topicFilter": "usa/dpnkj/122/+",
+          "expectedPublisherGroups": [
+            122
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 123,
+          "subscribers": 1,
+          "topicFilter": "usa/zxviz/123/+",
+          "expectedPublisherGroups": [
+            123
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 124,
+          "subscribers": 1,
+          "topicFilter": "usa/bkjyo/124/+",
+          "expectedPublisherGroups": [
+            124
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 125,
+          "subscribers": 1,
+          "topicFilter": "usa/uadbk/125/+",
+          "expectedPublisherGroups": [
+            125
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 126,
+          "subscribers": 1,
+          "topicFilter": "usa/zkivi/126/+",
+          "expectedPublisherGroups": [
+            126
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 127,
+          "subscribers": 1,
+          "topicFilter": "usa/vpply/127/+",
+          "expectedPublisherGroups": [
+            127
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 128,
+          "subscribers": 1,
+          "topicFilter": "usa/ajjzo/128/+",
+          "expectedPublisherGroups": [
+            128
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 129,
+          "subscribers": 1,
+          "topicFilter": "usa/reuti/129/+",
+          "expectedPublisherGroups": [
+            129
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 130,
+          "subscribers": 1,
+          "topicFilter": "usa/uradh/130/+",
+          "expectedPublisherGroups": [
+            130
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 131,
+          "subscribers": 1,
+          "topicFilter": "usa/nnkou/131/+",
+          "expectedPublisherGroups": [
+            131
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 132,
+          "subscribers": 1,
+          "topicFilter": "usa/qcuno/132/+",
+          "expectedPublisherGroups": [
+            132
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 133,
+          "subscribers": 1,
+          "topicFilter": "usa/hcxrb/133/+",
+          "expectedPublisherGroups": [
+            133
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 134,
+          "subscribers": 1,
+          "topicFilter": "usa/mkaog/134/+",
+          "expectedPublisherGroups": [
+            134
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 135,
+          "subscribers": 1,
+          "topicFilter": "usa/xamtp/135/+",
+          "expectedPublisherGroups": [
+            135
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 136,
+          "subscribers": 1,
+          "topicFilter": "usa/icefh/136/+",
+          "expectedPublisherGroups": [
+            136
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 137,
+          "subscribers": 1,
+          "topicFilter": "usa/qwlwr/137/+",
+          "expectedPublisherGroups": [
+            137
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 138,
+          "subscribers": 1,
+          "topicFilter": "usa/tjygi/138/+",
+          "expectedPublisherGroups": [
+            138
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 139,
+          "subscribers": 1,
+          "topicFilter": "usa/hpwpp/139/+",
+          "expectedPublisherGroups": [
+            139
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 140,
+          "subscribers": 1,
+          "topicFilter": "usa/tvdhw/140/+",
+          "expectedPublisherGroups": [
+            140
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 141,
+          "subscribers": 1,
+          "topicFilter": "usa/owosi/141/+",
+          "expectedPublisherGroups": [
+            141
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 142,
+          "subscribers": 1,
+          "topicFilter": "usa/bxtuo/142/+",
+          "expectedPublisherGroups": [
+            142
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 143,
+          "subscribers": 1,
+          "topicFilter": "usa/iipdt/143/+",
+          "expectedPublisherGroups": [
+            143
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 144,
+          "subscribers": 1,
+          "topicFilter": "usa/wtvog/144/+",
+          "expectedPublisherGroups": [
+            144
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 145,
+          "subscribers": 1,
+          "topicFilter": "usa/bnyth/145/+",
+          "expectedPublisherGroups": [
+            145
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 146,
+          "subscribers": 1,
+          "topicFilter": "usa/oezjj/146/+",
+          "expectedPublisherGroups": [
+            146
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 147,
+          "subscribers": 1,
+          "topicFilter": "usa/mbnej/147/+",
+          "expectedPublisherGroups": [
+            147
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 148,
+          "subscribers": 1,
+          "topicFilter": "usa/fgwjf/148/+",
+          "expectedPublisherGroups": [
+            148
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 149,
+          "subscribers": 1,
+          "topicFilter": "usa/xoeyl/149/+",
+          "expectedPublisherGroups": [
+            149
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 150,
+          "subscribers": 1,
+          "topicFilter": "usa/rohrb/150/+",
+          "expectedPublisherGroups": [
+            150
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 151,
+          "subscribers": 1,
+          "topicFilter": "usa/gehdd/151/+",
+          "expectedPublisherGroups": [
+            151
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 152,
+          "subscribers": 1,
+          "topicFilter": "usa/iunrq/152/+",
+          "expectedPublisherGroups": [
+            152
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 153,
+          "subscribers": 1,
+          "topicFilter": "usa/jtciu/153/+",
+          "expectedPublisherGroups": [
+            153
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 154,
+          "subscribers": 1,
+          "topicFilter": "usa/xowae/154/+",
+          "expectedPublisherGroups": [
+            154
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 155,
+          "subscribers": 1,
+          "topicFilter": "usa/rqstw/155/+",
+          "expectedPublisherGroups": [
+            155
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 156,
+          "subscribers": 1,
+          "topicFilter": "usa/fwdle/156/+",
+          "expectedPublisherGroups": [
+            156
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 157,
+          "subscribers": 1,
+          "topicFilter": "usa/sghtx/157/+",
+          "expectedPublisherGroups": [
+            157
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 158,
+          "subscribers": 1,
+          "topicFilter": "usa/crvtz/158/+",
+          "expectedPublisherGroups": [
+            158
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 159,
+          "subscribers": 1,
+          "topicFilter": "usa/wvcto/159/+",
+          "expectedPublisherGroups": [
+            159
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 160,
+          "subscribers": 1,
+          "topicFilter": "usa/qimam/160/+",
+          "expectedPublisherGroups": [
+            160
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 161,
+          "subscribers": 1,
+          "topicFilter": "usa/qxeje/161/+",
+          "expectedPublisherGroups": [
+            161
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 162,
+          "subscribers": 1,
+          "topicFilter": "usa/xxjla/162/+",
+          "expectedPublisherGroups": [
+            162
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 163,
+          "subscribers": 1,
+          "topicFilter": "usa/fvgfh/163/+",
+          "expectedPublisherGroups": [
+            163
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 164,
+          "subscribers": 1,
+          "topicFilter": "usa/wswmu/164/+",
+          "expectedPublisherGroups": [
+            164
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 165,
+          "subscribers": 1,
+          "topicFilter": "usa/awfvk/165/+",
+          "expectedPublisherGroups": [
+            165
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 166,
+          "subscribers": 1,
+          "topicFilter": "usa/ysuxf/166/+",
+          "expectedPublisherGroups": [
+            166
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 167,
+          "subscribers": 1,
+          "topicFilter": "usa/efelm/167/+",
+          "expectedPublisherGroups": [
+            167
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 168,
+          "subscribers": 1,
+          "topicFilter": "usa/lolry/168/+",
+          "expectedPublisherGroups": [
+            168
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 169,
+          "subscribers": 1,
+          "topicFilter": "usa/fffck/169/+",
+          "expectedPublisherGroups": [
+            169
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 170,
+          "subscribers": 1,
+          "topicFilter": "usa/tvcnr/170/+",
+          "expectedPublisherGroups": [
+            170
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 171,
+          "subscribers": 1,
+          "topicFilter": "usa/dtzfe/171/+",
+          "expectedPublisherGroups": [
+            171
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 172,
+          "subscribers": 1,
+          "topicFilter": "usa/jqckh/172/+",
+          "expectedPublisherGroups": [
+            172
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 173,
+          "subscribers": 1,
+          "topicFilter": "usa/phkce/173/+",
+          "expectedPublisherGroups": [
+            173
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 174,
+          "subscribers": 1,
+          "topicFilter": "usa/tyfzd/174/+",
+          "expectedPublisherGroups": [
+            174
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 175,
+          "subscribers": 1,
+          "topicFilter": "usa/mchmj/175/+",
+          "expectedPublisherGroups": [
+            175
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 176,
+          "subscribers": 1,
+          "topicFilter": "usa/jurum/176/+",
+          "expectedPublisherGroups": [
+            176
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 177,
+          "subscribers": 1,
+          "topicFilter": "usa/wlysq/177/+",
+          "expectedPublisherGroups": [
+            177
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 178,
+          "subscribers": 1,
+          "topicFilter": "usa/xoijn/178/+",
+          "expectedPublisherGroups": [
+            178
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 179,
+          "subscribers": 1,
+          "topicFilter": "usa/aqpjp/179/+",
+          "expectedPublisherGroups": [
+            179
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 180,
+          "subscribers": 1,
+          "topicFilter": "usa/vylor/180/+",
+          "expectedPublisherGroups": [
+            180
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 181,
+          "subscribers": 1,
+          "topicFilter": "usa/rtobg/181/+",
+          "expectedPublisherGroups": [
+            181
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 182,
+          "subscribers": 1,
+          "topicFilter": "usa/wfmrh/182/+",
+          "expectedPublisherGroups": [
+            182
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 183,
+          "subscribers": 1,
+          "topicFilter": "usa/bbfay/183/+",
+          "expectedPublisherGroups": [
+            183
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 184,
+          "subscribers": 1,
+          "topicFilter": "usa/eloae/184/+",
+          "expectedPublisherGroups": [
+            184
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 185,
+          "subscribers": 1,
+          "topicFilter": "usa/rkfnk/185/+",
+          "expectedPublisherGroups": [
+            185
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 186,
+          "subscribers": 1,
+          "topicFilter": "usa/jckxg/186/+",
+          "expectedPublisherGroups": [
+            186
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 187,
+          "subscribers": 1,
+          "topicFilter": "usa/xxhid/187/+",
+          "expectedPublisherGroups": [
+            187
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 188,
+          "subscribers": 1,
+          "topicFilter": "usa/pkhlx/188/+",
+          "expectedPublisherGroups": [
+            188
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 189,
+          "subscribers": 1,
+          "topicFilter": "usa/kruwq/189/+",
+          "expectedPublisherGroups": [
+            189
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 190,
+          "subscribers": 1,
+          "topicFilter": "usa/ojvym/190/+",
+          "expectedPublisherGroups": [
+            190
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 191,
+          "subscribers": 1,
+          "topicFilter": "usa/asmdn/191/+",
+          "expectedPublisherGroups": [
+            191
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 192,
+          "subscribers": 1,
+          "topicFilter": "usa/qxjrd/192/+",
+          "expectedPublisherGroups": [
+            192
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 193,
+          "subscribers": 1,
+          "topicFilter": "usa/sscou/193/+",
+          "expectedPublisherGroups": [
+            193
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 194,
+          "subscribers": 1,
+          "topicFilter": "usa/xcucv/194/+",
+          "expectedPublisherGroups": [
+            194
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 195,
+          "subscribers": 1,
+          "topicFilter": "usa/fljcs/195/+",
+          "expectedPublisherGroups": [
+            195
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 196,
+          "subscribers": 1,
+          "topicFilter": "usa/usgtn/196/+",
+          "expectedPublisherGroups": [
+            196
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 197,
+          "subscribers": 1,
+          "topicFilter": "usa/tvuku/197/+",
+          "expectedPublisherGroups": [
+            197
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 198,
+          "subscribers": 1,
+          "topicFilter": "usa/fbibx/198/+",
+          "expectedPublisherGroups": [
+            198
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 199,
+          "subscribers": 1,
+          "topicFilter": "usa/wdavk/199/+",
+          "expectedPublisherGroups": [
+            199
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 200,
+          "subscribers": 1,
+          "topicFilter": "usa/budjo/200/+",
+          "expectedPublisherGroups": [
+            200
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 201,
+          "subscribers": 1,
+          "topicFilter": "usa/ovyzy/201/+",
+          "expectedPublisherGroups": [
+            201
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 202,
+          "subscribers": 1,
+          "topicFilter": "usa/roydc/202/+",
+          "expectedPublisherGroups": [
+            202
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 203,
+          "subscribers": 1,
+          "topicFilter": "usa/mgvtf/203/+",
+          "expectedPublisherGroups": [
+            203
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 204,
+          "subscribers": 1,
+          "topicFilter": "usa/vbylq/204/+",
+          "expectedPublisherGroups": [
+            204
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 205,
+          "subscribers": 1,
+          "topicFilter": "usa/pmasu/205/+",
+          "expectedPublisherGroups": [
+            205
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 206,
+          "subscribers": 1,
+          "topicFilter": "usa/pbsao/206/+",
+          "expectedPublisherGroups": [
+            206
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 207,
+          "subscribers": 1,
+          "topicFilter": "usa/fmiox/207/+",
+          "expectedPublisherGroups": [
+            207
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 208,
+          "subscribers": 1,
+          "topicFilter": "usa/jrrrc/208/+",
+          "expectedPublisherGroups": [
+            208
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 209,
+          "subscribers": 1,
+          "topicFilter": "usa/fccdb/209/+",
+          "expectedPublisherGroups": [
+            209
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 210,
+          "subscribers": 1,
+          "topicFilter": "usa/xipdf/210/+",
+          "expectedPublisherGroups": [
+            210
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 211,
+          "subscribers": 1,
+          "topicFilter": "usa/demdg/211/+",
+          "expectedPublisherGroups": [
+            211
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 212,
+          "subscribers": 1,
+          "topicFilter": "usa/racpa/212/+",
+          "expectedPublisherGroups": [
+            212
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 213,
+          "subscribers": 1,
+          "topicFilter": "usa/kaxbg/213/+",
+          "expectedPublisherGroups": [
+            213
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 214,
+          "subscribers": 1,
+          "topicFilter": "usa/whfaj/214/+",
+          "expectedPublisherGroups": [
+            214
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 215,
+          "subscribers": 1,
+          "topicFilter": "usa/gscok/215/+",
+          "expectedPublisherGroups": [
+            215
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 216,
+          "subscribers": 1,
+          "topicFilter": "usa/dkake/216/+",
+          "expectedPublisherGroups": [
+            216
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 217,
+          "subscribers": 1,
+          "topicFilter": "usa/bwozj/217/+",
+          "expectedPublisherGroups": [
+            217
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 218,
+          "subscribers": 1,
+          "topicFilter": "usa/ruhik/218/+",
+          "expectedPublisherGroups": [
+            218
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 219,
+          "subscribers": 1,
+          "topicFilter": "usa/qlzkk/219/+",
+          "expectedPublisherGroups": [
+            219
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 220,
+          "subscribers": 1,
+          "topicFilter": "usa/mwozz/220/+",
+          "expectedPublisherGroups": [
+            220
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 221,
+          "subscribers": 1,
+          "topicFilter": "usa/cpvcy/221/+",
+          "expectedPublisherGroups": [
+            221
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 222,
+          "subscribers": 1,
+          "topicFilter": "usa/rnagz/222/+",
+          "expectedPublisherGroups": [
+            222
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 223,
+          "subscribers": 1,
+          "topicFilter": "usa/iewom/223/+",
+          "expectedPublisherGroups": [
+            223
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 224,
+          "subscribers": 1,
+          "topicFilter": "usa/lktic/224/+",
+          "expectedPublisherGroups": [
+            224
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 225,
+          "subscribers": 1,
+          "topicFilter": "usa/fkhyt/225/+",
+          "expectedPublisherGroups": [
+            225
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 226,
+          "subscribers": 1,
+          "topicFilter": "usa/sbuqf/226/+",
+          "expectedPublisherGroups": [
+            226
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 227,
+          "subscribers": 1,
+          "topicFilter": "usa/drsbg/227/+",
+          "expectedPublisherGroups": [
+            227
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 228,
+          "subscribers": 1,
+          "topicFilter": "usa/hlrig/228/+",
+          "expectedPublisherGroups": [
+            228
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 229,
+          "subscribers": 1,
+          "topicFilter": "usa/cfyoc/229/+",
+          "expectedPublisherGroups": [
+            229
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 230,
+          "subscribers": 1,
+          "topicFilter": "usa/mwsfc/230/+",
+          "expectedPublisherGroups": [
+            230
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 231,
+          "subscribers": 1,
+          "topicFilter": "usa/fzqxd/231/+",
+          "expectedPublisherGroups": [
+            231
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 232,
+          "subscribers": 1,
+          "topicFilter": "usa/hhooo/232/+",
+          "expectedPublisherGroups": [
+            232
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 233,
+          "subscribers": 1,
+          "topicFilter": "usa/zkqlj/233/+",
+          "expectedPublisherGroups": [
+            233
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 234,
+          "subscribers": 1,
+          "topicFilter": "usa/qgdyf/234/+",
+          "expectedPublisherGroups": [
+            234
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 235,
+          "subscribers": 1,
+          "topicFilter": "usa/oprtj/235/+",
+          "expectedPublisherGroups": [
+            235
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 236,
+          "subscribers": 1,
+          "topicFilter": "usa/ihudu/236/+",
+          "expectedPublisherGroups": [
+            236
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 237,
+          "subscribers": 1,
+          "topicFilter": "usa/umrbe/237/+",
+          "expectedPublisherGroups": [
+            237
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 238,
+          "subscribers": 1,
+          "topicFilter": "usa/vhqrg/238/+",
+          "expectedPublisherGroups": [
+            238
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 239,
+          "subscribers": 1,
+          "topicFilter": "usa/psdsw/239/+",
+          "expectedPublisherGroups": [
+            239
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 240,
+          "subscribers": 1,
+          "topicFilter": "usa/bhdlq/240/+",
+          "expectedPublisherGroups": [
+            240
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 241,
+          "subscribers": 1,
+          "topicFilter": "usa/svsoz/241/+",
+          "expectedPublisherGroups": [
+            241
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 242,
+          "subscribers": 1,
+          "topicFilter": "usa/rhdbw/242/+",
+          "expectedPublisherGroups": [
+            242
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 243,
+          "subscribers": 1,
+          "topicFilter": "usa/jmrmz/243/+",
+          "expectedPublisherGroups": [
+            243
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 244,
+          "subscribers": 1,
+          "topicFilter": "usa/bznxp/244/+",
+          "expectedPublisherGroups": [
+            244
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 245,
+          "subscribers": 1,
+          "topicFilter": "usa/eshia/245/+",
+          "expectedPublisherGroups": [
+            245
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 246,
+          "subscribers": 1,
+          "topicFilter": "usa/ejrcu/246/+",
+          "expectedPublisherGroups": [
+            246
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 247,
+          "subscribers": 1,
+          "topicFilter": "usa/rmtrf/247/+",
+          "expectedPublisherGroups": [
+            247
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 248,
+          "subscribers": 1,
+          "topicFilter": "usa/dsrqa/248/+",
+          "expectedPublisherGroups": [
+            248
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 249,
+          "subscribers": 1,
+          "topicFilter": "usa/tnhve/249/+",
+          "expectedPublisherGroups": [
+            249
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 250,
+          "subscribers": 1,
+          "topicFilter": "usa/grirb/250/+",
+          "expectedPublisherGroups": [
+            250
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 251,
+          "subscribers": 1,
+          "topicFilter": "usa/wwwfj/251/+",
+          "expectedPublisherGroups": [
+            251
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 252,
+          "subscribers": 1,
+          "topicFilter": "usa/qvfln/252/+",
+          "expectedPublisherGroups": [
+            252
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 253,
+          "subscribers": 1,
+          "topicFilter": "usa/arsag/253/+",
+          "expectedPublisherGroups": [
+            253
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 254,
+          "subscribers": 1,
+          "topicFilter": "usa/pdgcp/254/+",
+          "expectedPublisherGroups": [
+            254
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 255,
+          "subscribers": 1,
+          "topicFilter": "usa/iyvuk/255/+",
+          "expectedPublisherGroups": [
+            255
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 256,
+          "subscribers": 1,
+          "topicFilter": "usa/wimvy/256/+",
+          "expectedPublisherGroups": [
+            256
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 257,
+          "subscribers": 1,
+          "topicFilter": "usa/kdnbx/257/+",
+          "expectedPublisherGroups": [
+            257
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 258,
+          "subscribers": 1,
+          "topicFilter": "usa/qpqau/258/+",
+          "expectedPublisherGroups": [
+            258
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 259,
+          "subscribers": 1,
+          "topicFilter": "usa/sciye/259/+",
+          "expectedPublisherGroups": [
+            259
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 260,
+          "subscribers": 1,
+          "topicFilter": "usa/qxaee/260/+",
+          "expectedPublisherGroups": [
+            260
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 261,
+          "subscribers": 1,
+          "topicFilter": "usa/soysf/261/+",
+          "expectedPublisherGroups": [
+            261
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 262,
+          "subscribers": 1,
+          "topicFilter": "usa/utskl/262/+",
+          "expectedPublisherGroups": [
+            262
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 263,
+          "subscribers": 1,
+          "topicFilter": "usa/rbxxs/263/+",
+          "expectedPublisherGroups": [
+            263
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 264,
+          "subscribers": 1,
+          "topicFilter": "usa/xlhmu/264/+",
+          "expectedPublisherGroups": [
+            264
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 265,
+          "subscribers": 1,
+          "topicFilter": "usa/whpyr/265/+",
+          "expectedPublisherGroups": [
+            265
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 266,
+          "subscribers": 1,
+          "topicFilter": "usa/kxkkc/266/+",
+          "expectedPublisherGroups": [
+            266
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 267,
+          "subscribers": 1,
+          "topicFilter": "usa/amsgd/267/+",
+          "expectedPublisherGroups": [
+            267
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 268,
+          "subscribers": 1,
+          "topicFilter": "usa/bontf/268/+",
+          "expectedPublisherGroups": [
+            268
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 269,
+          "subscribers": 1,
+          "topicFilter": "usa/nirjt/269/+",
+          "expectedPublisherGroups": [
+            269
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 270,
+          "subscribers": 1,
+          "topicFilter": "usa/mrxii/270/+",
+          "expectedPublisherGroups": [
+            270
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 271,
+          "subscribers": 1,
+          "topicFilter": "usa/ucgse/271/+",
+          "expectedPublisherGroups": [
+            271
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 272,
+          "subscribers": 1,
+          "topicFilter": "usa/sntng/272/+",
+          "expectedPublisherGroups": [
+            272
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 273,
+          "subscribers": 1,
+          "topicFilter": "usa/pvqmz/273/+",
+          "expectedPublisherGroups": [
+            273
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 274,
+          "subscribers": 1,
+          "topicFilter": "usa/npkjg/274/+",
+          "expectedPublisherGroups": [
+            274
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 275,
+          "subscribers": 1,
+          "topicFilter": "usa/snvca/275/+",
+          "expectedPublisherGroups": [
+            275
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 276,
+          "subscribers": 1,
+          "topicFilter": "usa/qiyli/276/+",
+          "expectedPublisherGroups": [
+            276
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 277,
+          "subscribers": 1,
+          "topicFilter": "usa/hlhnz/277/+",
+          "expectedPublisherGroups": [
+            277
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 278,
+          "subscribers": 1,
+          "topicFilter": "usa/wvfla/278/+",
+          "expectedPublisherGroups": [
+            278
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 279,
+          "subscribers": 1,
+          "topicFilter": "usa/wtdcb/279/+",
+          "expectedPublisherGroups": [
+            279
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 280,
+          "subscribers": 1,
+          "topicFilter": "usa/dvurh/280/+",
+          "expectedPublisherGroups": [
+            280
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 281,
+          "subscribers": 1,
+          "topicFilter": "usa/mulrn/281/+",
+          "expectedPublisherGroups": [
+            281
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 282,
+          "subscribers": 1,
+          "topicFilter": "usa/iapky/282/+",
+          "expectedPublisherGroups": [
+            282
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 283,
+          "subscribers": 1,
+          "topicFilter": "usa/bmrfg/283/+",
+          "expectedPublisherGroups": [
+            283
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 284,
+          "subscribers": 1,
+          "topicFilter": "usa/sowkw/284/+",
+          "expectedPublisherGroups": [
+            284
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 285,
+          "subscribers": 1,
+          "topicFilter": "usa/zrzsk/285/+",
+          "expectedPublisherGroups": [
+            285
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 286,
+          "subscribers": 1,
+          "topicFilter": "usa/afohf/286/+",
+          "expectedPublisherGroups": [
+            286
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 287,
+          "subscribers": 1,
+          "topicFilter": "usa/tqgws/287/+",
+          "expectedPublisherGroups": [
+            287
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 288,
+          "subscribers": 1,
+          "topicFilter": "usa/ckpbo/288/+",
+          "expectedPublisherGroups": [
+            288
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 289,
+          "subscribers": 1,
+          "topicFilter": "usa/jound/289/+",
+          "expectedPublisherGroups": [
+            289
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 290,
+          "subscribers": 1,
+          "topicFilter": "usa/qvjrq/290/+",
+          "expectedPublisherGroups": [
+            290
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 291,
+          "subscribers": 1,
+          "topicFilter": "usa/fugtl/291/+",
+          "expectedPublisherGroups": [
+            291
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 292,
+          "subscribers": 1,
+          "topicFilter": "usa/cgytb/292/+",
+          "expectedPublisherGroups": [
+            292
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 293,
+          "subscribers": 1,
+          "topicFilter": "usa/tobhm/293/+",
+          "expectedPublisherGroups": [
+            293
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 294,
+          "subscribers": 1,
+          "topicFilter": "usa/rjsmh/294/+",
+          "expectedPublisherGroups": [
+            294
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 295,
+          "subscribers": 1,
+          "topicFilter": "usa/pytel/295/+",
+          "expectedPublisherGroups": [
+            295
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 296,
+          "subscribers": 1,
+          "topicFilter": "usa/vlude/296/+",
+          "expectedPublisherGroups": [
+            296
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 297,
+          "subscribers": 1,
+          "topicFilter": "usa/sihnp/297/+",
+          "expectedPublisherGroups": [
+            297
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 298,
+          "subscribers": 1,
+          "topicFilter": "usa/hqokr/298/+",
+          "expectedPublisherGroups": [
+            298
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 299,
+          "subscribers": 1,
+          "topicFilter": "usa/jokgb/299/+",
+          "expectedPublisherGroups": [
+            299
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 300,
+          "subscribers": 1,
+          "topicFilter": "usa/rtjaz/300/+",
+          "expectedPublisherGroups": [
+            300
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 301,
+          "subscribers": 1,
+          "topicFilter": "usa/yzieq/301/+",
+          "expectedPublisherGroups": [
+            301
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 302,
+          "subscribers": 1,
+          "topicFilter": "usa/raebd/302/+",
+          "expectedPublisherGroups": [
+            302
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 303,
+          "subscribers": 1,
+          "topicFilter": "usa/hsuoz/303/+",
+          "expectedPublisherGroups": [
+            303
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 304,
+          "subscribers": 1,
+          "topicFilter": "usa/zdfcq/304/+",
+          "expectedPublisherGroups": [
+            304
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 305,
+          "subscribers": 1,
+          "topicFilter": "usa/cbxdl/305/+",
+          "expectedPublisherGroups": [
+            305
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 306,
+          "subscribers": 1,
+          "topicFilter": "usa/emgdx/306/+",
+          "expectedPublisherGroups": [
+            306
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 307,
+          "subscribers": 1,
+          "topicFilter": "usa/utdci/307/+",
+          "expectedPublisherGroups": [
+            307
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 308,
+          "subscribers": 1,
+          "topicFilter": "usa/pqmnh/308/+",
+          "expectedPublisherGroups": [
+            308
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 309,
+          "subscribers": 1,
+          "topicFilter": "usa/hpbpp/309/+",
+          "expectedPublisherGroups": [
+            309
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 310,
+          "subscribers": 1,
+          "topicFilter": "usa/mxsfg/310/+",
+          "expectedPublisherGroups": [
+            310
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 311,
+          "subscribers": 1,
+          "topicFilter": "usa/xlasy/311/+",
+          "expectedPublisherGroups": [
+            311
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 312,
+          "subscribers": 1,
+          "topicFilter": "usa/rbjca/312/+",
+          "expectedPublisherGroups": [
+            312
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 313,
+          "subscribers": 1,
+          "topicFilter": "usa/sagcf/313/+",
+          "expectedPublisherGroups": [
+            313
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 314,
+          "subscribers": 1,
+          "topicFilter": "usa/sbhdj/314/+",
+          "expectedPublisherGroups": [
+            314
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 315,
+          "subscribers": 1,
+          "topicFilter": "usa/zgoon/315/+",
+          "expectedPublisherGroups": [
+            315
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 316,
+          "subscribers": 1,
+          "topicFilter": "usa/rphth/316/+",
+          "expectedPublisherGroups": [
+            316
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 317,
+          "subscribers": 1,
+          "topicFilter": "usa/dpwbx/317/+",
+          "expectedPublisherGroups": [
+            317
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 318,
+          "subscribers": 1,
+          "topicFilter": "usa/bpzpn/318/+",
+          "expectedPublisherGroups": [
+            318
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 319,
+          "subscribers": 1,
+          "topicFilter": "usa/pyhmq/319/+",
+          "expectedPublisherGroups": [
+            319
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 320,
+          "subscribers": 1,
+          "topicFilter": "usa/vwyns/320/+",
+          "expectedPublisherGroups": [
+            320
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 321,
+          "subscribers": 1,
+          "topicFilter": "usa/wcdkr/321/+",
+          "expectedPublisherGroups": [
+            321
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 322,
+          "subscribers": 1,
+          "topicFilter": "usa/bkdev/322/+",
+          "expectedPublisherGroups": [
+            322
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 323,
+          "subscribers": 1,
+          "topicFilter": "usa/filrv/323/+",
+          "expectedPublisherGroups": [
+            323
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 324,
+          "subscribers": 1,
+          "topicFilter": "usa/qjlaz/324/+",
+          "expectedPublisherGroups": [
+            324
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 325,
+          "subscribers": 1,
+          "topicFilter": "usa/vubtl/325/+",
+          "expectedPublisherGroups": [
+            325
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 326,
+          "subscribers": 1,
+          "topicFilter": "usa/mrdcp/326/+",
+          "expectedPublisherGroups": [
+            326
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 327,
+          "subscribers": 1,
+          "topicFilter": "usa/zxyma/327/+",
+          "expectedPublisherGroups": [
+            327
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 328,
+          "subscribers": 1,
+          "topicFilter": "usa/ayczn/328/+",
+          "expectedPublisherGroups": [
+            328
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 329,
+          "subscribers": 1,
+          "topicFilter": "usa/gpfeg/329/+",
+          "expectedPublisherGroups": [
+            329
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 330,
+          "subscribers": 1,
+          "topicFilter": "usa/osjcb/330/+",
+          "expectedPublisherGroups": [
+            330
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 331,
+          "subscribers": 1,
+          "topicFilter": "usa/prapf/331/+",
+          "expectedPublisherGroups": [
+            331
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 332,
+          "subscribers": 1,
+          "topicFilter": "usa/prihe/332/+",
+          "expectedPublisherGroups": [
+            332
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 333,
+          "subscribers": 1,
+          "topicFilter": "usa/rfzzm/333/+",
+          "expectedPublisherGroups": [
+            333
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 334,
+          "subscribers": 1,
+          "topicFilter": "usa/gkret/334/+",
+          "expectedPublisherGroups": [
+            334
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 335,
+          "subscribers": 1,
+          "topicFilter": "usa/domdo/335/+",
+          "expectedPublisherGroups": [
+            335
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 336,
+          "subscribers": 1,
+          "topicFilter": "usa/dfvkb/336/+",
+          "expectedPublisherGroups": [
+            336
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 337,
+          "subscribers": 1,
+          "topicFilter": "usa/uggkc/337/+",
+          "expectedPublisherGroups": [
+            337
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 338,
+          "subscribers": 1,
+          "topicFilter": "usa/cqfdc/338/+",
+          "expectedPublisherGroups": [
+            338
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 339,
+          "subscribers": 1,
+          "topicFilter": "usa/kqpvd/339/+",
+          "expectedPublisherGroups": [
+            339
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 340,
+          "subscribers": 1,
+          "topicFilter": "usa/jqzea/340/+",
+          "expectedPublisherGroups": [
+            340
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 341,
+          "subscribers": 1,
+          "topicFilter": "usa/qdvyt/341/+",
+          "expectedPublisherGroups": [
+            341
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 342,
+          "subscribers": 1,
+          "topicFilter": "usa/qdxhx/342/+",
+          "expectedPublisherGroups": [
+            342
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 343,
+          "subscribers": 1,
+          "topicFilter": "usa/pnggg/343/+",
+          "expectedPublisherGroups": [
+            343
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 344,
+          "subscribers": 1,
+          "topicFilter": "usa/xdxgw/344/+",
+          "expectedPublisherGroups": [
+            344
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 345,
+          "subscribers": 1,
+          "topicFilter": "usa/mrsfd/345/+",
+          "expectedPublisherGroups": [
+            345
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 346,
+          "subscribers": 1,
+          "topicFilter": "usa/fpprf/346/+",
+          "expectedPublisherGroups": [
+            346
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 347,
+          "subscribers": 1,
+          "topicFilter": "usa/mvezc/347/+",
+          "expectedPublisherGroups": [
+            347
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 348,
+          "subscribers": 1,
+          "topicFilter": "usa/yqgwh/348/+",
+          "expectedPublisherGroups": [
+            348
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 349,
+          "subscribers": 1,
+          "topicFilter": "usa/gwfit/349/+",
+          "expectedPublisherGroups": [
+            349
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 350,
+          "subscribers": 1,
+          "topicFilter": "usa/umgqa/350/+",
+          "expectedPublisherGroups": [
+            350
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 351,
+          "subscribers": 1,
+          "topicFilter": "usa/edamk/351/+",
+          "expectedPublisherGroups": [
+            351
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 352,
+          "subscribers": 1,
+          "topicFilter": "usa/hvixf/352/+",
+          "expectedPublisherGroups": [
+            352
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 353,
+          "subscribers": 1,
+          "topicFilter": "usa/mwtcc/353/+",
+          "expectedPublisherGroups": [
+            353
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 354,
+          "subscribers": 1,
+          "topicFilter": "usa/ixyej/354/+",
+          "expectedPublisherGroups": [
+            354
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 355,
+          "subscribers": 1,
+          "topicFilter": "usa/icpxf/355/+",
+          "expectedPublisherGroups": [
+            355
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 356,
+          "subscribers": 1,
+          "topicFilter": "usa/emfqr/356/+",
+          "expectedPublisherGroups": [
+            356
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 357,
+          "subscribers": 1,
+          "topicFilter": "usa/torym/357/+",
+          "expectedPublisherGroups": [
+            357
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 358,
+          "subscribers": 1,
+          "topicFilter": "usa/kuhfm/358/+",
+          "expectedPublisherGroups": [
+            358
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 359,
+          "subscribers": 1,
+          "topicFilter": "usa/ilgzy/359/+",
+          "expectedPublisherGroups": [
+            359
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 360,
+          "subscribers": 1,
+          "topicFilter": "usa/tltuz/360/+",
+          "expectedPublisherGroups": [
+            360
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 361,
+          "subscribers": 1,
+          "topicFilter": "usa/bxuli/361/+",
+          "expectedPublisherGroups": [
+            361
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 362,
+          "subscribers": 1,
+          "topicFilter": "usa/dawhu/362/+",
+          "expectedPublisherGroups": [
+            362
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 363,
+          "subscribers": 1,
+          "topicFilter": "usa/swtps/363/+",
+          "expectedPublisherGroups": [
+            363
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 364,
+          "subscribers": 1,
+          "topicFilter": "usa/ynieo/364/+",
+          "expectedPublisherGroups": [
+            364
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 365,
+          "subscribers": 1,
+          "topicFilter": "usa/gxwgv/365/+",
+          "expectedPublisherGroups": [
+            365
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 366,
+          "subscribers": 1,
+          "topicFilter": "usa/lbkho/366/+",
+          "expectedPublisherGroups": [
+            366
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 367,
+          "subscribers": 1,
+          "topicFilter": "usa/wtwzg/367/+",
+          "expectedPublisherGroups": [
+            367
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 368,
+          "subscribers": 1,
+          "topicFilter": "usa/ugenp/368/+",
+          "expectedPublisherGroups": [
+            368
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 369,
+          "subscribers": 1,
+          "topicFilter": "usa/hhrlz/369/+",
+          "expectedPublisherGroups": [
+            369
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 370,
+          "subscribers": 1,
+          "topicFilter": "usa/ggubp/370/+",
+          "expectedPublisherGroups": [
+            370
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 371,
+          "subscribers": 1,
+          "topicFilter": "usa/dqpni/371/+",
+          "expectedPublisherGroups": [
+            371
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 372,
+          "subscribers": 1,
+          "topicFilter": "usa/refcr/372/+",
+          "expectedPublisherGroups": [
+            372
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 373,
+          "subscribers": 1,
+          "topicFilter": "usa/hcgdb/373/+",
+          "expectedPublisherGroups": [
+            373
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 374,
+          "subscribers": 1,
+          "topicFilter": "usa/jawvt/374/+",
+          "expectedPublisherGroups": [
+            374
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 375,
+          "subscribers": 1,
+          "topicFilter": "usa/aznao/375/+",
+          "expectedPublisherGroups": [
+            375
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 376,
+          "subscribers": 1,
+          "topicFilter": "usa/skhhn/376/+",
+          "expectedPublisherGroups": [
+            376
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 377,
+          "subscribers": 1,
+          "topicFilter": "usa/iatoc/377/+",
+          "expectedPublisherGroups": [
+            377
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 378,
+          "subscribers": 1,
+          "topicFilter": "usa/pvxxf/378/+",
+          "expectedPublisherGroups": [
+            378
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 379,
+          "subscribers": 1,
+          "topicFilter": "usa/wakio/379/+",
+          "expectedPublisherGroups": [
+            379
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 380,
+          "subscribers": 1,
+          "topicFilter": "usa/kuivo/380/+",
+          "expectedPublisherGroups": [
+            380
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 381,
+          "subscribers": 1,
+          "topicFilter": "usa/jvdvo/381/+",
+          "expectedPublisherGroups": [
+            381
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 382,
+          "subscribers": 1,
+          "topicFilter": "usa/jxfjb/382/+",
+          "expectedPublisherGroups": [
+            382
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 383,
+          "subscribers": 1,
+          "topicFilter": "usa/ukdnd/383/+",
+          "expectedPublisherGroups": [
+            383
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 384,
+          "subscribers": 1,
+          "topicFilter": "usa/kkpfx/384/+",
+          "expectedPublisherGroups": [
+            384
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 385,
+          "subscribers": 1,
+          "topicFilter": "usa/ftgft/385/+",
+          "expectedPublisherGroups": [
+            385
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 386,
+          "subscribers": 1,
+          "topicFilter": "usa/indht/386/+",
+          "expectedPublisherGroups": [
+            386
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 387,
+          "subscribers": 1,
+          "topicFilter": "usa/minwu/387/+",
+          "expectedPublisherGroups": [
+            387
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 388,
+          "subscribers": 1,
+          "topicFilter": "usa/tvlfp/388/+",
+          "expectedPublisherGroups": [
+            388
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 389,
+          "subscribers": 1,
+          "topicFilter": "usa/zhkro/389/+",
+          "expectedPublisherGroups": [
+            389
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 390,
+          "subscribers": 1,
+          "topicFilter": "usa/teiqb/390/+",
+          "expectedPublisherGroups": [
+            390
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 391,
+          "subscribers": 1,
+          "topicFilter": "usa/znkvu/391/+",
+          "expectedPublisherGroups": [
+            391
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 392,
+          "subscribers": 1,
+          "topicFilter": "usa/lgrck/392/+",
+          "expectedPublisherGroups": [
+            392
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 393,
+          "subscribers": 1,
+          "topicFilter": "usa/kojhg/393/+",
+          "expectedPublisherGroups": [
+            393
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 394,
+          "subscribers": 1,
+          "topicFilter": "usa/ihqep/394/+",
+          "expectedPublisherGroups": [
+            394
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 395,
+          "subscribers": 1,
+          "topicFilter": "usa/kpivn/395/+",
+          "expectedPublisherGroups": [
+            395
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 396,
+          "subscribers": 1,
+          "topicFilter": "usa/uecgq/396/+",
+          "expectedPublisherGroups": [
+            396
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 397,
+          "subscribers": 1,
+          "topicFilter": "usa/mqcxx/397/+",
+          "expectedPublisherGroups": [
+            397
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 398,
+          "subscribers": 1,
+          "topicFilter": "usa/sultg/398/+",
+          "expectedPublisherGroups": [
+            398
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 399,
+          "subscribers": 1,
+          "topicFilter": "usa/kauxi/399/+",
+          "expectedPublisherGroups": [
+            399
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 400,
+          "subscribers": 1,
+          "topicFilter": "usa/qxjam/400/+",
+          "expectedPublisherGroups": [
+            400
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 401,
+          "subscribers": 1,
+          "topicFilter": "usa/wgjzd/401/+",
+          "expectedPublisherGroups": [
+            401
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 402,
+          "subscribers": 1,
+          "topicFilter": "usa/wktmr/402/+",
+          "expectedPublisherGroups": [
+            402
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 403,
+          "subscribers": 1,
+          "topicFilter": "usa/tftjn/403/+",
+          "expectedPublisherGroups": [
+            403
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 404,
+          "subscribers": 1,
+          "topicFilter": "usa/uszot/404/+",
+          "expectedPublisherGroups": [
+            404
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 405,
+          "subscribers": 1,
+          "topicFilter": "usa/bwtkp/405/+",
+          "expectedPublisherGroups": [
+            405
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 406,
+          "subscribers": 1,
+          "topicFilter": "usa/znmkp/406/+",
+          "expectedPublisherGroups": [
+            406
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 407,
+          "subscribers": 1,
+          "topicFilter": "usa/olndc/407/+",
+          "expectedPublisherGroups": [
+            407
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 408,
+          "subscribers": 1,
+          "topicFilter": "usa/rfkmh/408/+",
+          "expectedPublisherGroups": [
+            408
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 409,
+          "subscribers": 1,
+          "topicFilter": "usa/bavrh/409/+",
+          "expectedPublisherGroups": [
+            409
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 410,
+          "subscribers": 1,
+          "topicFilter": "usa/pbagx/410/+",
+          "expectedPublisherGroups": [
+            410
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 411,
+          "subscribers": 1,
+          "topicFilter": "usa/rprep/411/+",
+          "expectedPublisherGroups": [
+            411
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 412,
+          "subscribers": 1,
+          "topicFilter": "usa/afgmv/412/+",
+          "expectedPublisherGroups": [
+            412
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 413,
+          "subscribers": 1,
+          "topicFilter": "usa/bqost/413/+",
+          "expectedPublisherGroups": [
+            413
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 414,
+          "subscribers": 1,
+          "topicFilter": "usa/lwpjo/414/+",
+          "expectedPublisherGroups": [
+            414
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 415,
+          "subscribers": 1,
+          "topicFilter": "usa/uzfjv/415/+",
+          "expectedPublisherGroups": [
+            415
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 416,
+          "subscribers": 1,
+          "topicFilter": "usa/iqzco/416/+",
+          "expectedPublisherGroups": [
+            416
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 417,
+          "subscribers": 1,
+          "topicFilter": "usa/aqoha/417/+",
+          "expectedPublisherGroups": [
+            417
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 418,
+          "subscribers": 1,
+          "topicFilter": "usa/edadf/418/+",
+          "expectedPublisherGroups": [
+            418
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 419,
+          "subscribers": 1,
+          "topicFilter": "usa/emmcr/419/+",
+          "expectedPublisherGroups": [
+            419
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 420,
+          "subscribers": 1,
+          "topicFilter": "usa/svuwy/420/+",
+          "expectedPublisherGroups": [
+            420
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 421,
+          "subscribers": 1,
+          "topicFilter": "usa/wipdh/421/+",
+          "expectedPublisherGroups": [
+            421
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 422,
+          "subscribers": 1,
+          "topicFilter": "usa/gbddk/422/+",
+          "expectedPublisherGroups": [
+            422
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 423,
+          "subscribers": 1,
+          "topicFilter": "usa/vvvsn/423/+",
+          "expectedPublisherGroups": [
+            423
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 424,
+          "subscribers": 1,
+          "topicFilter": "usa/uchrq/424/+",
+          "expectedPublisherGroups": [
+            424
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 425,
+          "subscribers": 1,
+          "topicFilter": "usa/npuna/425/+",
+          "expectedPublisherGroups": [
+            425
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 426,
+          "subscribers": 1,
+          "topicFilter": "usa/gglkw/426/+",
+          "expectedPublisherGroups": [
+            426
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 427,
+          "subscribers": 1,
+          "topicFilter": "usa/rvnuk/427/+",
+          "expectedPublisherGroups": [
+            427
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 428,
+          "subscribers": 1,
+          "topicFilter": "usa/nfifi/428/+",
+          "expectedPublisherGroups": [
+            428
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 429,
+          "subscribers": 1,
+          "topicFilter": "usa/fcpci/429/+",
+          "expectedPublisherGroups": [
+            429
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 430,
+          "subscribers": 1,
+          "topicFilter": "usa/zxqbe/430/+",
+          "expectedPublisherGroups": [
+            430
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 431,
+          "subscribers": 1,
+          "topicFilter": "usa/vrvti/431/+",
+          "expectedPublisherGroups": [
+            431
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 432,
+          "subscribers": 1,
+          "topicFilter": "usa/aiuor/432/+",
+          "expectedPublisherGroups": [
+            432
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 433,
+          "subscribers": 1,
+          "topicFilter": "usa/tpoym/433/+",
+          "expectedPublisherGroups": [
+            433
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 434,
+          "subscribers": 1,
+          "topicFilter": "usa/usduu/434/+",
+          "expectedPublisherGroups": [
+            434
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 435,
+          "subscribers": 1,
+          "topicFilter": "usa/fzgdy/435/+",
+          "expectedPublisherGroups": [
+            435
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 436,
+          "subscribers": 1,
+          "topicFilter": "usa/tdkdp/436/+",
+          "expectedPublisherGroups": [
+            436
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 437,
+          "subscribers": 1,
+          "topicFilter": "usa/vjzxu/437/+",
+          "expectedPublisherGroups": [
+            437
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 438,
+          "subscribers": 1,
+          "topicFilter": "usa/jrgzy/438/+",
+          "expectedPublisherGroups": [
+            438
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 439,
+          "subscribers": 1,
+          "topicFilter": "usa/hlwkm/439/+",
+          "expectedPublisherGroups": [
+            439
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 440,
+          "subscribers": 1,
+          "topicFilter": "usa/ysfox/440/+",
+          "expectedPublisherGroups": [
+            440
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 441,
+          "subscribers": 1,
+          "topicFilter": "usa/ljzkv/441/+",
+          "expectedPublisherGroups": [
+            441
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 442,
+          "subscribers": 1,
+          "topicFilter": "usa/fvedo/442/+",
+          "expectedPublisherGroups": [
+            442
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 443,
+          "subscribers": 1,
+          "topicFilter": "usa/mdsnt/443/+",
+          "expectedPublisherGroups": [
+            443
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 444,
+          "subscribers": 1,
+          "topicFilter": "usa/ccwsd/444/+",
+          "expectedPublisherGroups": [
+            444
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 445,
+          "subscribers": 1,
+          "topicFilter": "usa/ibiep/445/+",
+          "expectedPublisherGroups": [
+            445
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 446,
+          "subscribers": 1,
+          "topicFilter": "usa/ncanx/446/+",
+          "expectedPublisherGroups": [
+            446
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 447,
+          "subscribers": 1,
+          "topicFilter": "usa/ylqii/447/+",
+          "expectedPublisherGroups": [
+            447
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 448,
+          "subscribers": 1,
+          "topicFilter": "usa/pkqtl/448/+",
+          "expectedPublisherGroups": [
+            448
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 449,
+          "subscribers": 1,
+          "topicFilter": "usa/dyklx/449/+",
+          "expectedPublisherGroups": [
+            449
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 450,
+          "subscribers": 1,
+          "topicFilter": "usa/ohius/450/+",
+          "expectedPublisherGroups": [
+            450
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 451,
+          "subscribers": 1,
+          "topicFilter": "usa/dubqs/451/+",
+          "expectedPublisherGroups": [
+            451
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 452,
+          "subscribers": 1,
+          "topicFilter": "usa/iocgb/452/+",
+          "expectedPublisherGroups": [
+            452
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 453,
+          "subscribers": 1,
+          "topicFilter": "usa/vakgi/453/+",
+          "expectedPublisherGroups": [
+            453
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 454,
+          "subscribers": 1,
+          "topicFilter": "usa/ifsyq/454/+",
+          "expectedPublisherGroups": [
+            454
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 455,
+          "subscribers": 1,
+          "topicFilter": "usa/awwrs/455/+",
+          "expectedPublisherGroups": [
+            455
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 456,
+          "subscribers": 1,
+          "topicFilter": "usa/yhfvz/456/+",
+          "expectedPublisherGroups": [
+            456
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 457,
+          "subscribers": 1,
+          "topicFilter": "usa/mhwst/457/+",
+          "expectedPublisherGroups": [
+            457
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 458,
+          "subscribers": 1,
+          "topicFilter": "usa/bkgdi/458/+",
+          "expectedPublisherGroups": [
+            458
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 459,
+          "subscribers": 1,
+          "topicFilter": "usa/jtjtw/459/+",
+          "expectedPublisherGroups": [
+            459
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 460,
+          "subscribers": 1,
+          "topicFilter": "usa/qdefh/460/+",
+          "expectedPublisherGroups": [
+            460
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 461,
+          "subscribers": 1,
+          "topicFilter": "usa/egunj/461/+",
+          "expectedPublisherGroups": [
+            461
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 462,
+          "subscribers": 1,
+          "topicFilter": "usa/bumpu/462/+",
+          "expectedPublisherGroups": [
+            462
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 463,
+          "subscribers": 1,
+          "topicFilter": "usa/hvhew/463/+",
+          "expectedPublisherGroups": [
+            463
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 464,
+          "subscribers": 1,
+          "topicFilter": "usa/ihykk/464/+",
+          "expectedPublisherGroups": [
+            464
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 465,
+          "subscribers": 1,
+          "topicFilter": "usa/ffxqq/465/+",
+          "expectedPublisherGroups": [
+            465
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 466,
+          "subscribers": 1,
+          "topicFilter": "usa/tkbjx/466/+",
+          "expectedPublisherGroups": [
+            466
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 467,
+          "subscribers": 1,
+          "topicFilter": "usa/tjthp/467/+",
+          "expectedPublisherGroups": [
+            467
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 468,
+          "subscribers": 1,
+          "topicFilter": "usa/ykmiv/468/+",
+          "expectedPublisherGroups": [
+            468
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 469,
+          "subscribers": 1,
+          "topicFilter": "usa/tzgyb/469/+",
+          "expectedPublisherGroups": [
+            469
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 470,
+          "subscribers": 1,
+          "topicFilter": "usa/icubp/470/+",
+          "expectedPublisherGroups": [
+            470
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 471,
+          "subscribers": 1,
+          "topicFilter": "usa/izarr/471/+",
+          "expectedPublisherGroups": [
+            471
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 472,
+          "subscribers": 1,
+          "topicFilter": "usa/icjgk/472/+",
+          "expectedPublisherGroups": [
+            472
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 473,
+          "subscribers": 1,
+          "topicFilter": "usa/iwxle/473/+",
+          "expectedPublisherGroups": [
+            473
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 474,
+          "subscribers": 1,
+          "topicFilter": "usa/vcwiu/474/+",
+          "expectedPublisherGroups": [
+            474
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 475,
+          "subscribers": 1,
+          "topicFilter": "usa/vwmlh/475/+",
+          "expectedPublisherGroups": [
+            475
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 476,
+          "subscribers": 1,
+          "topicFilter": "usa/vknqe/476/+",
+          "expectedPublisherGroups": [
+            476
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 477,
+          "subscribers": 1,
+          "topicFilter": "usa/clcye/477/+",
+          "expectedPublisherGroups": [
+            477
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 478,
+          "subscribers": 1,
+          "topicFilter": "usa/yvyvx/478/+",
+          "expectedPublisherGroups": [
+            478
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 479,
+          "subscribers": 1,
+          "topicFilter": "usa/vpvmh/479/+",
+          "expectedPublisherGroups": [
+            479
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 480,
+          "subscribers": 1,
+          "topicFilter": "usa/mvjad/480/+",
+          "expectedPublisherGroups": [
+            480
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 481,
+          "subscribers": 1,
+          "topicFilter": "usa/itdec/481/+",
+          "expectedPublisherGroups": [
+            481
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 482,
+          "subscribers": 1,
+          "topicFilter": "usa/hiqkb/482/+",
+          "expectedPublisherGroups": [
+            482
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 483,
+          "subscribers": 1,
+          "topicFilter": "usa/zlzis/483/+",
+          "expectedPublisherGroups": [
+            483
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 484,
+          "subscribers": 1,
+          "topicFilter": "usa/jlxgm/484/+",
+          "expectedPublisherGroups": [
+            484
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 485,
+          "subscribers": 1,
+          "topicFilter": "usa/qdwmz/485/+",
+          "expectedPublisherGroups": [
+            485
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 486,
+          "subscribers": 1,
+          "topicFilter": "usa/jbcns/486/+",
+          "expectedPublisherGroups": [
+            486
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 487,
+          "subscribers": 1,
+          "topicFilter": "usa/cctlt/487/+",
+          "expectedPublisherGroups": [
+            487
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 488,
+          "subscribers": 1,
+          "topicFilter": "usa/fsgxm/488/+",
+          "expectedPublisherGroups": [
+            488
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 489,
+          "subscribers": 1,
+          "topicFilter": "usa/uqzmn/489/+",
+          "expectedPublisherGroups": [
+            489
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 490,
+          "subscribers": 1,
+          "topicFilter": "usa/dtolr/490/+",
+          "expectedPublisherGroups": [
+            490
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 491,
+          "subscribers": 1,
+          "topicFilter": "usa/whenq/491/+",
+          "expectedPublisherGroups": [
+            491
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 492,
+          "subscribers": 1,
+          "topicFilter": "usa/jxzvn/492/+",
+          "expectedPublisherGroups": [
+            492
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 493,
+          "subscribers": 1,
+          "topicFilter": "usa/easix/493/+",
+          "expectedPublisherGroups": [
+            493
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 494,
+          "subscribers": 1,
+          "topicFilter": "usa/koxlt/494/+",
+          "expectedPublisherGroups": [
+            494
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 495,
+          "subscribers": 1,
+          "topicFilter": "usa/pezec/495/+",
+          "expectedPublisherGroups": [
+            495
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 496,
+          "subscribers": 1,
+          "topicFilter": "usa/gjmsj/496/+",
+          "expectedPublisherGroups": [
+            496
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 497,
+          "subscribers": 1,
+          "topicFilter": "usa/vhlxr/497/+",
+          "expectedPublisherGroups": [
+            497
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 498,
+          "subscribers": 1,
+          "topicFilter": "usa/wolny/498/+",
+          "expectedPublisherGroups": [
+            498
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 499,
+          "subscribers": 1,
+          "topicFilter": "usa/jsiyy/499/+",
+          "expectedPublisherGroups": [
+            499
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
+          },
+          "clientIdPrefix": null
+        },
+        {
+          "id": 500,
+          "subscribers": 1,
+          "topicFilter": "usa/uszcz/500/+",
+          "expectedPublisherGroups": [
+            500
+          ],
+          "persistentSessionInfo": {
+            "clientType": "DEVICE"
           },
           "clientIdPrefix": null
         }
       ],
       "dummyClients": 0,
-      "secondsToRun": 3600,
-      "additionalSecondsToWait": 600,
+      "secondsToRun": 600,
+      "additionalSecondsToWait": 10,
       "maxMsgsPerPublisherPerSecond": 1,
       "publisherQosValue": 1,
       "subscriberQosValue": 1,
       "minPayloadSize": 1,
-      "maxConcurrentOperations": 3000,
+      "maxConcurrentOperations": 10000,
       "telemetryKeys": [
         "lat",
         "long",

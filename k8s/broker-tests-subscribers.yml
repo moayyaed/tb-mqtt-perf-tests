@@ -45,13 +45,6 @@ spec:
         - name: server
           imagePullPolicy: Always
           image: thingsboard/tbmq-performance-tests:2.0.2
-          resources:
-            limits:
-              cpu: 1
-              memory: 1500Mi
-            requests:
-              cpu: 1
-              memory: 1500Mi
           ports:
             - containerPort: 8088
               name: http
