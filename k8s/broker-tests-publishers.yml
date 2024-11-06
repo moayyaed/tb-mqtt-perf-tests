@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-publishers
 spec:
   serviceName: broker-tests-publishers
-  replicas: 1
+  replicas: 5
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -30,6 +30,10 @@ spec:
       labels:
         app: broker-tests-publishers
     spec:
+      securityContext:
+        sysctls:
+          - name: net.ipv4.ip_local_port_range
+            value: "1024 60999"
       volumes:
         - name: broker-tests-publishers-config
           configMap:
@@ -100,7 +104,7 @@ spec:
             - name: TEST_RUN_DEFAULT_WORKER_TYPE
               value: "PUBLISHER"
             - name: TEST_RUN_DEFAULT_PUB_SUB_GROUPS_COUNT
-              value: "15000"
+              value: "60000"
             - name: TEST_RUN_DEFAULT_SECONDS_TO_RUN
               value: "300"
             - name: TEST_RUN_DEFAULT_ADDITIONAL_SECONDS_TO_WAIT
@@ -110,7 +114,7 @@ spec:
             - name: TEST_RUN_DEFAULT_MIN_PAYLOAD_SIZE
               value: "1"
             - name: TEST_RUN_DEFAULT_MAX_CONCURRENT_OPERATIONS
-              value: "5000"
+              value: "1000"
             - name: TEST_RUN_PUBLISH_CHUNK_SIZE_DIVIDER
               value: "1000"
           volumeMounts:
