@@ -104,7 +104,7 @@ spec:
             - name: TEST_RUN_DEFAULT_WORKER_TYPE
               value: "PUBLISHER"
             - name: TEST_RUN_DEFAULT_PUB_SUB_GROUPS_COUNT
-              value: "60000"
+              value: "70000"
             - name: TEST_RUN_DEFAULT_SECONDS_TO_RUN
               value: "300"
             - name: TEST_RUN_DEFAULT_ADDITIONAL_SECONDS_TO_WAIT

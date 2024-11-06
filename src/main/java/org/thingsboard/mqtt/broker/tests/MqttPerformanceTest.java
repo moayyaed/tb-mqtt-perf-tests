@@ -105,10 +105,10 @@ public class MqttPerformanceTest {
 
         final UUID defaultCredentialsId = createDefaultMqttCredentials();
 
-        log.info("Start clear persisted Sessions.");
-        persistedMqttClientService.clearPersistedSessions();
-        persistedMqttClientService.removeApplicationClients();
-        Thread.sleep(2000);
+//        log.info("Start clear persisted Sessions.");
+//        persistedMqttClientService.clearPersistedSessions();
+//        persistedMqttClientService.removeApplicationClients();
+//        Thread.sleep(2000);
         persistedMqttClientService.initApplicationClients();
 
         SubscribeStats subscribeStats = new SubscribeStats(new DescriptiveStatistics(), new DescriptiveStatistics());
