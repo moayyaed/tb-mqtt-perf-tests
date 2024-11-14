@@ -22,7 +22,7 @@ metadata:
     name: broker-tests-subscribers-config
 data:
   tb-mqtt-broker-performance-tests.conf: |
-    export JAVA_OPTS="$JAVA_OPTS -Xmx2g -Xms2g -Xss320k -XX:+AlwaysPreTouch"
+    export JAVA_OPTS="$JAVA_OPTS -Xmx4g -Xms4g -Xss320k -XX:+AlwaysPreTouch"
     export JAVA_OPTS="$JAVA_OPTS -Dplatform=deb"
     export JAVA_OPTS="$JAVA_OPTS -XX:+IgnoreUnrecognizedVMOptions -XX:+HeapDumpOnOutOfMemoryError"
     export JAVA_OPTS="$JAVA_OPTS -XX:+UseTLAB -XX:+ResizeTLAB -XX:+PerfDisableSharedMem -XX:+UseCondCardMark"
