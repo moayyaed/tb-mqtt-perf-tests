@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-subscribers
 spec:
   serviceName: broker-tests-subscribers
-  replicas: 5
+  replicas: 10
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -98,7 +98,7 @@ spec:
             - name: TEST_RUN_DEFAULT_WORKER_TYPE
               value: "SUBSCRIBER"
             - name: TEST_RUN_DEFAULT_PUB_SUB_GROUPS_COUNT
-              value: "200000"
+              value: "300000"
             - name: TEST_RUN_DEFAULT_SECONDS_TO_RUN
               value: "300"
             - name: TEST_RUN_DEFAULT_ADDITIONAL_SECONDS_TO_WAIT
@@ -108,7 +108,7 @@ spec:
             - name: TEST_RUN_DEFAULT_MIN_PAYLOAD_SIZE
               value: "1"
             - name: TEST_RUN_DEFAULT_MAX_CONCURRENT_OPERATIONS
-              value: "1000"
+              value: "3000"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-subscribers-config

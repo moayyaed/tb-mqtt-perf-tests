@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-NUM_ITERATIONS=4
+NUM_ITERATIONS=9
 PARALLEL_TESTS_COUNT=$((NUM_ITERATIONS + 1))
 
 for i in $(seq 0 $NUM_ITERATIONS); do

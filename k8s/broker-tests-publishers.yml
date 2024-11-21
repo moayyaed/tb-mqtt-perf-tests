@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-publishers
 spec:
   serviceName: broker-tests-publishers
-  replicas: 5
+  replicas: 10
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -104,7 +104,7 @@ spec:
             - name: TEST_RUN_DEFAULT_WORKER_TYPE
               value: "PUBLISHER"
             - name: TEST_RUN_DEFAULT_PUB_SUB_GROUPS_COUNT
-              value: "200000"
+              value: "300000"
             - name: TEST_RUN_DEFAULT_SECONDS_TO_RUN
               value: "300"
             - name: TEST_RUN_DEFAULT_ADDITIONAL_SECONDS_TO_WAIT
@@ -114,7 +114,7 @@ spec:
             - name: TEST_RUN_DEFAULT_MIN_PAYLOAD_SIZE
               value: "1"
             - name: TEST_RUN_DEFAULT_MAX_CONCURRENT_OPERATIONS
-              value: "1000"
+              value: "3000"
             - name: TEST_RUN_PUBLISH_CHUNK_SIZE_DIVIDER
               value: "1000"
           volumeMounts:
