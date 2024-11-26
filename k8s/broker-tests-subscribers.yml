@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-subscribers
 spec:
   serviceName: broker-tests-subscribers
-  replicas: 10
+  replicas: 9
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -100,7 +100,7 @@ spec:
             - name: TEST_RUN_DEFAULT_PUB_SUB_GROUPS_COUNT
               value: "300000"
             - name: TEST_RUN_DEFAULT_SECONDS_TO_RUN
-              value: "300"
+              value: "600"
             - name: TEST_RUN_DEFAULT_ADDITIONAL_SECONDS_TO_WAIT
               value: "10"
             - name: TEST_RUN_DEFAULT_SUBSCRIBER_QOS
@@ -109,10 +109,16 @@ spec:
               value: "1"
             - name: TEST_RUN_DEFAULT_MAX_CONCURRENT_OPERATIONS
               value: "3000"
+            - name: MQTT_BROKER_IP_ADDRESSES
+              value: "{{MQTT_BROKER_IP_ADDRESSES}}"
+            - name: TEST_RUN_PARALLEL_TESTS_COUNT
+              value: "9"
+            - name: TEST_RUN_TEST_ORCHESTRATOR_URL
+              value: "http://broker-tests-orchestrator-0.broker-tests-orchestrator.thingsboard-mqtt-broker.svc.cluster.local:8088"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-subscribers-config
-          command: [ 'sh', '-c', 'while [ ! -f /tmp/test-finished ]; do sleep 2; done;' ]
+#          command: [ 'sh', '-c', 'while [ ! -f /tmp/test-finished ]; do sleep 2; done;' ]
       restartPolicy: Always
 ---
 apiVersion: v1
