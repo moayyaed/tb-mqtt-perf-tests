@@ -100,7 +100,7 @@ spec:
             - name: TEST_RUN_DEFAULT_PUB_SUB_GROUPS_COUNT
               value: "300000"
             - name: TEST_RUN_DEFAULT_SECONDS_TO_RUN
-              value: "300"
+              value: "600"
             - name: TEST_RUN_DEFAULT_ADDITIONAL_SECONDS_TO_WAIT
               value: "10"
             - name: TEST_RUN_DEFAULT_SUBSCRIBER_QOS
