@@ -10,11 +10,8 @@ To delete broker tests:
 ./k8s-delete-broker-tests.sh
 ```
 
-To run tests:
-
-```
-./start-test.sh
-```
+Once each pod is deployed, it will start the test automatically.
+There is no need to run `start-test.sh`.
 
 Unlike other MQTT test scenarios, the [Point-to-point](https://docs.aws.amazon.com/whitepapers/latest/designing-mqtt-topics-aws-iot-core/mqtt-communication-patterns.html#point-to-point) 
 (P2P) communication tests involve a large number of publishers and subscribers. As a result, using a static configuration file to define publisher and subscriber groups becomes cumbersome.
@@ -60,7 +57,7 @@ or [broker-tests-subscribers-config.yml](broker-tests-subscribers-config.yml) co
 However, you can still use config files mentioned above to update other settings such as the Java options
 in the `tb-mqtt-broker-performance-tests.conf` section or logging settings in the `logback.xml` file section.
 
-You can find overridden environment variables for publishers and subscribers in the next configuration files:
+You can find override environment variables for publishers and subscribers in the next configuration files:
 
 - [broker-tests-publishers.yml](broker-tests-publishers.yml)
 - [broker-tests-subscribers.yml](broker-tests-subscribers.yml)
