@@ -46,7 +46,6 @@ test-run:
     max-concurrent-operations: "${TEST_RUN_DEFAULT_MAX_CONCURRENT_OPERATIONS:1000}"
 ```
 
-
 **Note:** In this case json test configuration `test_run_config.json` inside
 the [broker-tests-publishers-config.yml](broker-tests-publishers-config.yml) config file
 or [broker-tests-subscribers-config.yml](broker-tests-subscribers-config.yml) config file is empty:
@@ -60,7 +59,7 @@ or [broker-tests-subscribers-config.yml](broker-tests-subscribers-config.yml) co
 However, you can still use config files mentioned above to update other settings such as the Java options
 in the `tb-mqtt-broker-performance-tests.conf` section or logging settings in the `logback.xml` file section.
 
-You can find overridden environment variables for publishers and subscribers in the next configuration files:
+You can find override environment variables for publishers and subscribers in the next configuration files:
 
 - [broker-tests-publishers.yml](broker-tests-publishers.yml)
 - [broker-tests-subscribers.yml](broker-tests-subscribers.yml)
