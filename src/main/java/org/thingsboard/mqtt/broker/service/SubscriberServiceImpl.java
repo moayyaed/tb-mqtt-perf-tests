@@ -70,7 +70,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     @Override
     public void connectSubscribers(SubscribeStats subscribeStats) {
         List<PreConnectedSubscriberInfo> preConnectedSubscriberInfos = TestClusterUtil.getTestNodeSubscribers(testRunConfiguration, testRunClusterConfig);
-        log.info("Found {} preConnectedSubscriberInfos", preConnectedSubscriberInfos);
+        log.debug("Found {} preConnectedSubscriberInfos", preConnectedSubscriberInfos);
 
         clusterProcessService.process("SUBSCRIBERS_CONNECT", preConnectedSubscriberInfos, (latch, preConnectedSubscriberInfo) -> {
             int subscriberIndex = preConnectedSubscriberInfo.getSubscriberIndex();
