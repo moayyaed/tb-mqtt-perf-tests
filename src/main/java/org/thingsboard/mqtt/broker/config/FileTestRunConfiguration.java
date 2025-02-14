@@ -17,6 +17,7 @@ package org.thingsboard.mqtt.broker.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.handler.codec.mqtt.MqttQoS;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Component;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.List;
 

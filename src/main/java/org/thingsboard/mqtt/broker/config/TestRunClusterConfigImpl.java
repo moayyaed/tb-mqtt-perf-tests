@@ -15,13 +15,12 @@
  */
 package org.thingsboard.mqtt.broker.config;
 
+import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.mqtt.broker.service.ServiceHelper;
-
-import javax.annotation.PostConstruct;
 
 @Component
 @Data

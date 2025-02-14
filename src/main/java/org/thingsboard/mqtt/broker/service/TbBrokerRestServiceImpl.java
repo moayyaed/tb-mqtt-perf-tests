@@ -16,6 +16,7 @@
 package org.thingsboard.mqtt.broker.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +32,6 @@ import org.thingsboard.mqtt.broker.data.dto.LoginDto;
 import org.thingsboard.mqtt.broker.data.dto.LoginResponseDto;
 import org.thingsboard.mqtt.broker.data.dto.MqttClientCredentialsDto;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

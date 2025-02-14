@@ -15,13 +15,12 @@
  */
 package org.thingsboard.mqtt.broker.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.thingsboard.mqtt.broker.data.TestType;
-
-import javax.annotation.PostConstruct;
 
 @Slf4j
 @Service

@@ -15,6 +15,7 @@
  */
 package org.thingsboard.mqtt.broker.service.orchestration;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,6 @@ import org.thingsboard.mqtt.broker.controller.ClusterConst;
 import org.thingsboard.mqtt.broker.data.NodeInfo;
 import org.thingsboard.mqtt.broker.data.TestType;
 import org.thingsboard.mqtt.broker.service.ServiceHelper;
-
-import javax.annotation.PostConstruct;
 
 @Slf4j
 @Service

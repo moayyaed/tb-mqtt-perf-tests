@@ -16,6 +16,16 @@
 
 server:
   port: "${HTTP_BIND_PORT:8088}"
+#  ssl:
+#    enabled: true
+#    key-store: ""
+#    key-store-password: changeit
+#    key-store-type: PKCS12
+#    key-alias: tomcat
+#
+#    trust-store: ""
+#    trust-store-password: changeit
+#    client-auth: need
 
 mqtt:
   host: "${MQTT_HOST:localhost}"

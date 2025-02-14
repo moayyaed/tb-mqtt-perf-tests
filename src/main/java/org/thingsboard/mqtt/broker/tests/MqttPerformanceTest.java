@@ -17,6 +17,8 @@ package org.thingsboard.mqtt.broker.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.util.ResourceLeakDetector;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -44,8 +46,6 @@ import org.thingsboard.mqtt.broker.service.orchestration.TestRestService;
 import org.thingsboard.mqtt.broker.util.ThingsBoardThreadFactory;
 import org.thingsboard.mqtt.broker.util.ValidationUtil;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;

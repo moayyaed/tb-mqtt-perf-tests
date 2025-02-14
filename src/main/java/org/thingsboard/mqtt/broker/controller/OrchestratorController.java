@@ -15,6 +15,7 @@
  */
 package org.thingsboard.mqtt.broker.controller;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.thingsboard.mqtt.broker.data.NodeInfo;
 import org.thingsboard.mqtt.broker.service.orchestration.TestRestService;
 
-import javax.annotation.PostConstruct;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;

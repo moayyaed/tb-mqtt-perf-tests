@@ -20,6 +20,7 @@ import com.google.common.collect.Iterables;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
+import jakarta.annotation.PreDestroy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,6 @@ import org.thingsboard.mqtt.broker.tests.MqttPerformanceTest;
 import org.thingsboard.mqtt.broker.util.CallbackUtil;
 import org.thingsboard.mqtt.broker.util.ThingsBoardThreadFactory;
 
-import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

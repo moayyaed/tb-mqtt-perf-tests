@@ -16,6 +16,7 @@
 package org.thingsboard.mqtt.broker.config;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -27,7 +28,6 @@ import org.thingsboard.mqtt.broker.data.PersistentSessionInfo;
 import org.thingsboard.mqtt.broker.data.PublisherGroup;
 import org.thingsboard.mqtt.broker.data.SubscriberGroup;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

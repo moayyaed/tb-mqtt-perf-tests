@@ -31,14 +31,14 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-boot.version>2.5.7</spring-boot.version>
-        <commons-lang3.version>3.13.0</commons-lang3.version>
+        <spring-boot.version>3.2.12</spring-boot.version>
+        <commons-lang3.version>3.14.0</commons-lang3.version>
         <commons-math3.version>3.6.1</commons-math3.version>
-        <lombok.version>1.18.26</lombok.version>
-        <spring.version>5.3.26</spring.version>
-        <jackson.version>2.13.4</jackson.version>
-        <netty.version>4.1.109.Final</netty.version>
-        <guava.version>31.1-jre</guava.version>
+        <lombok.version>1.18.32</lombok.version>
+        <spring.version>6.1.15</spring.version>
+        <jackson.version>2.17.2</jackson.version>
+        <netty.version>4.1.115.Final</netty.version>
+        <guava.version>33.1.0-jre</guava.version>
         <dockerfile-maven.version>1.4.13</dockerfile-maven.version>
 
         <pkg.name>tb-mqtt-broker-performance-tests</pkg.name>

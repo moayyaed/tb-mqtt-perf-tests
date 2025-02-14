@@ -15,6 +15,7 @@
  */
 package org.thingsboard.mqtt.broker.service;
 
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
@@ -28,7 +29,6 @@ import org.thingsboard.mqtt.broker.config.TestRunConfiguration;
 import org.thingsboard.mqtt.broker.tests.MqttPerformanceTest;
 import org.thingsboard.mqtt.broker.util.CallbackUtil;
 
-import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

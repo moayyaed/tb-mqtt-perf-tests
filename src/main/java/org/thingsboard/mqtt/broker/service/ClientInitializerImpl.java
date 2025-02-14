@@ -19,6 +19,8 @@ import com.google.common.collect.Iterables;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.handler.codec.mqtt.MqttVersion;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,8 +34,6 @@ import org.thingsboard.mqtt.broker.client.mqtt.ReceivedMsgProcessor;
 import org.thingsboard.mqtt.broker.data.dto.HostPortDto;
 import org.thingsboard.mqtt.broker.util.ThingsBoardThreadFactory;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
