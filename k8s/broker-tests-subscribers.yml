@@ -20,7 +20,7 @@ metadata:
   name: broker-tests-subscribers
 spec:
   serviceName: broker-tests-subscribers
-  replicas: 5
+  replicas: 1
   podManagementPolicy: "Parallel"
   selector:
     matchLabels:
@@ -41,17 +41,19 @@ spec:
                 path: logback.xml
               - key: tb-mqtt-broker-performance-tests.conf
                 path: tb-mqtt-broker-performance-tests.conf
+      #      nodeSelector:
+      #        role: tests
       containers:
         - name: server
           imagePullPolicy: Always
-          image: thingsboard/tbmq-performance-tests:2.0.2
-          resources:
-            limits:
-              cpu: 1
-              memory: 1500Mi
-            requests:
-              cpu: 1
-              memory: 1500Mi
+          image: thingsboard/tbmq-performance-tests:3.0.2
+          #          resources:
+          #            limits:
+          #              cpu: 1
+          #              memory: 1500Mi
+          #            requests:
+          #              cpu: 1
+          #              memory: 1500Mi
           ports:
             - containerPort: 8088
               name: http
@@ -67,11 +69,11 @@ spec:
             - name: BROKER_TYPE
               value: "THINGSBOARD"
             - name: MQTT_HOST
-              value: "tb-broker"
+              value: "tbmq"
             - name: MQTT_PORT
               value: "1883"
             - name: TB_URI
-              value: "http://tb-broker:8083"
+              value: "http://tbmq:8083"
             - name: ORCHESTRATION_NODE
               value: "false"
             - name: HTTP_BIND_PORT
@@ -91,11 +93,11 @@ spec:
             - name: STATS_ENABLED
               value: "true"
             - name: STATS_PERIOD_SECS
-              value: "30"
+              value: "10"
             - name: CLIENT_KEEP_ALIVE_SECONDS
               value: "10800"
             - name: MQTT_NETTY_WORKER_GROUP_THREADS
-              value: "2"
+              value: "0"
           volumeMounts:
             - mountPath: /config
               name: broker-tests-subscribers-config

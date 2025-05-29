@@ -121,8 +121,8 @@ data:
         }
       ],
       "dummyClients": 0,
-      "secondsToRun": 3600,
-      "additionalSecondsToWait": 600,
+      "secondsToRun": 120,
+      "additionalSecondsToWait": 1,
       "maxMsgsPerPublisherPerSecond": 1,
       "publisherQosValue": 1,
       "subscriberQosValue": 1,

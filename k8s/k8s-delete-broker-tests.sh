@@ -17,7 +17,7 @@
 
 set -e
 
-kubectl config set-context $(kubectl config current-context) --namespace=thingsboard-mqtt-broker
+kubectl config set-context $(kubectl config current-context) --namespace=tbmq
 
 kubectl delete -f broker-tests-publishers-config.yml
 kubectl delete -f broker-tests-subscribers-config.yml

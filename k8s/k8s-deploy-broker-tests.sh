@@ -18,7 +18,7 @@
 set -e
 
 kubectl apply -f broker-tests-namespace.yml
-kubectl config set-context $(kubectl config current-context) --namespace=thingsboard-mqtt-broker
+kubectl config set-context $(kubectl config current-context) --namespace=tbmq
 
 kubectl apply -f broker-tests-orch-config.yml
 kubectl apply -f broker-tests-orch.yml
