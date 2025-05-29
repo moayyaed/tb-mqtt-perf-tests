@@ -39,13 +39,13 @@ if [ "$ORCHESTRATION_NODE" == "true" ]; then
 
   java -cp ${jarfile} $JAVA_OPTS -Dloader.main=org.thingsboard.mqtt.broker.TestsOrchestratorApplication \
                     -Dlogging.config=${logbackfile} \
-                    org.springframework.boot.loader.PropertiesLauncher
+                    org.springframework.boot.loader.launch.PropertiesLauncher
 
 else
   echo "Starting '${project.name}' in WORKER mode..."
 
   java -cp ${jarfile} $JAVA_OPTS -Dloader.main=org.thingsboard.mqtt.broker.TestsApplication \
                     -Dlogging.config=${logbackfile} \
-                    org.springframework.boot.loader.PropertiesLauncher
+                    org.springframework.boot.loader.launch.PropertiesLauncher
 
 fi
